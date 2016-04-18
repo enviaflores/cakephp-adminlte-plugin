@@ -1,0 +1,2 @@
+(function(a){a.fn.datepicker.dates.et={days:"P\u00fchap\u00e4ev Esmasp\u00e4ev Teisip\u00e4ev Kolmap\u00e4ev Neljap\u00e4ev Reede Laup\u00e4ev P\u00fchap\u00e4ev".split(" "),daysShort:"P\u00fchap Esmasp Teisip Kolmap Neljap Reede Laup P\u00fchap".split(" "),daysMin:"PETKNRLP".split(""),months:"Jaanuar Veebruar M\u00e4rts Aprill Mai Juuni Juuli August September Oktoober November Detsember".split(" "),monthsShort:"Jaan Veebr M\u00e4rts Apr Mai Juuni Juuli Aug Sept Okt Nov Dets".split(" "),today:"T\u00e4na",
+clear:"T\u00fchjenda",weekStart:1,format:"dd.mm.yyyy"}})(jQuery);
