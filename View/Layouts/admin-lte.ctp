@@ -8,12 +8,14 @@
 <meta
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 	name="viewport">
-  <!-- Bootstrap 3.3.5 -->
+<!-- Bootstrap 3.3.5 -->
   <?php echo $this->Html->css('AdminLTE.bootstrap'); ?>
   <!-- Font Awesome -->
   <?php echo $this->Html->css('AdminLTE.font-awesome'); ?>
   <!-- Ionicons -->
   <?php echo $this->Html->css('AdminLTE.ionicons'); ?>
+  <!-- Msg -->
+  <?php echo $this->Html->css('AdminLTE.msg'); ?>
   <!-- Theme style -->
   <?php echo $this->Html->css('AdminLTE.AdminLTE'); ?>
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -49,14 +51,14 @@ if (! empty($head_additional_scripts))
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
 <body class="<?php echo AdminLTE_BodyClass; ?>">
 	<div class="wrapper">
-		<header class="main-header"><?php echo $this->element('AdminLTE.main-header-logo'); ?><?php echo $this->element('AdminLTE.main-header-nav-bar'); ?></header>
-	   <!-- LeftMainSideBar Element -->
+		<header class="main-header"><?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?></header>
+		<!-- LeftMainSideBar Element -->
         <?php echo $this->element('AdminLTE.left-main-sidebar'); ?>
         <!-- Content Wrapper. Contains page content -->
-	   <div class="content-wrapper"> <?php echo $this->fetch('content'); ?> </div>
-        <!-- Footer -->
-	   <footer class="main-footer"><?php echo $this->element('AdminLTE.footer'); ?></footer>
-	   <!-- Control Sidebar -->
+		<div class="content-wrapper"> <?php echo $this->fetch('content'); ?> </div>
+		<!-- Footer -->
+		<footer class="main-footer"><?php echo $this->element('AdminLTE.footer'); ?></footer>
+		<!-- Control Sidebar -->
 	   <?php echo $this->element('AdminLTE.control-sidebar'); ?>
 	   <div class="control-sidebar-bg"></div>
 	</div>
@@ -68,6 +70,14 @@ if (! empty($head_additional_scripts))
 <?php echo $this->Html->script('AdminLTE.slimScroll/jquery.slimscroll', array('inline' => true)); ?>
 <!-- FastClick -->
 <?php echo $this->Html->script('AdminLTE.fastclick/fastclick', array('inline' => true)); ?>
+<!-- Bootbox 4.4.0 -->
+<?php echo $this->Html->script('AdminLTE.bootbox/bootbox-4.4.0', array('inline' => true)); ?>
+<!-- Noty 2.3.8 -->
+<?php echo $this->Html->script('AdminLTE.noty/noty-2.3.8', array('inline' => true)); ?>
+<!-- Center 1.1.1 -->
+<?php echo $this->Html->script('AdminLTE.center/center-1.1.1', array('inline' => true)); ?>
+<!-- Msg 1.0.7 -->
+<?php echo $this->Html->script('AdminLTE.msg/msg-1.0.7', array('inline' => true)); ?>
 <?php
 
 /**

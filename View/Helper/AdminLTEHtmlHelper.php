@@ -5,6 +5,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
 {
 
     public $_sectionBlockOptions = array();
+
     public $_divBlockOptions = array();
 
     public $_defaultBoxOptions = array(
@@ -21,7 +22,86 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->_tags['section'] = '<section %s>%s</section>';
         $this->_tags['divLTE'] = '<div %s>%s</div>';
         $this->_tags['span'] = '<span %s>%s</span>';
+    }
 
+    public function getMainHeaderLogo()
+    {
+        if (file_exists(APP . 'View/Elements/main-header-logo.ctp') && is_readable(APP . 'View/Elements/main-header-logo.ctp')) {
+            $css_file = APP . 'View/Elements/css/main-header-logo.css';
+            if (file_exists($css_file)) {
+                $this->_View->start('cssHead');
+                include_once $css_file;
+                $this->_View->end();
+            }
+            $js_file = APP . 'View/Elements/js/main-header-logo.js';
+            if (file_exists($js_file)) {
+                $this->_View->start('scriptBody');
+                include_once $js_file;
+                $this->_View->end();
+            }
+            ob_start();
+            require_once APP . 'View/Elements/main-header-logo.ctp';
+            return ob_get_clean();
+        } else
+            if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp')) {
+                $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-logo.css';
+                if (file_exists($css_file)) {
+                    $this->_View->start('cssHead');
+                    include_once $css_file;
+                    $this->_View->end();
+                }
+                $js_file = CakePlugin::path('AdminLTE') . 'View/Elements/js/main-header-logo.js';
+                if (file_exists($js_file)) {
+                    $this->_View->start('scriptBody');
+                    include_once $js_file;
+                    $this->_View->end();
+                }
+                ob_start();
+                require_once CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp';
+                return ob_get_clean();
+            } else {
+                return '<!-- [NoMainHeaderLogoDefined] -->';
+            }
+    }
+
+    public function getMainHeaderNavBar()
+    {
+        if (file_exists(APP . 'View/Elements/main-header-nav-bar.ctp') && is_readable(APP . 'View/Elements/main-header-nav-bar.ctp')) {
+            $css_file = APP . 'View/Elements/css/main-header-nav-bar.css';
+            if (file_exists($css_file)) {
+                $this->_View->start('cssHead');
+                include_once $css_file;
+                $this->_View->end();
+            }
+            $js_file = APP . 'View/Elements/js/main-header-nav-bar.js';
+            if (file_exists($js_file)) {
+                $this->_View->start('scriptBody');
+                include_once $js_file;
+                $this->_View->end();
+            }
+            ob_start();
+            require_once APP . 'View/Elements/main-header-nav-bar.ctp';
+            return ob_get_clean();
+        } else
+            if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp')) {
+                $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-nav-bar.css';
+                if (file_exists($css_file)) {
+                    $this->_View->start('cssHead');
+                    include_once $css_file;
+                    $this->_View->end();
+                }
+                $js_file = CakePlugin::path('AdminLTE') . 'View/Elements/js/main-header-nav-bar.js';
+                if (file_exists($js_file)) {
+                    $this->_View->start('scriptBody');
+                    include_once $js_file;
+                    $this->_View->end();
+                }
+                ob_start();
+                require_once CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp';
+                return ob_get_clean();
+            } else {
+                return '<!-- [NoMainHeaderNavBarDefined] -->';
+            }
     }
 
     public function setTag($key, $value)
@@ -29,7 +109,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->_tags[$key] = $value;
     }
 
-public function sectionStart($options = array())
+    public function sectionStart($options = array())
     {
         array_push($this->_sectionBlockOptions, $options);
         ob_start();
@@ -56,8 +136,6 @@ public function sectionStart($options = array())
         $options = array_pop($this->_divBlockOptions);
         print $this->useTag('divLTE', $options, $buffer);
     }
-
-
 
     public function controlSideBarStart($options = array())
     {
@@ -133,24 +211,21 @@ public function sectionStart($options = array())
 
     public function dataTableStruct($fieldName, $options = array(), $data = array())
     {
-        $this->script('ProtonUI.vendor/jquery.dataTables', array(
+        $this->script('AdminLTE.datatables/datatables-1.10.11', array(
             'inline' => false
         ));
-        $this->script('ProtonUI.vendor/datatables', array(
+        $this->script('AdminLTE.datatables/datatables-bootstrap', array(
             'inline' => false
         ));
-        $this->script('ProtonUI.vendor/select2', array(
+
+        $this->script('AdminLTE.datatables/datatables-responsive', array(
             'inline' => false
         ));
-        $this->script('ProtonUI.proton/tables', array(
+
+        $this->css('AdminLTE.datatables/datatables', null, array(
             'inline' => false
         ));
-        $this->css('ProtonUI.vendor/select2/select2', array(
-            'inline' => false
-        ));
-        $this->css('ProtonUI.vendor/datatables', null, array(
-            'inline' => false
-        ));
+
         if ($fieldName !== false) {
             $html = '<div class="table-responsive">';
             $html .= '<table id ="' . Inflector::variable($fieldName) . '" class="table table-responsive table-striped table-bordered">';
@@ -263,5 +338,4 @@ EOF;
 
         return vsprintf($html_data, join('', $menu_opts));
     }
-
 }

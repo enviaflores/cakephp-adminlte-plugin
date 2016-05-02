@@ -37,8 +37,7 @@ if (defined('AdminLTE_SideBarForm'))
 		</form>
 		-->
 <?php
-if (! empty(Configure::read('AdminLTE_SideBarMenu')))
-    echo $this->element('AdminLTE.sidebar-menu');
+echo $this->element('AdminLTE.sidebar-menu');
 ?>
 	</section>
 	<!-- /.sidebar -->

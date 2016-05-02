@@ -55,7 +55,8 @@ class AdminLTEController extends Controller
 
     public function beforeRender()
     {
-        FB::info($this);
+        parent::beforeRender();
+
         if ($this->admin_lte_options & self::BOXED_LAYOUT && $this->admin_lte_options & self::FIXED_LAYOUT) {
             throw new InternalErrorException('Cannot use both layout boxed and fixed.');
         }
