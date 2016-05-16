@@ -892,6 +892,7 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function label($fieldName = null, $text = null, $options = array())
     {
+        FB::info(func_get_args(), __METHOD__);
         if ($fieldName === null) {
             $fieldName = implode('.', $this->entity());
         }
@@ -914,6 +915,9 @@ class AdminLTEFormHelper extends AppHelper
                 'class' => $options
             );
         }
+
+        if (isset($options['icon']))
+            $text = '<i class="fa fa-' . $options['icon'] . '"></i> ' . $text;
 
         if (isset($options['for'])) {
             $labelFor = $options['for'];
@@ -1069,11 +1073,11 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function input($fieldName, $options = array())
     {
-        FB::info(func_get_args(), __METHOD__);
         $this->setEntity($fieldName);
         $options = $this->_parseOptions($options);
 
         $divOptions = $this->_divOptions($options);
+
         unset($options['div']);
 
         if ($options['type'] === 'radio' && isset($options['options'])) {
@@ -1131,7 +1135,7 @@ class AdminLTEFormHelper extends AppHelper
             $out['between'] = null;
         }
         $out['input'] = $this->_getInput(compact('type', 'fieldName', 'options', 'radioOptions', 'selected', 'dateFormat', 'timeFormat'));
-
+        FB::info($out, __METHOD__);
         $output = '';
         foreach ($format as $element) {
             $output .= $out[$element];
@@ -1154,7 +1158,6 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _getInput($args)
     {
-        FB::info($args, __METHOD__);
         extract($args);
         switch ($type) {
             case 'hidden':
@@ -1405,6 +1408,7 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _getLabel($fieldName, $options)
     {
+        FB::info(func_get_args(), __METHOD__);
         if ($options['type'] === 'radio' || $options['type'] == 'checkbox') {
             return false;
         }
@@ -1456,6 +1460,11 @@ class AdminLTEFormHelper extends AppHelper
         if ($options['type'] === 'hidden') {
             return array();
         }
+
+        if ($options['type'] === 'select') {
+            return array();
+        }
+
         $div = $this->_extractOption('div', $options, true);
         if (! $div) {
             return array();
@@ -1515,6 +1524,7 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _inputLabel($fieldName, $label, $options)
     {
+        FB::info(func_get_args(), __METHOD__);
         $labelAttributes = $this->domId(array(), 'for');
         $idKey = null;
         if ($options['type'] === 'date' || $options['type'] === 'datetime') {
@@ -1818,7 +1828,6 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function __call($method, $params)
     {
-        FB::info(func_get_args(), __METHOD__);
         $options = array();
         if (empty($params)) {
             throw new CakeException(__d('cake_dev', 'Missing field name for FormHelper::%s', $method));
@@ -2366,6 +2375,13 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function select($fieldName, $options = array(), $attributes = array())
     {
+        $this->Html->css('AdminLTE.select2/select2', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.select2/select2', array(
+            'inline' => false
+        ));
+
         $select = array();
         $style = null;
         $tag = null;
@@ -2376,7 +2392,8 @@ class AdminLTEFormHelper extends AppHelper
             'empty' => '',
             'showParents' => false,
             'hiddenField' => true,
-            'disabled' => false
+            'disabled' => false,
+            'style' => 'width: 100%;'
         );
 
         $escapeOptions = $this->_extractOption('escape', $attributes);
@@ -2440,7 +2457,6 @@ class AdminLTEFormHelper extends AppHelper
             $select[] = $this->Html->useTag($tag, $attributes['name'], array_diff_key($attributes, $filter));
         }
         $emptyMulti = ($showEmpty !== null && $showEmpty !== false && ! (empty($showEmpty) && (isset($attributes) && array_key_exists('multiple', $attributes))));
-
         if ($emptyMulti) {
             $showEmpty = ($showEmpty === true) ? '' : $showEmpty;
             $options = array(
@@ -2461,8 +2477,16 @@ class AdminLTEFormHelper extends AppHelper
             'id' => $attributes['id'],
             'disabled' => $attributes['disabled']
         )));
-
         $template = ($style === 'checkbox') ? 'checkboxmultipleend' : 'selectend';
+
+        $select2_opts = '';
+
+        if (! empty($attributes['select2_options'])) {
+            $select2_opts = $this->js_array($attributes['select2_options']);
+        }
+
+        $this->_View->append("scriptAddTemplate", "\$('select[id=\"" . $id . "\"]').select2(" . $select2_opts . ");\n");
+
         $select[] = $this->Html->useTag($template);
         return implode("\n", $select);
     }
@@ -3017,6 +3041,26 @@ class AdminLTEFormHelper extends AppHelper
         return $opt;
     }
 
+    public function dateRange($fieldName, $options = array())
+    {
+        $this->Html->css('AdminLTE.daterangepicker', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.moment/moment-2.10.2', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.daterangepicker/daterangepicker', array(
+            'inline' => false
+        ));
+        $options = $this->_initInputField($fieldName, $options);
+        $options = $this->addClass($options, 'form-control');
+        $options['type'] = 'text';
+        $options = $this->addClass($options, 'form-control pull-right');
+        $toReturn = '<label>' . $fieldName . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $fieldName, $options) . '</div>';
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options, null) . "\"]').daterangepicker();");
+        return $toReturn;
+    }
+
     /**
      * Parse the value for a datetime selected value
      *
@@ -3467,423 +3511,38 @@ class AdminLTEFormHelper extends AppHelper
         }
         return $this->_inputDefaults;
     }
-}
 
-class AdminLTEOldFormHelper extends FormHelper
-{
-
-    public function create($model = null, $options = array())
+    function array_key_js($v, $k, $idx)
     {
-        if (isset($options['data-parsley-namespace']) || isset($options['data-parsley-validate'])) {
-            $this->Html->script('ProtonUI.vendor/parsley', array(
-                'inline' => false
-            ));
-            $this->Html->script('ProtonUI.vendor/parsley.extend', array(
-                'inline' => false
-            ));
-        }
-        return parent::create($model, $options);
-    }
-
-    public function input($fieldName, $options = array())
-    {
-        $this->setEntity($fieldName);
-        $options = $this->_parseOptions($options);
-
-        $type = $options['type'];
-        $options['div'] = array(
-            'class' => 'form-group'
-        );
-        switch ($type) {
-            case 'select':
-                $this->Html->css('ProtonUI.vendor/select2/select2', array(
-                    'inline' => false
-                ));
-                $this->Html->script('ProtonUI.vendor/select2', array(
-                    'inline' => false
-                ));
-                break;
-            case 'tags':
-                $this->Html->css('ProtonUI.vendor/select2/select2', array(
-                    'inline' => false
-                ));
-                $this->Html->script('ProtonUI.vendor/select2', array(
-                    'inline' => false
-                ));
-                $select2_opts = '';
-                if (! empty($options['select2_options'])) {
-                    $select2_opts = $this->js_array($options['select2_options']);
-                    unset($options['select2_options']);
-                    $options['type'] = 'text';
-                }
-                $tags_attributes = $this->_initInputField($fieldName, array_merge((array) $options, array(
-                    'secure' => self::SECURE_SKIP
-                )));
-                $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $tags_attributes, null) . "\"]').select2(" . $select2_opts . ");\n");
-                break;
-            default:
-                if (! empty($options['col-lg'])) {
-                    $options = $this->addClass($options, 'col-lg-' . $options['col-lg']);
-                    unset($options['col-lg']);
-                }
-                break;
-        }
-
-        /**
-         * input class
-         */
-        $options = $this->addClass($options, 'form-control');
-
-        if (! empty($options['input-lg']))
-            $options = $this->addClass($options, 'input-lg');
-
-        $divOptions = $this->_divOptions($options);
-        unset($options['div']);
-
-        if ($options['type'] === 'radio' && isset($options['options'])) {
-            $radioOptions = (array) $options['options'];
-            unset($options['options']);
-        }
-
-        $label = $this->_getLabel($fieldName, $options);
-        if ($options['type'] !== 'radio') {
-            unset($options['label']);
-        }
-
-        $error = $this->_extractOption('error', $options, null);
-        unset($options['error']);
-
-        $errorMessage = $this->_extractOption('errorMessage', $options, true);
-        unset($options['errorMessage']);
-
-        $selected = $this->_extractOption('selected', $options, null);
-        unset($options['selected']);
-
-        if ($options['type'] === 'datetime' || $options['type'] === 'date' || $options['type'] === 'time') {
-            $dateFormat = $this->_extractOption('dateFormat', $options, 'MDY');
-            $timeFormat = $this->_extractOption('timeFormat', $options, 12);
-            unset($options['dateFormat'], $options['timeFormat']);
-        }
-
-        $out = array(
-            'before' => $options['before'],
-            'label' => $label,
-            'between' => $options['between'],
-            'after' => $options['after']
-        );
-        $format = $this->_getFormat($options);
-
-        unset($options['type'], $options['before'], $options['between'], $options['after'], $options['format']);
-
-        $out['error'] = null;
-        if ($type !== 'hidden' && $error !== false) {
-            $errMsg = $this->error($fieldName, $error);
-            if ($errMsg) {
-                $divOptions = $this->addClass($divOptions, 'error');
-                if ($errorMessage) {
-                    $out['error'] = $errMsg;
-                }
-            }
-        }
-
-        if ($type === 'radio' && isset($out['between'])) {
-            $options['between'] = $out['between'];
-            $out['between'] = null;
-        }
-        $out['input'] = $this->_getInput(compact('type', 'fieldName', 'options', 'radioOptions', 'selected', 'dateFormat', 'timeFormat'));
-        $output = '';
-        foreach ($format as $element) {
-            $output .= $out[$element];
-        }
-
-        if (! empty($divOptions['tag'])) {
-            $tag = $divOptions['tag'];
-            unset($divOptions['tag']);
-            $output = $this->Html->tag($tag, $output, $divOptions);
-        }
-        return $output;
-    }
-
-    public function select($fieldName, $options = array(), $attributes = array())
-    {
-        $select = array();
-        $style = null;
-        $tag = null;
-        $attributes += array(
-            'class' => null,
-            'escape' => true,
-            'secure' => true,
-            'empty' => '',
-            'showParents' => false,
-            'hiddenField' => true,
-            'disabled' => false
-        );
-
-        $attributes = $this->addClass($attributes, 'form-control');
-        $attributes = $this->addClass($attributes, 'select2');
-
-        $escapeOptions = $this->_extractOption('escape', $attributes);
-        $secure = $this->_extractOption('secure', $attributes);
-        $showEmpty = $this->_extractOption('empty', $attributes);
-        $showParents = $this->_extractOption('showParents', $attributes);
-        $hiddenField = $this->_extractOption('hiddenField', $attributes);
-        unset($attributes['escape'], $attributes['secure'], $attributes['empty'], $attributes['showParents'], $attributes['hiddenField']);
-        $id = $this->_extractOption('id', $attributes);
-
-        $attributes = $this->_initInputField($fieldName, array_merge((array) $attributes, array(
-            'secure' => self::SECURE_SKIP
-        )));
-
-        if (is_string($options) && isset($this->_options[$options])) {
-            $options = $this->_generateOptions($options);
-        } elseif (! is_array($options)) {
-            $options = array();
-        }
-        if (isset($attributes['type'])) {
-            unset($attributes['type']);
-        }
-
-        if (! empty($attributes['multiple'])) {
-            $style = ($attributes['multiple'] === 'checkbox') ? 'checkbox' : null;
-            $template = ($style) ? 'checkboxmultiplestart' : 'selectmultiplestart';
-            $tag = $template;
-            if ($hiddenField) {
-                $hiddenAttributes = array(
-                    'value' => '',
-                    'id' => $attributes['id'] . ($style ? '' : '_'),
-                    'secure' => false,
-                    'form' => isset($attributes['form']) ? $attributes['form'] : null,
-                    'name' => $attributes['name']
-                );
-                $select[] = $this->hidden(null, $hiddenAttributes);
-            }
+        if (is_array($v)) {
+            $_is_a_a = true;
+            $this->_jsArrayHelper[$idx][] = ((! is_int($k)) ? $k . ' : ' . (($_is_a_a == true) ? '[' : '') : '') . $this->js_array($v) . (($_is_a_a == true) ? ']' : '');
         } else {
-            $tag = 'selectstart';
+            $this->_jsArrayHelper[$idx][] = ((! is_int($k)) ? $k . ' : ' : '') . ((! is_numeric($v)) ? "'" . $v . "'" : $v);
         }
+    }
 
-        if ($tag === 'checkboxmultiplestart') {
-            unset($attributes['required']);
-        }
-
-        if (! empty($tag) || isset($template)) {
-            $hasOptions = (count($options) > 0 || $showEmpty);
-            // Secure the field if there are options, or its a multi select.
-            // Single selects with no options don't submit, but multiselects do.
-            if ((! isset($secure) || $secure) && empty($attributes['disabled']) && (! empty($attributes['multiple']) || $hasOptions)) {
-                $this->_secure(true, $this->_secureFieldName($attributes));
-            }
-            $filter = array(
-                'name' => null,
-                'value' => null
-            );
-            if (is_array($attributes['disabled'])) {
-                $filter['disabled'] = null;
-            }
-            $select[] = $this->Html->useTag($tag, $attributes['name'], array_diff_key($attributes, $filter));
-        }
-        $emptyMulti = ($showEmpty !== null && $showEmpty !== false && ! (empty($showEmpty) && (isset($attributes) && array_key_exists('multiple', $attributes))));
-
-        if ($emptyMulti) {
-            $showEmpty = ($showEmpty === true) ? '' : $showEmpty;
-            $options = array(
-                '' => $showEmpty
-            ) + $options;
-        }
-
-        if (! $id) {
-            $attributes['id'] = Inflector::camelize($attributes['id']);
-            $__id = $attributes['id'];
+    function js_array($array)
+    {
+        $idx = count($this->_jsArrayHelper);
+        $this->_jsArrayHelper[$idx] = array();
+        $temp = array_walk($array, array(
+            $this,
+            'array_key_js'
+        ), $idx);
+        $rd = implode(', ', $this->_jsArrayHelper[$idx]);
+        if (substr($rd, 0, 1) == "{") {
+            return $rd;
         } else {
-            $__id = $id;
+            if ($this->isAssoc($array))
+                return '{' . $rd . '}';
+            else
+                return $rd;
         }
-
-        $select = array_merge($select, $this->_selectOptions(array_reverse($options, true), array(), $showParents, array(
-            'escape' => $escapeOptions,
-            'style' => $style,
-            'name' => $attributes['name'],
-            'value' => $attributes['value'],
-            'class' => $attributes['class'],
-            'id' => $attributes['id'],
-            'disabled' => $attributes['disabled']
-        )));
-
-        $template = ($style === 'checkbox') ? 'checkboxmultipleend' : 'selectend';
-        $select[] = $this->Html->useTag($template);
-        $select2_opts = '';
-
-        if (! empty($attributes['col-lg'])) {
-            if (! isset($attributes['select2_options']))
-                $attributes['select2_options'] = array();
-
-            $attributes['select2_options'] += array(
-                'width' => $attributes['col-lg'] * round((100 / 12), 2) . '%'
-            );
-            unset($attributes['col-lg']);
-        }
-
-        if (! empty($attributes['select2_options'])) {
-            $select2_opts = $this->js_array($attributes['select2_options']);
-        }
-
-        $this->_View->append("scriptAddTemplate", "\$('select[id=\"" . $__id . "\"]').select2(" . $select2_opts . ");\n");
-
-        return implode("\n", $select);
     }
 
-    public function file($fieldName, $options = array())
+    function isAssoc($arr)
     {
-        $options += array(
-            'secure' => true
-        );
-        $secure = $options['secure'];
-        $options['secure'] = self::SECURE_SKIP;
-
-        $options = $this->_initInputField($fieldName, $options);
-        if (! empty($options['image-with-preview'])) {
-            return $this->image_with_input_preview($fieldName, $options);
-        }
-        $field = $this->entity();
-
-        foreach (array(
-            'name',
-            'type',
-            'tmp_name',
-            'error',
-            'size'
-        ) as $suffix) {
-            $this->_secure($secure, array_merge($field, array(
-                $suffix
-            )));
-        }
-
-        $exclude = array(
-            'name' => null,
-            'value' => null
-        );
-        return $this->Html->useTag('file', $options['name'], array_diff_key($options, $exclude));
-    }
-
-    public function switchOnOff($fieldName, $options = array())
-    {
-        $this->Html->css('ProtonUI.vendor/bootstrap-switch', array(
-            'inline' => false
-        ));
-        $this->Html->script('ProtonUI.vendor/bootstrap-switch', array(
-            'inline' => false
-        ));
-        $options = $this->addClass($options, 'make-switch');
-        $_options = $this->_initInputField($fieldName, $options);
-        $this->_View->append("scriptAddTemplate", "\$('" . $_options['id'] . "').bootstrapSwitch();");
-        return parent::checkbox($fieldName, $options);
-    }
-
-    public function image_with_input_preview($fieldName, $options = array())
-    {
-        $this->Html->script('ProtonUI.vendor/fileinput', array(
-            'inline' => false
-        ));
-        if (! empty($options['image-with-preview']['resize'])) {
-            $this->Html->css('ProtonUI.vendor/cropper', array(
-                'inline' => false
-            ));
-            $this->Html->script('ProtonUI.vendor/cropper', array(
-                'inline' => false
-            ));
-        }
-        $width = 'width: 200px;';
-        $height = 'height : 150px;';
-        if (! empty($options['image-with-preview']['width']))
-            $width = 'width: ' . $options['image-with-preview']['width'] . ';';
-        if (! empty($options['image-with-preview']['height']))
-            $height = 'height: ' . $options['image-with-preview']['height'] . ';';
-        if ($options['image-with-preview']['width'] === false)
-            $width = '';
-        if ($options['image-with-preview']['height'] === false)
-            $height = '';
-        $options = $this->_initInputField($fieldName, $options);
-        $html = '<div class="form-group"><label>' . $options['label']; // Open 1
-
-        if (! empty($options['image-with-preview']['resize']))
-            $html .= ' <span id="resizeImgInfo' . $options['id'] . '"></span>';
-
-        $html .= '</label><div>'; // Open 2
-        $html .= '<div id="fileInputPreview' . $options['id'] . '" data-provides="fileinput" class="fileinput fileinput-new"><input type="hidden" value="" name="' . $options['name'] . '">'; // Open 3
-        $html .= '<div id="imgPreviewDiv' . $options['id'] . '" style=" ' . $width . $height . ' line-height: 150px;" data-trigger="fileinput" class="fileinput-preview thumbnail">'; // Open 4
-        $html .= '<img src="';
-        if (! empty($options['value'])) {
-            $html .= $options['value'];
-        }
-        $html .= '">';
-
-        $html .= '</div>'; // Close 4
-        $html .= '<div><span class="btn btn-primary btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">' . __('Change') . '</span><input type="file" name="' . $options['name'] . '"></span>'; // Open 5
-        $html .= ' <a  href="#" class="btn btn-primary fileinput-exists" data-dismiss="fileinput">' . __('Remove') . '</a>';
-        if (! empty($options['image-with-preview']['resize']))
-            $html .= ' <a  href="#imgPreviewDiv' . $options['id'] . 'Dialog" data-toggle="modal" class="btn btn-primary fileinput-exists">' . __('Crop') . '</a>';
-        $html .= '</div>'; // Close 4
-        $html .= '</div>'; // Close 3
-        $html .= '</div>'; // Close 2
-        $html .= '</div>'; // Close 1
-
-        if (! empty($options['image-with-preview']['resize'])) {
-            $html .= $this->hidden($fieldName . 'X', array(
-                'val' => 0
-            ));
-            $html .= $this->hidden($fieldName . 'Y', array(
-                'val' => 0
-            ));
-            $html .= $this->hidden($fieldName . 'W', array(
-                'val' => $options['image-with-preview']['resize']['width']
-            ));
-            $html .= $this->hidden($fieldName . 'H', array(
-                'val' => $options['image-with-preview']['resize']['height']
-            ));
-
-            $resize_width = 'width: 200px;';
-            $resize_height = 'height : 150px;';
-            if (! empty($options['image-with-preview']['resize']['width']))
-                $resize_width = 'width: ' . $options['image-with-preview']['resize']['width'] . 'px;';
-            if (! empty($options['image-with-preview']['resize']['height']))
-                $resize_height = 'height: ' . $options['image-with-preview']['resize']['height'] . 'px;';
-
-            $dialogBody = <<<EOF
-<div class="{$options['id']}-resize-wrapper">
-    <img class="{$options['id']}-cropper" src="">
-</div>
-EOF;
-            $dialogFooter = '<button class="btn btn-sm btn-default" data-dismiss="modal" type="button" id="' . $options['id'] . 'DoneCrop">' . __('Done') . '</button>';
-            $this->Html->dialog('imgPreviewDiv' . $options['id'], array(
-                'dialog-header' => __('Resize') . ' ' . $options['label'],
-                'dialog-content' => $dialogBody,
-                'dialog-footer' => $dialogFooter
-            ));
-            $this->_View->append("scriptAddTemplate", "
-                \$('#imgPreviewDiv" . $options['id'] . "Dialog').on('show.bs.modal', function() {
-                     var sI = new Image();
-                     sI.src = $('div[id=imgPreviewDiv" . $options['id'] . "]').children('img').attr('src');
-                     $('." . $options['id'] . "-resize-wrapper').css('width', sI.width+'px');
-                     $('." . $options['id'] . "-resize-wrapper').css('height', sI.height+'px');
-                    \$('." . $options['id'] . "-cropper').cropper({
-                        aspectRatio: " . $options['image-with-preview']['resize']['width'] . " / " . $options['image-with-preview']['resize']['height'] . ",
-                        data: {
-                            x: $('#" . $options['id'] . "X').val(),
-                            y: $('#" . $options['id'] . "Y').val(),
-                            width: $('#" . $options['id'] . "H').val(),
-                            height:  $('#" . $options['id'] . "W').val()
-                        },
-                        done: function(data) {
-                            $('#" . $options['id'] . "X').val(data.x);
-                            $('#" . $options['id'] . "Y').val(data.y);
-                            $('#" . $options['id'] . "H').val(data.height);
-                            $('#" . $options['id'] . "W').val(data.width);
-                        }
-                    });
-                    \$('." . $options['id'] . "-cropper').cropper('setImgSrc', $('div[id=imgPreviewDiv" . $options['id'] . "]').children('img').attr('src'));
-                });
-                \$('#imgPreviewDiv" . $options['id'] . "Dialog').on('hidden.bs.modal', function() {
-                    $('#resizeImgInfo" . $options['id'] . "').html(' " . __('Crop Data: ') . "' + JSON.stringify($('." . $options['id'] . "-cropper').cropper('getData')));
-                }); ");
-        }
-        return $html;
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 }

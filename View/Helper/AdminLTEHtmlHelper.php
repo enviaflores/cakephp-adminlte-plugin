@@ -8,10 +8,6 @@ class AdminLTEHtmlHelper extends HtmlHelper
 
     public $_divBlockOptions = array();
 
-    public $_defaultBoxOptions = array(
-        'variant' => 'default'
-    );
-
     public $_controlSideBarStartOptions = array(
         'color' => 'dark'
     );
@@ -151,64 +147,6 @@ class AdminLTEHtmlHelper extends HtmlHelper
         define('AdminLTE_ControlSideBar_HTML', $_sidebar_html_str);
     }
 
-    /**
-     *
-     * @param $options array(
-     *            'header' => array(
-     *            'title' => 'Header',
-     *            'border' => true,
-     *            )
-     *            'footer' => 'Footer'
-     *            'variant' => 'default|primary|info|warning|success|danger',
-     *            'box-tools' => array(
-     *            'collapsable' => 'collapsable tooltip',
-     *            'remove' => 'remove tooltip',
-     *            'label' => 'label title',
-     *            'input' => 'place holder'
-     *            ),
-     *            'loading-state' => true
-     * @return NULL
-     */
-    public function defaultBoxStart($options = array())
-    {
-        $this->_defaultBoxOptions = array_merge($this->_defaultBoxOptions, $options);
-        ob_start();
-        return null;
-    }
-
-    public function defaultBoxEnd()
-    {
-        $buffer = ob_get_clean();
-        $_box_html_str = '<div class="box box-' . $this->_defaultBoxOptions['variant'] . '">';
-        if (! empty($this->_defaultBoxOptions['header'])) {
-            $_box_html_str .= '<div class="box-header' . ((! empty($this->_defaultBoxOptions['header']['border'])) ? ' with-border' : '') . '">';
-            $_box_html_str .= '<h3 class="box-title">' . $this->_defaultBoxOptions['header']['title'] . '</h3>';
-            if (! empty($this->_defaultBoxOptions['box-tools'])) {
-                $_box_html_str .= '<div class="box-tools pull-right">';
-                if (! empty($this->_defaultBoxOptions['box-tools']['label']))
-                    $_box_html_str .= '<span class="label label-primary">' . $this->_defaultBoxOptions['box-tools']['label'] . '</span>';
-                if (! empty($this->_defaultBoxOptions['box-tools']['collapsable']))
-                    $_box_html_str .= '<button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="' . $this->_defaultBoxOptions['box-tools']['collapsable'] . '"><i class="fa fa-minus"></i></button>';
-                if (! empty($this->_defaultBoxOptions['box-tools']['remove']))
-                    $_box_html_str .= '      <button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="' . $this->_defaultBoxOptions['box-tools']['remove'] . '"><i class="fa fa-times"></i></button>';
-                $_box_html_str .= '</div>';
-            }
-            $_box_html_str .= '</div>';
-        }
-
-        $_box_html_str .= '<div class="box-body">' . $buffer . '</div>';
-        if (! empty($this->_defaultBoxOptions['footer']))
-            $_box_html_str .= '<div class="box-footer">' . $this->_defaultBoxOptions['footer'] . '</div>';
-        $_box_html_str .= '</div>';
-
-        print $_box_html_str;
-    }
-
-    public function defaultBox($content, $options = array())
-    {
-        print $this->useTag('block', $options, $content);
-    }
-
     public function dataTableStruct($fieldName, $options = array(), $data = array())
     {
         $this->script('AdminLTE.datatables/datatables-1.10.11', array(
@@ -222,7 +160,15 @@ class AdminLTEHtmlHelper extends HtmlHelper
             'inline' => false
         ));
 
+        $this->script('AdminLTE.adminlte/datatables', array(
+            'inline' => false
+        ));
+
         $this->css('AdminLTE.datatables/datatables', null, array(
+            'inline' => false
+        ));
+
+        $this->css('AdminLTE.datatables/datatables-responsive', array(
             'inline' => false
         ));
 
@@ -293,20 +239,55 @@ EOF;
 
     public function button($fieldName, $options = array())
     {
-        if (empty($option['button-size']))
-            $option['button-size'] = 'btn-xs';
-
-        if (empty($options['button-type'])) {
-            $options['button-type'] = 'btn-primary';
+        if (! empty($options['type'])) {
+            switch ($options['type']) {
+                case 'app':
+                    return $this->buttonApp($fieldName, $options);
+                    break;
+                case 'dropdown':
+                    return $this->buttonDropDown($fieldName, $options);
+                    break;
+            }
         }
-        $field_id = Inflector::variable($fieldName . 'Button');
+        if (! isset($option['button-size']))
+            $options['button-size'] = '';
+
+        if (! isset($options['button-type']))
+            $options['button-type'] = 'btn-primary';
+
+        if (isset($options['id']))
+            $field_id = $options['id'];
+        else
+            $field_id = Inflector::variable($fieldName . 'Button');
         $html_data = <<<EOF
         <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}" type="button">{$fieldName}</button>
 EOF;
         return $html_data;
     }
 
-    public function dropdown_button($fieldName, $options = array())
+    public function buttonApp($fieldName, $options = array())
+    {
+        if (empty($options['button-icon']))
+            $options['button-icon'] = 'plus';
+        $fieldNotification = '';
+        if (! empty($options['button-notification-color']) && ! empty($options['button-notification-label']))
+            $fieldNotification = '<span class="badge bg-' . $options['button-icon'] . '">' . $options['button-notification-label'] . '</span>';
+
+        if (empty($options['button-href']))
+            $options['button-href'] = '#';
+
+        if (isset($options['id']))
+            $field_id = $options['id'];
+        else
+            $field_id = Inflector::variable($fieldName . 'Button');
+
+        $html_data = <<<EOF
+        <a id="{$field_id}" href="{$options['button-href']}" class="btn btn-app">{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
+EOF;
+        return $html_data;
+    }
+
+    public function buttonDropDown($fieldName, $options = array())
     {
         if (empty($options['button-type'])) {
             $options['button-type'] = 'btn-primary';
@@ -320,6 +301,12 @@ EOF;
             <ul class="dropdown-menu dropdown-menu-arrow" role="menu">%s</ul>
         </div>
 EOF;
+
+        if (isset($options['id']))
+            $field_id = $options['id'];
+        else
+            $field_id = Inflector::variable($fieldName . 'Button');
+
         $menu_opts = array();
         foreach ($options['menu'] as $opt_menu_data) {
             if (empty($opt_menu_data['href']))
@@ -331,7 +318,7 @@ EOF;
                     $menu_opts[] = '<li class="divider"></li>';
                     break;
                 default:
-                    $menu_opts[] = '<li><a id="' . Inflector::variable($fieldName . '_' . $opt_menu_data['name']) . ((isset($opt_menu_data['ref'])) ? '" ref="' . $opt_menu_data['ref'] : '') . '" href="' . $opt_menu_data['href'] . '">' . $opt_menu_data['name'] . '</a></li>';
+                    $menu_opts[] = '<li><a id="' . Inflector::variable($field_id . '_' . $opt_menu_data['name']) . ((isset($opt_menu_data['ref'])) ? '" ref="' . $opt_menu_data['ref'] : '') . '" href="' . $opt_menu_data['href'] . '">' . $opt_menu_data['name'] . '</a></li>';
                     break;
             }
         }

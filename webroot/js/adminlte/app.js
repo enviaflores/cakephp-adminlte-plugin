@@ -154,6 +154,7 @@ $.AdminLTE.options = {
         lg: 1200
     }
 };
+
 $(function() {
     $("body").removeClass("hold-transition");
     "undefined" !== typeof AdminLTEOptions && $.extend(!0, $.AdminLTE.options, AdminLTEOptions);

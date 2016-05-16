@@ -93,7 +93,9 @@ if (! empty($body_additional_scripts))
 <!-- AdminLTE Dynamic Script -->
 <?php echo $this->fetch('script'); ?>
  <script>
- 	$(this).addTemplateSetup(function(){<?php echo $this->fetch('scriptAddTemplate'); ?>});
+ 	$(this).addTemplateSetup(function(){
+ 	<?php echo $this->fetch('scriptAddTemplate'); ?>
+ 	});
  	<?php echo $this->fetch('scriptBody'); ?>
  	$(function(){$(document).ready(function(){$(document.body).applyTemplateSetup();});});
  </script>
