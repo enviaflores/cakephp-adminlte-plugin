@@ -38,7 +38,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-logo.ctp';
             return ob_get_clean();
-        } else
+        } else 
             if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp')) {
                 $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-logo.css';
                 if (file_exists($css_file)) {
@@ -78,7 +78,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-nav-bar.ctp';
             return ob_get_clean();
-        } else
+        } else 
             if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp')) {
                 $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-nav-bar.css';
                 if (file_exists($css_file)) {
@@ -155,23 +155,23 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->script('AdminLTE.datatables/datatables-bootstrap', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.datatables/datatables-responsive', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.adminlte/datatables', array(
             'inline' => false
         ));
-
+        
         $this->css('AdminLTE.datatables/datatables', null, array(
             'inline' => false
         ));
-
+        
         $this->css('AdminLTE.datatables/datatables-responsive', array(
             'inline' => false
         ));
-
+        
         if ($fieldName !== false) {
             $html = '<div class="table-responsive">';
             $html .= '<table id ="' . Inflector::variable($fieldName) . '" class="table table-responsive table-striped table-bordered">';
@@ -205,16 +205,16 @@ class AdminLTEHtmlHelper extends HtmlHelper
             $options['dialog-header'] = $fieldName;
         if (empty($options['dialog-content']))
             $options['dialog-content'] = '&nbsp;';
-
+        
         $dialogId = Inflector::variable($fieldName . 'Dialog');
-
+        
         if (empty($options['dialog-footer'])) {
             $options['dialog-footer'] .= <<<EOF
                 <button id="{$dialogId}CloseBtn" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button id="{$dialogId}SaveBtn" type="button" class="btn btn-primary">Save changes</button>
 EOF;
         }
-
+        $html_data = '';
         $html_data .= <<<EOF
         <div id="{$dialogId}" tabindex="-1" role="dialog" class="modal fade">
             <div class="modal-dialog">
@@ -251,10 +251,10 @@ EOF;
         }
         if (! isset($option['button-size']))
             $options['button-size'] = '';
-
+        
         if (! isset($options['button-type']))
             $options['button-type'] = 'btn-primary';
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
@@ -272,15 +272,15 @@ EOF;
         $fieldNotification = '';
         if (! empty($options['button-notification-color']) && ! empty($options['button-notification-label']))
             $fieldNotification = '<span class="badge bg-' . $options['button-icon'] . '">' . $options['button-notification-label'] . '</span>';
-
+        
         if (empty($options['button-href']))
             $options['button-href'] = '#';
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-
+        
         $html_data = <<<EOF
         <a id="{$field_id}" href="{$options['button-href']}" class="btn btn-app">{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
 EOF;
@@ -292,7 +292,7 @@ EOF;
         if (empty($options['button-type'])) {
             $options['button-type'] = 'btn-primary';
         }
-
+        
         $html_data = <<<EOF
         <div class="btn-group">
             <button type="button" class="btn {$options['button-type']} dropdown-toggle" data-toggle="dropdown">
@@ -301,12 +301,12 @@ EOF;
             <ul class="dropdown-menu dropdown-menu-arrow" role="menu">%s</ul>
         </div>
 EOF;
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-
+        
         $menu_opts = array();
         foreach ($options['menu'] as $opt_menu_data) {
             if (empty($opt_menu_data['href']))
@@ -322,7 +322,8 @@ EOF;
                     break;
             }
         }
-
+        
         return vsprintf($html_data, join('', $menu_opts));
     }
+
 }

@@ -27,6 +27,7 @@
 /**
  * Additional CSS
  */
+FB::info($additional_css);
 if (! empty($additional_css))
     foreach ($additional_css as $css => $opts)
         echo $this->Html->css($css, $opts);
@@ -62,7 +63,8 @@ if (! empty($head_additional_scripts))
 	   <?php echo $this->element('AdminLTE.control-sidebar'); ?>
 	   <div class="control-sidebar-bg"></div>
 	</div>
-	<!-- jQuery 2.2.0 -->
+	<?php echo $this->fetch('modal-dialogs'); ?>
+<!-- jQuery 2.2.0 -->
 <?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.1', array('inline' => true)); ?>
 <!-- Bootstrap 3.3.5 -->
 <?php echo $this->Html->script('AdminLTE.bootstrap/bootstrap-3.3.6', array('inline' => true)); ?>
