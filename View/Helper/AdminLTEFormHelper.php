@@ -571,7 +571,7 @@ class AdminLTEFormHelper extends AppHelper
                 }
                 $submitOptions = $options;
             }
-            $out .= $this->submit($submit, $submitOptions);
+            $out .= $this->button($submit, $submitOptions);
         }
         if ($this->requestType !== 'get' && isset($this->request['_Token']) && ! empty($this->request['_Token'])) {
             $out .= $this->secure($this->fields, $secureAttributes);
@@ -892,7 +892,6 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function label($fieldName = null, $text = null, $options = array())
     {
-        FB::info(func_get_args(), __METHOD__);
         if ($fieldName === null) {
             $fieldName = implode('.', $this->entity());
         }
@@ -1077,7 +1076,6 @@ class AdminLTEFormHelper extends AppHelper
         $options = $this->_parseOptions($options);
         
         $divOptions = $this->_divOptions($options);
-        
         unset($options['div']);
         
         if ($options['type'] === 'radio' && isset($options['options'])) {
@@ -1134,8 +1132,12 @@ class AdminLTEFormHelper extends AppHelper
             $options['between'] = $out['between'];
             $out['between'] = null;
         }
+        
+        if ($type === 'colorpicker') {
+            $divOptions = null;
+        }
         $out['input'] = $this->_getInput(compact('type', 'fieldName', 'options', 'radioOptions', 'selected', 'dateFormat', 'timeFormat'));
-        FB::info($out, __METHOD__);
+        
         $output = '';
         foreach ($format as $element) {
             $output .= $out[$element];
@@ -1146,7 +1148,11 @@ class AdminLTEFormHelper extends AppHelper
             unset($divOptions['tag']);
             $output = $this->Html->tag($tag, $output, $divOptions);
         }
-        return $output;
+        
+        return $this->Html->tag('div', $output, array(
+            'class' => 'form-group',
+            'for' => $this->domId($fieldName)
+        ));
     }
 
     /**
@@ -1408,7 +1414,6 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _getLabel($fieldName, $options)
     {
-        FB::info(func_get_args(), __METHOD__);
         if ($options['type'] === 'radio' || $options['type'] == 'checkbox') {
             return false;
         }
@@ -1534,7 +1539,6 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _inputLabel($fieldName, $label, $options)
     {
-        FB::info(func_get_args(), __METHOD__);
         $labelAttributes = $this->domId(array(), 'for');
         $idKey = null;
         if ($options['type'] === 'date' || $options['type'] === 'datetime') {
@@ -1854,14 +1858,155 @@ class AdminLTEFormHelper extends AppHelper
         )));
     }
 
+    public function text($fieldName, $options = array())
+    {
+        FB::info(func_get_args(), __METHOD__);
+        $options = $this->_initInputField($fieldName, $options);
+        $options = $this->addClass($options, 'form-control');
+        $options['type'] = 'text';
+        $pre = "";
+        if (! empty($options['pre-input-group-addon'])) {
+            $pre = $this->Html->useTag('span', array(
+                'class' => 'input-group-addon'
+            ), $options['pre-input-group-addon']);
+            unset($options['pre-input-group-addon']);
+        }
+        $post = "";
+        if (! empty($options['post-input-group-addon'])) {
+            $post = $this->Html->useTag('span', array(
+                'class' => 'input-group-addon'
+            ), $options['post-input-group-addon']);
+            unset($options['post-input-group-addon']);
+        }
+        
+        if (isset($options['typeahead'])) {
+            $this->Html->css('AdminLTE.typeahead/typeahead', array(
+                'inline' => false
+            ));
+            $this->Html->script('AdminLTE.typeahead/typeahead', array(
+                'inline' => false
+            ));
+            $ta_query_url = isset($options['typeahead']['query_url']) ? $options['typeahead']['query_url'] : Router::url(array(
+                'prefix' => $this->params['prefix'],
+                'controller' => $this->params['controller'],
+                'action' => $this->params['action']
+            )) . '?q=%QUERY';
+            $ta_query_cache_response = isset($options['typeahead']['query_cache_response']) ? 'true' : 'false';
+            $ta_query_limit_response = isset($options['typeahead']['query_limit_response']) && is_numeric($options['typeahead']['query_limit_response']) ? round($options['typeahead']['query_limit_response'], 0) : 100;
+            $ta_hint = (isset($options['typeahead']['hint']) && $options['typeahead']['hint'] === false) ? 'false' : 'true';
+            $ta_highlight = (isset($options['typeahead']['highlight']) && $options['typeahead']['highlight'] === false) ? 'false' : 'true';
+            $ta_min_length = isset($options['typeahead']['min_length']) ? $options['typeahead']['min_length'] : 3;
+            $ta_onselect = isset($options['typeahead']['on_select']) ? $options['typeahead']['on_select'] : 'function(obj,datum) {}';
+            $ta_onrender_on = isset($options['typeahead']['on_render_on']) ? $options['typeahead']['on_render_on'] : '';
+            $ta_onrender_off = isset($options['typeahead']['on_render_off']) ? $options['typeahead']['on_render_off'] : '';
+            
+            $js_typeahead = <<<EOF
+var {$options['id']}_render = 0;
+var {$options['id']}_bhobj = new Bloodhound({
+    name : '{$options['id']}_name',
+            remote: {
+                url: '{$ta_query_url}',
+                wildcard: '%QUERY',
+                cache: {$ta_query_cache_response}
+            },
+            limit: {$ta_query_limit_response},
+            datumTokenizer : function(d) {
+                return Bloodhound.tokenizers.whitespace(d.val);
+            },
+            queryTokenizer : Bloodhound.tokenizers.whitespace
+        });
+{$options['id']}_bhobj.initialize();
+$('#{$options['id']}').typeahead({
+            hint : {$ta_hint},
+            highlight : {$ta_highlight},
+            minLength : {$ta_min_length}
+        }, {
+            name : '{$options['id']}_name',
+            display : 'value',
+            source : {$options['id']}_bhobj.ttAdapter()
+        }).bind('typeahead:select', {$ta_onselect}).bind('typeahead:render', function(obj, datum) {
+            if({$options['id']}_render == 0) {
+                {$ta_onrender_on}
+                if(!datum || !$(this).val()) {
+                    {$options['id']}_render = 1;
+                }
+            } else {
+                {$ta_onrender_off}
+                {$options['id']}_render = 0;
+            }
+        });
+EOF;
+            unset($options['typeahead']);
+            $this->_View->append("scriptAddTemplate", $js_typeahead);
+        }
+        
+        if (! empty($pre) || ! empty($post))
+            return $this->Html->useTag('block', array(
+                'class' => 'input-group',
+                'for' => $options['id']
+            ), $pre . $this->Html->useTag('input', $options['name'], $options) . $post);
+        
+        return $this->Html->useTag('input', $options['name'], $options);
+    }
+
     public function password($fieldName, $options = array())
     {
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options['type'] = 'password';
-        return $this->Html->useTag('input', $fieldName, $options) . $this->Html->useTag('span', array(
+        return $this->Html->useTag('input', $options['name'], $options) . $this->Html->useTag('span', array(
             'class' => 'glyphicon glyphicon-lock form-control-feedback'
         ), null);
+    }
+
+    public function colorpicker($fieldName, $options = array())
+    {
+        $this->Html->css('AdminLTE.colorpicker/colorpicker', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.colorpicker/colorpicker-2.3.3', array(
+            'inline' => false
+        ));
+        $options = $this->_initInputField($fieldName, $options);
+        $options = $this->addClass($options, 'form-control');
+        $options['type'] = 'text';
+        $this->_View->append("scriptAddTemplate", "\$('div[for=\"" . $options['id'] . "\"]').colorpicker();\n");
+        return $this->Html->useTag('block', array(
+            'class' => 'input-group colorpicker-element',
+            'for' => $options['id']
+        ), $this->Html->useTag('input', $options['name'], $options) . $this->Html->useTag('block', array(
+            'class' => 'input-group-addon'
+        ), '<i></i>'));
+    }
+
+    public function phone($fieldName, $options = array())
+    {
+        $this->Html->css('AdminLTE.intl-tel-input/intl-tel-input', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.intl-tel-input/intl-tel-input-9.0.3', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.intl-tel-input/utils', array(
+            'inline' => false
+        ));
+        
+        $options = $this->_initInputField($fieldName, $options);
+        $options = $this->addClass($options, 'form-control');
+        $options['type'] = 'tel';
+        
+        $plugin_opts = array(
+            'utilsScript' => $this->Html->assetUrl("AdminLTE.intl-tel-input/utils.js", array(
+                'pathPrefix' => Configure::read('App.jsBaseUrl')
+            ))
+        );
+        if (! empty($options['plugin-options'])) {
+            $plugin_opts += $options['plugin-options'];
+            unset($options['plugin-options']);
+        }
+        
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $options['id'] . "\"]').intlTelInput(" . $this->js_array($plugin_opts) . ");\n");
+        return $this->Html->useTag('input', $options['name'], $options);
     }
 
     public function email($fieldName, $options = array())
@@ -1869,7 +2014,7 @@ class AdminLTEFormHelper extends AppHelper
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options['type'] = 'email';
-        return $this->Html->useTag('input', $fieldName, $options) . $this->Html->useTag('span', array(
+        return $this->Html->useTag('input', $options['name'], $options) . $this->Html->useTag('span', array(
             'class' => 'glyphicon glyphicon-envelope form-control-feedback'
         ), null);
     }
@@ -2058,8 +2203,6 @@ class AdminLTEFormHelper extends AppHelper
         $attributes = $this->_initInputField($fieldName, array_merge((array) $attributes, array(
             'secure' => static::SECURE_SKIP
         )));
-        
-        FB::info($attributes, __METHOD__);
         
         $this->Html->link('Enter', '/pages/home', array(
             'class' => 'button',
@@ -2463,11 +2606,12 @@ EOF;
         $showParents = $this->_extractOption('showParents', $attributes);
         $hiddenField = $this->_extractOption('hiddenField', $attributes);
         unset($attributes['escape'], $attributes['secure'], $attributes['empty'], $attributes['showParents'], $attributes['hiddenField']);
-        $id = $this->_extractOption('id', $attributes);
         
         $attributes = $this->_initInputField($fieldName, array_merge((array) $attributes, array(
             'secure' => static::SECURE_SKIP
         )));
+        
+        $id = $this->_extractOption('id', $attributes);
         
         if (is_string($options) && isset($this->_options[$options])) {
             $options = $this->_generateOptions($options);
@@ -2494,6 +2638,7 @@ EOF;
                 $select[] = $this->hidden(null, $hiddenAttributes);
             }
         } else {
+            $attributes = $this->addClass($attributes, 'form-control');
             $tag = 'selectstart';
         }
         
@@ -3571,6 +3716,62 @@ EOF;
             }
         }
         return $this->_inputDefaults;
+    }
+
+    public function inputRow()
+    {
+        $size_rows = array();
+        $empty_rows = 0;
+        $counting_spaces = 0;
+        foreach (func_get_args() as $idx => $argument) {
+            if (is_int($argument)) {
+                $size_rows[$idx] = $argument;
+                $counting_spaces += $argument;
+            } else 
+                if (is_string($argument)) {
+                    $size_rows[$idx] = null;
+                    $empty_rows ++;
+                } else 
+                    if (is_array($argument) && array_key_exists('size', $argument)) {
+                        $size_rows[$idx] = null;
+                        $counting_spaces += $argument['size'];
+                    }
+        }
+        $toProcess = array();
+        if ($empty_rows > 0)
+            $emptyToSpace = (12 - $counting_spaces) / $empty_rows;
+        
+        foreach (func_get_args() as $idx => $argument) {
+            if (is_array($argument)) {
+                if (array_key_exists('size', $argument) && array_key_exists('content', $argument)) {
+                    $toProcess[] = $argument;
+                } else {
+                    $toProcess[] = 'Missing Parameters';
+                }
+            } else 
+                if (is_string($argument)) {
+                    $toProcess[] = array(
+                        'size' => $emptyToSpace,
+                        'content' => $argument
+                    );
+                } else 
+                    if (is_int($argument)) {
+                        $toProcess[] = array(
+                            'size' => $argument,
+                            'content' => '&nbsp;'
+                        );
+                    }
+        }
+        $toDisplay = array();
+        foreach ($toProcess as $tp) {
+            $extra_class = '';
+            if ($tp['content'] == '&nbsp;')
+                $extra_class = 'hidden-xs hidden-sm ';
+            
+            $toDisplay[] = "<div class='" . $extra_class . "col-md-" . $tp['size'] . "'>" . $tp['content'] . "</div>";
+        }
+        
+        return "<div class='row' style='display: flex;align-items: center;'>" . join("\n", $toDisplay) . "</div>";
     }
 
     function array_key_js($v, $k, $idx)

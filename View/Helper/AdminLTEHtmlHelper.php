@@ -259,8 +259,14 @@ EOF;
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
+        
+         $style ='';
+         
+         if( isset($options['style']))
+             $style = ' style="'.$options['style'].'"';
+            
         $html_data = <<<EOF
-        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}" type="button">{$fieldName}</button>
+        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style} type="button">{$fieldName}</button>
 EOF;
         return $html_data;
     }
@@ -273,8 +279,8 @@ EOF;
         if (! empty($options['button-notification-color']) && ! empty($options['button-notification-label']))
             $fieldNotification = '<span class="badge bg-' . $options['button-icon'] . '">' . $options['button-notification-label'] . '</span>';
         
-        if (empty($options['button-href']))
-            $options['button-href'] = '#';
+        if (empty($options['href']))
+            $options['href'] = '#';
         
         if (isset($options['id']))
             $field_id = $options['id'];
@@ -282,7 +288,7 @@ EOF;
             $field_id = Inflector::variable($fieldName . 'Button');
         
         $html_data = <<<EOF
-        <a id="{$field_id}" href="{$options['button-href']}" class="btn btn-app">{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
+        <a id="{$field_id}" href="{$options['href']}" class="btn btn-app">{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
 EOF;
         return $html_data;
     }
