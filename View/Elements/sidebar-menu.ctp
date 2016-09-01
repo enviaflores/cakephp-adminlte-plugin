@@ -5,7 +5,7 @@
  * <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span></span></a></li>
  * <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span></span></a></li>
  */
-if (! empty(Configure::read('AdminLTELeftSideMainMenu'))) {
+if (Configure::read('AdminLTELeftSideMainMenu')) {
     $AdminLTE_SideBarMenu = array();
     foreach (Configure::read('AdminLTELeftSideMainMenu') as $type => $data) {
         switch ($type) {
@@ -18,7 +18,7 @@ if (! empty(Configure::read('AdminLTELeftSideMainMenu'))) {
                         $active_link = false;
                         if ($this->request->here == trim($labels_data_menus['a-href']) && trim($labels_data_menus['a-href']) != '#')
                             $active_link = true;
-                        $labels_menu[] = '<li' . (($active_link == true) ? ' class="active"' : '') . '><a href="' . $labels_data_menus['a-href'] . '"><i class="fa ' . $labels_data_menus['icon'] . ((! empty($labels_data_menus['icon-color'])) ? '  text-' . $labels_data_menus['icon-color'] : '') . '"></i><span>' . $labels_data_menus['label'] . '</span></a></li>';
+                        $labels_menu[] = '<li' . (($active_link == true) ? ' class="active"' : '') . '><a href="' . $labels_data_menus['a-href'] . '"' . ((! empty($labels_data_menus['onclick'])) ? ' onclick="' . $labels_data_menus['onclick'] . '"' : '') . '><i class="fa ' . $labels_data_menus['icon'] . ((! empty($labels_data_menus['icon-color'])) ? '  text-' . $labels_data_menus['icon-color'] : '') . '"></i><span>' . $labels_data_menus['label'] . '</span></a></li>';
                     }
                     $AdminLTE_SideBarMenu[] = '<li class="header">' . $labels_data['label'] . '</li>' . ((! empty($labels_menu)) ? implode($labels_menu) : '');
                 }
@@ -35,7 +35,7 @@ if (! empty(Configure::read('AdminLTELeftSideMainMenu'))) {
                                 $active_link = true;
                                 $active_submenu = true;
                             }
-                            $treeview_menu[] = '<li' . (($active_link == true) ? ' class="active"' : '') . '><a href="' . $treeview_menu_data['a-href'] . '"><i class="fa ' . $treeview_menu_data['icon'] . ((! empty($treeview_menu_data['icon-color'])) ? '  text-' . $labels_data_menus['icon-color'] : '') . '"></i>' . $treeview_menu_data['label'] . '</a></li>';
+                            $treeview_menu[] = '<li' . (($active_link == true) ? ' class="active"' : '') . '><a href="' . $treeview_menu_data['a-href'] . '"' . ((! empty($treeview_menu_data['onclick'])) ? ' onclick="' . $treeview_menu_data['onclick'] . '"' : '') . '><i class="fa ' . $treeview_menu_data['icon'] . ((! empty($treeview_menu_data['icon-color'])) ? '  text-' . $labels_data_menus['icon-color'] : '') . '"></i>' . $treeview_menu_data['label'] . '</a></li>';
                         }
                     $AdminLTE_SideBarMenu[] = '<li class="treeview' . (($active_submenu == true) ? ' active' : '') . '"><a href="' . (! empty($treeview_data['a-href']) ? $treeview_data['a-href'] : '#') . '"><i class="fa ' . $treeview_data['icon'] . '"></i> <span>' . $treeview_data['label'] . '</span>' . ((! empty($treeview_data['small-label'])) ? '<small class="label pull-right bg-' . $treeview_data['small-label']['color'] . '">' . $treeview_data['small-label']['label'] . '</small>' : '') . ((! empty($treeview_menu)) ? '<i class="fa fa-angle-left pull-right"></i>' : '') . '</a>' . ((! empty($treeview_menu)) ? '<ul class="treeview-menu">' . implode($treeview_menu) . '</ul>' : '') . '</li>';
                 }

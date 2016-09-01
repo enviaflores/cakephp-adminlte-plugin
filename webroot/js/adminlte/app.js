@@ -1,9 +1,20 @@
 if ("undefined" === typeof jQuery) throw Error("AdminLTE requires jQuery");
-var blockUI = function(){
+
+var AdminLTEReloadPage = function(block_message) {
+    for (i = 0; i < document.forms.length; i++) {
+        document.forms[i].reset();
+    }
+    blockUI(block_message);
+    window.location.reload(true);
+}
+
+var blockUI = function(content){
+    if(!content)
+        content = '<i style="font-size: 30px" class="fa fa-refresh fa-spin"></i>'
 	$.msg({
         fadeIn : 0,
         autoUnblock : false,
-        content : '<i style="font-size: 30px" class="fa fa-refresh fa-spin"></i>'
+        content : content
     });
 }
 
