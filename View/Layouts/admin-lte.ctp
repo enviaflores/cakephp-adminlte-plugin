@@ -69,7 +69,7 @@ if (! empty($head_additional_scripts))
 <!-- Bootstrap 3.3.5 -->
 <?php echo $this->Html->script('AdminLTE.bootstrap/bootstrap-3.3.6', array('inline' => true)); ?>
 <!-- SlimScroll -->
-<?php echo $this->Html->script('AdminLTE.slimScroll/jquery.slimscroll', array('inline' => true)); ?>
+<?php echo $this->Html->script('AdminLTE.slimScroll/slimscroll-1.3.8', array('inline' => true)); ?>
 <!-- FastClick -->
 <?php echo $this->Html->script('AdminLTE.fastclick/fastclick', array('inline' => true)); ?>
 <!-- Bootbox 4.4.0 -->

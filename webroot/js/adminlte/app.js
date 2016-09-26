@@ -106,25 +106,25 @@ var AdminLTENoty = function(type, msg, modal, sticky) {
 };
 $.AdminLTE = {};
 $.AdminLTE.options = {
-    navbarMenuSlimscroll: !0,
+    navbarMenuSlimscroll: true,
     navbarMenuSlimscrollWidth: "3px",
     navbarMenuHeight: "200px",
     animationSpeed: 500,
     sidebarToggleSelector: "[data-toggle='offcanvas']",
-    sidebarPushMenu: !0,
-    sidebarSlimScroll: !0,
+    sidebarPushMenu: true,
+    sidebarSlimScroll: true,
     sidebarExpandOnHover: !1,
-    enableBoxRefresh: !0,
-    enableBSToppltip: !0,
+    enableBoxRefresh: true,
+    enableBSToppltip: true,
     BSTooltipSelector: "[data-toggle='tooltip']",
-    enableFastclick: !0,
-    enableControlSidebar: !0,
+    enableFastclick: true,
+    enableControlSidebar: true,
     controlSidebarOptions: {
         toggleBtnSelector: "[data-toggle='control-sidebar']",
         selector: ".control-sidebar",
-        slide: !0
+        slide: true
     },
-    enableBoxWidget: !0,
+    enableBoxWidget: true,
     boxWidgetOptions: {
         boxWidgetIcons: {
             collapse: "fa-minus",
@@ -137,7 +137,7 @@ $.AdminLTE.options = {
         }
     },
     directChat: {
-        enable: !0,
+        enable: true,
         contactToggleSelector: '[data-widget="chat-pane-toggle"]'
     },
     colors: {

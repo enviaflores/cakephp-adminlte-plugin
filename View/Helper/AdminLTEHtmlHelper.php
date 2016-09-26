@@ -38,7 +38,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-logo.ctp';
             return ob_get_clean();
-        } else 
+        } else
             if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp')) {
                 $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-logo.css';
                 if (file_exists($css_file)) {
@@ -78,7 +78,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-nav-bar.ctp';
             return ob_get_clean();
-        } else 
+        } else
             if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp')) {
                 $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-nav-bar.css';
                 if (file_exists($css_file)) {
@@ -147,34 +147,62 @@ class AdminLTEHtmlHelper extends HtmlHelper
         define('AdminLTE_ControlSideBar_HTML', $_sidebar_html_str);
     }
 
+    /**
+     * See: https://datatables.net/extensions/responsive/examples/column-control/classes.html
+     * @param unknown $fieldName
+     * @param array $options
+     * @param array $data
+     * @return string
+     */
     public function dataTableStruct($fieldName, $options = array(), $data = array())
     {
-        $this->script('AdminLTE.datatables/datatables-1.10.11', array(
+        $this->script('AdminLTE.datatables/datatables-1.10.12', array(
             'inline' => false
         ));
-        $this->script('AdminLTE.datatables/datatables-bootstrap', array(
+        $this->script('AdminLTE.datatables/1.10.12/bootstrap', array(
             'inline' => false
         ));
-        
-        $this->script('AdminLTE.datatables/datatables-responsive', array(
+
+        $this->script('AdminLTE.datatables/1.10.12/responsive', array(
             'inline' => false
         ));
-        
+
+        $this->script('AdminLTE.datatables/1.10.12/buttons', array(
+            'inline' => false
+        ));
+
+        $this->script('AdminLTE.datatables/1.10.12/buttons/colVis', array(
+            'inline' => false
+        ));
+
+        $this->script('AdminLTE.datatables/1.10.12/buttons/html5', array(
+            'inline' => false
+        ));
+
+
         $this->script('AdminLTE.adminlte/datatables', array(
             'inline' => false
         ));
-        
-        $this->css('AdminLTE.datatables/datatables', null, array(
+
+        $this->css('AdminLTE.datatables/bootstrap', array(
             'inline' => false
         ));
-        
-        $this->css('AdminLTE.datatables/datatables-responsive', array(
+
+        $this->css('AdminLTE.datatables/responsive', array(
             'inline' => false
         ));
-        
+
+        $this->css('AdminLTE.datatables/buttons/bootstrap', null, array(
+            'inline' => false
+        ));
+
+        $this->css('AdminLTE.datatables/buttons/datatables', null, array(
+            'inline' => false
+        ));
+
         if ($fieldName !== false) {
             $html = '<div class="table-responsive">';
-            $html .= '<table id ="' . Inflector::variable($fieldName) . '" class="table table-responsive table-striped table-bordered">';
+            $html .= '<table id ="' . Inflector::variable($fieldName) . '" style="width: 100%" class="table responsive table-striped table-bordered nowrap">';
             $html .= '<thead>' . ((! empty($options['headers'])) ? $this->tableHeaders($options['headers']) : '') . '</thead>';
             if (empty($data))
                 $html .= '<tbody>' . ((! empty($options['body'])) ? $options['body'] : '') . '</tbody>';
@@ -205,9 +233,9 @@ class AdminLTEHtmlHelper extends HtmlHelper
             $options['dialog-header'] = $fieldName;
         if (empty($options['dialog-content']))
             $options['dialog-content'] = '&nbsp;';
-        
+
         $dialogId = Inflector::variable($fieldName . 'Dialog');
-        
+
         if (empty($options['dialog-footer'])) {
             $options['dialog-footer'] .= <<<EOF
                 <button id="{$dialogId}CloseBtn" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -247,26 +275,53 @@ EOF;
                 case 'dropdown':
                     return $this->buttonDropDown($fieldName, $options);
                     break;
+                case 'box-tool-icon':
+                    return $this->buttonBoxToolIcon($fieldName, $options);
+                    break;
             }
         }
         if (! isset($option['button-size']))
             $options['button-size'] = '';
-        
+
         if (! isset($options['button-type']))
             $options['button-type'] = 'btn-primary';
-        
+
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-        
-         $style ='';
-         
-         if( isset($options['style']))
-             $style = ' style="'.$options['style'].'"';
-            
+
+        $style = '';
+
+        if (isset($options['style']))
+            $style = ' style="' . $options['style'] . '"';
+
+        if (isset($options['nolabel']))
+            $fieldName = '';
+
+        $icon_str = '';
+        if (isset($options['button-icon']))
+            $icon_str = '<i class="fa fa-' . $options['button-icon'] . '">';
+
         $html_data = <<<EOF
-        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style} type="button">{$fieldName}</button>
+        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}>{$icon_str}{$fieldName}</button>
+EOF;
+        return $html_data;
+    }
+
+    public function buttonBoxToolIcon($fieldName, $options = array())
+    {
+        if (isset($options['id']))
+            $field_id = $options['id'];
+        else
+            $field_id = Inflector::variable($fieldName . 'Button');
+
+        $data_toggle = '';
+        if (isset($options['data-toggle']))
+            $data_toggle = ' data-toggle="' . $options['data-toggle'] . '"';
+
+        $html_data = <<<EOF
+        <button id="{$field_id}" class="btn btn-box-tool" type="button" {$data_toggle}><i class="fa fa-{$options['icon']}"></i></button>
 EOF;
         return $html_data;
     }
@@ -278,15 +333,15 @@ EOF;
         $fieldNotification = '';
         if (! empty($options['button-notification-color']) && ! empty($options['button-notification-label']))
             $fieldNotification = '<span class="badge bg-' . $options['button-icon'] . '">' . $options['button-notification-label'] . '</span>';
-        
+
         if (empty($options['href']))
             $options['href'] = '#';
-        
+
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-        
+
         $html_data = <<<EOF
         <a id="{$field_id}" href="{$options['href']}" class="btn btn-app">{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
 EOF;
@@ -298,7 +353,7 @@ EOF;
         if (empty($options['button-type'])) {
             $options['button-type'] = 'btn-primary';
         }
-        
+
         $html_data = <<<EOF
         <div class="btn-group">
             <button type="button" class="btn {$options['button-type']} dropdown-toggle" data-toggle="dropdown">
@@ -307,12 +362,12 @@ EOF;
             <ul class="dropdown-menu dropdown-menu-arrow" role="menu">%s</ul>
         </div>
 EOF;
-        
+
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-        
+
         $menu_opts = array();
         foreach ($options['menu'] as $opt_menu_data) {
             if (empty($opt_menu_data['href']))
@@ -328,8 +383,7 @@ EOF;
                     break;
             }
         }
-        
+
         return vsprintf($html_data, join('', $menu_opts));
     }
-
 }

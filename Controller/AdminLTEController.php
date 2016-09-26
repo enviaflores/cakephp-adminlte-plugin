@@ -16,6 +16,8 @@ class AdminLTEController extends Controller
 
     const LOGIN_LAYOUT = 32;
 
+    const EMPTY_LAYOUT = 64;
+
     public $components = array(
         'Flash'
     );
@@ -107,11 +109,15 @@ class AdminLTEController extends Controller
             $_admin_lte_breadcrum .= '</ol >';
             define('AdminLTE_Breadcrumb', $_admin_lte_breadcrum);
         }
+
         if ($this->admin_lte_options & self::FIXED_LAYOUT || $this->admin_lte_options & self::BOXED_LAYOUT)
             $this->layout = 'AdminLTE.admin-lte';
         else
             if ($this->admin_lte_options & self::LOGIN_LAYOUT)
                 $this->layout = 'AdminLTE.login';
+
+        if ($this->admin_lte_options & self::EMPTY_LAYOUT)
+            $this->layout = 'AdminLTE.empty';
     }
 
     public function setLayoutOptions($options)
