@@ -2045,6 +2045,40 @@ EOF;
             }
             unset($options['value']);
         }
+
+        $options = $this->addClass($options, 'form-control');
+
+        if (isset($options['wysihtml5']) && $options['wysihtml5'] == true) {
+            $this->Html->script('AdminLTE.bootstrap3-wysihtml5/bootstrap3-wysihtml5.all', array(
+                'inline' => false
+            ));
+            $this->Html->css('AdminLTE.bootstrap3-wysihtml5/bootstrap3-wysihtml5', array(
+                'inline' => false
+            ));
+            if (! empty($options['wysihtml5_options'])) {
+                $wysihtml5_opts = Zend\Json\Json::encode($options['wysihtml5_options'], false, array(
+                    'enableJsonExprFinder' => true
+                ));
+                unset($options['wysihtml5_options']);
+            }
+
+            $this->_View->append("scriptAddTemplate", "\$('textarea[id=\"" . $options['id'] . "\"]').wysihtml5(" . $wysihtml5_opts . ");\n");
+        }
+
+        if (isset($options['textcounter']) && ! isset($options['wysihtml5']) && $options['textcounter'] == true) {
+            $this->Html->script('AdminLTE.textcounter/textcounter-0.3.6', array(
+                'inline' => false
+            ));
+            if (! empty($options['textcounter_options'])) {
+                $textcounter_opts = Zend\Json\Json::encode($options['textcounter_options'], false, array(
+                    'enableJsonExprFinder' => true
+                ));
+                unset($options['textcounter_options']);
+            }
+
+            $this->_View->append("scriptAddTemplate", "\$('textarea[id=\"" . $options['id'] . "\"]').textcounter(" . $textcounter_opts . ");\n");
+        }
+
         return $this->Html->useTag('textarea', $options['name'], array_diff_key($options, array(
             'type' => null,
             'name' => null
@@ -2204,14 +2238,23 @@ EOF;
             'secure' => static::SECURE_SKIP
         )));
 
+        $onclick_main_action = 'javascript:;';
+        if (! empty($attributes['onclick']))
+            $onclick_main_action = $attributes['onclick'] . "'";
+
         $this->Html->link('Enter', '/pages/home', array(
             'class' => 'button',
             'target' => '_blank'
         ));
 
+        if (isset($attributes['id']))
+            $fieldId = $attributes['id'];
+        else
+            $fieldId = Inflector::variable($fieldName . 'Button');
+
         $splitButton_part1 = <<<EOF
 <div class="btn-group">
-    <button class="btn {$btn_type}" type="button">{$fieldName}</button>
+    <button id="{$fieldId}" class="btn {$btn_type}" type="button" onclick="{$onclick_main_action}" >{$fieldName}</button>
     <button data-toggle="dropdown" class="btn {$btn_type} dropdown-toggle" type="button">
         <span class="caret"></span>
         <span class="sr-only">Toggle Dropdown</span>
@@ -2579,6 +2622,7 @@ EOF;
      */
     public function select($fieldName, $options = array(), $attributes = array())
     {
+        FB::info(func_get_args(), __METHOD__);
         $this->Html->css('AdminLTE.select2/select2', array(
             'inline' => false
         ));
@@ -2688,10 +2732,26 @@ EOF;
         $select2_opts = '';
 
         if (! empty($attributes['select2_options'])) {
-            $select2_opts = json_encode($attributes['select2_options']);
+            $select2_opts = Zend\Json\Json::encode($attributes['select2_options'], false, array(
+                'enableJsonExprFinder' => true
+            ));
         }
 
-        $this->_View->append("scriptAddTemplate", "\$('select[id=\"" . $id . "\"]').select2(" . $select2_opts . ");\n");
+        $additional_select_js = '';
+        $additional_select_js_has_changed = false;
+
+        if (isset($attributes['value'])) {
+            $additional_select_js .= '.val(' . $attributes['value'] . ')';
+            $additional_select_js_has_changed = true;
+        }
+
+        if ($additional_select_js_has_changed == true)
+            $additional_select_js .= ".trigger('change');";
+
+        if (empty($additional_select_js))
+            $additional_select_js = ';';
+
+        $this->_View->append("scriptAddTemplate", "\$('select[id=\"" . $id . "\"]').select2(" . $select2_opts . ")" . $additional_select_js . "\n");
 
         $select[] = $this->Html->useTag($template);
         return implode("\n", $select);

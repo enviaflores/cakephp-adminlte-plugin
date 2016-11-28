@@ -12,6 +12,8 @@ class AdminLTEHtmlHelper extends HtmlHelper
         'color' => 'dark'
     );
 
+    public $_timeLine = array();
+
     public function __construct(View $View, $settings = array( ))
     {
         parent::__construct($View, $settings);
@@ -149,6 +151,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
 
     /**
      * See: https://datatables.net/extensions/responsive/examples/column-control/classes.html
+     *
      * @param unknown $fieldName
      * @param array $options
      * @param array $data
@@ -178,7 +181,6 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->script('AdminLTE.datatables/1.10.12/buttons/html5', array(
             'inline' => false
         ));
-
 
         $this->script('AdminLTE.adminlte/datatables', array(
             'inline' => false
@@ -231,21 +233,50 @@ class AdminLTEHtmlHelper extends HtmlHelper
     {
         if (empty($options['dialog-header']))
             $options['dialog-header'] = $fieldName;
+
         if (empty($options['dialog-content']))
             $options['dialog-content'] = '&nbsp;';
 
+        FB::info($options, __METHOD__);
+        if ($options['save-btn-label'] !== false && empty($options['save-btn-label'])) {
+            $options['save-btn-label'] = 'Save changes';
+        }
+
+        if (empty($options['close-btn-label']))
+            $options['close-btn-label'] = 'Close';
+
         $dialogId = Inflector::variable($fieldName . 'Dialog');
 
+        FB::info($options, __METHOD__);
         if (empty($options['dialog-footer'])) {
             $options['dialog-footer'] .= <<<EOF
-                <button id="{$dialogId}CloseBtn" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="{$dialogId}SaveBtn" type="button" class="btn btn-primary">Save changes</button>
+                <button id="{$dialogId}CloseBtn" type="button" class="btn btn-default" data-dismiss="modal">{$options['close-btn-label']}</button>
 EOF;
+            if (isset($options['save-btn-content']) && ! empty($options['save-btn-content']))
+                $options['dialog-footer'] .= $options['save-btn-content'];
+            else
+                if ($options['save-btn-label'] !== false) {
+                    $options['dialog-footer'] .= <<<EOF
+                    <button id="{$dialogId}SaveBtn" type="button" class="btn btn-primary">{$options['save-btn-label']}</button>
+EOF;
+                }
         }
         $html_data = '';
+        $style_wh = array();
+        if (isset($options['height']) && ! empty($options['height']))
+            $style_wh[] = 'height:' . $options['height'];
+
+        if (isset($options['width']) && ! empty($options['width']))
+            $style_wh[] = 'width:' . $options['width'];
+
+        $style_wh_str = '';
+        if (! empty($style_wh))
+            $style_wh_str = ' style="' . str_replace('%', '%%', join(';', $style_wh)) . '" ';
+
+        FB::info($style_wh_str, __METHOD__);
         $html_data .= <<<EOF
         <div id="{$dialogId}" tabindex="-1" role="dialog" class="modal fade">
-            <div class="modal-dialog">
+            <div class="modal-dialog" {$style_wh_str}>
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -257,11 +288,13 @@ EOF;
             </div>
         </div>
 EOF;
+        FB::info($html_data);
         $this->_View->append('modal-dialogs', vsprintf($html_data, array(
             $options['dialog-header'],
             $options['dialog-content'],
             $options['dialog-footer']
         )));
+
         return $dialogId;
     }
 
@@ -342,8 +375,12 @@ EOF;
         else
             $field_id = Inflector::variable($fieldName . 'Button');
 
+        $on_click = '';
+        if (isset($options['onclick']))
+            $on_click = ' onclick="' . $options['onclick'] . '"';
+
         $html_data = <<<EOF
-        <a id="{$field_id}" href="{$options['href']}" class="btn btn-app">{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
+        <a id="{$field_id}" href="{$options['href']}" class="btn btn-app" {$on_click}>{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
 EOF;
         return $html_data;
     }
@@ -385,5 +422,50 @@ EOF;
         }
 
         return vsprintf($html_data, join('', $menu_opts));
+    }
+
+    public function startTimeLine($fieldName, $options = array())
+    {
+        $this->_timeLine = array();
+    }
+
+    public function addTimeLine($label, $header, $body, $footer, $time, $options = array())
+    {
+        $defaultOpts = array(
+            'label-color' => 'red',
+            'icon' => 'envelope',
+            'icon-color' => 'blue',
+            'header-class' => '',
+            'body-class' => '',
+            'footer-class' => ''
+        );
+
+        $options += $defaultOpts;
+
+        $timeLine = <<<EOF
+    <li class="time-label"><span class="bg-{$options['label-color']}"> {$label} </span></li>
+    <li>
+        <i class="fa fa-{$options['icon']} bg-{$options['icon-color']}"></i>
+        <div class="timeline-item">
+EOF;
+        if (! empty($time)) {
+            $timeLine .= <<<EOF
+<span class="time"><i class="fa fa-clock-o"></i> {$time}</span>
+EOF;
+        }
+        $timeLine .= <<<EOF
+            <h3 class="timeline-header {$options['header-class']}">{$header}</h3>
+            <div class="timeline-body {$options['body-class']}">{$body}</div>
+            <div class="timeline-footer {$options['footer-class']}">{$footer}</div>
+        </div>
+    </li>
+EOF;
+
+        $this->_timeLine[] = $timeLine;
+    }
+
+    public function endTimeLine()
+    {
+        echo '<ul class="timeline">' . join("\n", $this->_timeLine) . '<li><i class="fa fa-clock-o bg-gray"></i></li></ul>';
     }
 }

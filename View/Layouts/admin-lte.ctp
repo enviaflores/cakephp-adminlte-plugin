@@ -1,13 +1,16 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta
+    http-equiv="X-UA-Compatible"
+    content="IE=edge">
 <title><?php echo AdminLTE_Header; ?></title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta
-	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-	name="viewport">
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    name="viewport">
 <!-- Bootstrap 3.3.5 -->
   <?php echo $this->Html->css('AdminLTE.bootstrap'); ?>
   <!-- Font Awesome -->
@@ -21,18 +24,17 @@
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <?php echo $this->Html->css('AdminLTE.skins/'.AdminLTE_Skin); ?>
-  <?php echo $this->fetch('css'); ?>
 <?php
 
 /**
  * Additional CSS
  */
-FB::info($additional_css);
 if (! empty($additional_css))
     foreach ($additional_css as $css => $opts)
         echo $this->Html->css($css, $opts);
+echo $this->fetch('css');
 ?>
-  <!--[if lt IE 9]>
+<!--[if lt IE 9]>
   <?php echo $this->Html->script('AdminLTE.html5shiv/html5shiv-3.7.3', array('inline' => true)); ?>
   <?php echo $this->Html->script('AdminLTE.respond/respond-1.4.2', array('inline' => true)); ?>
   <![endif]-->
@@ -51,18 +53,18 @@ if (! empty($head_additional_scripts))
 </head>
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
 <body class="<?php echo AdminLTE_BodyClass; ?>">
-	<div class="wrapper">
-		<header class="main-header"><?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?></header>
-		<!-- LeftMainSideBar Element -->
+    <div class="wrapper">
+        <header class="main-header"><?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?></header>
+        <!-- LeftMainSideBar Element -->
         <?php echo $this->element('AdminLTE.left-main-sidebar'); ?>
         <!-- Content Wrapper. Contains page content -->
-		<div class="content-wrapper"> <?php echo $this->fetch('content'); ?> </div>
-		<!-- Footer -->
-		<footer class="main-footer"><?php echo $this->element('AdminLTE.footer'); ?></footer>
-		<!-- Control Sidebar -->
+        <div class="content-wrapper"> <?php echo $this->fetch('content'); ?> </div>
+        <!-- Footer -->
+        <footer class="main-footer"><?php echo $this->element('AdminLTE.footer'); ?></footer>
+        <!-- Control Sidebar -->
 	   <?php echo $this->element('AdminLTE.control-sidebar'); ?>
 	   <div class="control-sidebar-bg"></div>
-	</div>
+    </div>
 	<?php echo $this->fetch('modal-dialogs'); ?>
 <!-- jQuery 2.2.0 -->
 <?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.1', array('inline' => true)); ?>

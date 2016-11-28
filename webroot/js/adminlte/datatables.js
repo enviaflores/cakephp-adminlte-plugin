@@ -1,4 +1,4 @@
-jQuery.fn.dataTableExt.oApi.fnFilterOnReturn = function (oSettings) {
+jQuery.fn.dataTableExt.oApi.filterOnReturn = function (oSettings) {
     var _that = this;
 
     this.each(function (i) {

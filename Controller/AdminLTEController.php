@@ -1,4 +1,7 @@
 <?php
+FB::info(CakePlugin::path('AdminLTE') . '/Vendor/autoload.php', __METHOD__);
+require_once CakePlugin::path('AdminLTE') . '/Vendor/autoload.php';
+
 App::uses('Controller', 'Controller');
 
 class AdminLTEController extends Controller
