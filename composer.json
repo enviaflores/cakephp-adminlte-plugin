@@ -1,0 +1,13 @@
+{
+  "name" : "cakephp-adminlte-plugin",
+  "require" : {
+    "zendframework/zend-json" : "3.0.0"
+  },
+  "repositories" : [ {
+    "type" : "composer",
+    "url" : "https://packagist.org/"
+  } ],
+  "config" : {
+    "vendor-dir" : "Vendor"
+  }
+}
