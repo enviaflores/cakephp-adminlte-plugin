@@ -238,7 +238,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             $options['dialog-content'] = '&nbsp;';
 
         FB::info($options, __METHOD__);
-        if ($options['save-btn-label'] !== false && empty($options['save-btn-label'])) {
+        if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false && empty($options['save-btn-label'])) {
             $options['save-btn-label'] = 'Save changes';
         }
 
@@ -255,7 +255,7 @@ EOF;
             if (isset($options['save-btn-content']) && ! empty($options['save-btn-content']))
                 $options['dialog-footer'] .= $options['save-btn-content'];
             else
-                if ($options['save-btn-label'] !== false) {
+                if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false) {
                     $options['dialog-footer'] .= <<<EOF
                     <button id="{$dialogId}SaveBtn" type="button" class="btn btn-primary">{$options['save-btn-label']}</button>
 EOF;
