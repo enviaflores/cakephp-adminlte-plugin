@@ -157,4 +157,7 @@ class AdminLTEController extends Controller
                 break;
         }
     }
+
+    public function index()
+    {}
 }
