@@ -468,4 +468,30 @@ EOF;
     {
         echo '<ul class="timeline">' . join("\n", $this->_timeLine) . '<li><i class="fa fa-clock-o bg-gray"></i></li></ul>';
     }
+
+    public function pogressbar($fieldName, $options = array())
+    {
+        $defaultOpts = array(
+            'label' => $fieldName,
+            'type' => 'bar-primary',
+            'value' => 0
+        );
+        $options += $defaultOpts;
+
+        if (isset($options['id']))
+            $field_id = $options['id'];
+        else
+            $field_id = Inflector::variable($fieldName . 'ProgressBar');
+
+        $progressBar = <<<EOF
+<p>{$options['label']}</p>
+<div class="progress">
+    <div id="{$field_id}" class="progress-bar progress-{$options['type']} progress-bar-striped" role="progressbar" aria-valuenow="{$options['value']}" aria-valuemin="0" aria-valuemax="100" style="width: {$options['value']}%">
+        <span class="sr-only"></span>
+    </div>
+</div>
+EOF;
+        echo $progressBar;
+        $this->_View->append("scriptBody", "var _set$field_id = function(percentage){ $('#$field_id').attr('style','width: ' + percentage + '%');};\n");
+    }
 }
