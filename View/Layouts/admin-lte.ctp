@@ -102,6 +102,19 @@ if (! empty($body_additional_scripts))
  	});
  	<?php echo $this->fetch('scriptBody'); ?>
  	$(function(){$(document).ready(function(){$(document.body).applyTemplateSetup();});});
+
+
+ 	function notify(message,type){ 	 	
+ 	 	noty({
+ 	 	 	text: message, 
+ 	 	 	theme : 'defaultTheme', 
+ 	 	 	type:type,
+ 	 	 	//modal: true,
+ 	 	 	killer: true, // if true closes all notifications and shows itself,
+ 	 	 	timeout:3000,
+ 	 	 	layout: 'topRight'
+ 	 	 });
+ 	 	}
  </script>
 </body>
 </html>

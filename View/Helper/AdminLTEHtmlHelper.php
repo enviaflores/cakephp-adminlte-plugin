@@ -13,6 +13,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
     );
 
     public $_timeLine = array();
+    
+    public $_contentBlockOptions = array();
+    public $_contentBlockTabs = array();
+    public $_currentTab = null;
+    
 
     public function __construct(View $View, $settings = array( ))
     {
@@ -494,4 +499,73 @@ EOF;
         echo $progressBar;
         $this->_View->append("scriptBody", "var _set$field_id = function(percentage){ $('#$field_id').attr('style','width: ' + percentage + '%');};\n");
     }
+
+    public function contentBlockStart($options = array())
+    {        
+        ob_start();
+        $this->_contentBlockOptions = $options;
+        return null;
+    }
+
+    public function contentBlockEnd()
+    {
+        $buffer = ob_get_clean();
+        $options = $this->_contentBlockOptions;
+        $this->_contentBlockOptions = array();
+        $tabs = $this->_contentBlockTabs;
+        return $this->contentBlock($buffer, $options,$tabs);
+        
+    }
+    
+    public function contentTabStart($tab_title) {
+        $this->_currentTab = $tab_title;
+        ob_start();       
+        return null;
+    }
+    
+    public function contentTabEnd() {
+        $this->_contentBlockTabs[$this->_currentTab] = ob_get_clean();
+        $this->_currentTab = null;
+        return null;
+    }
+    
+    public function contentBlock($content, $options = array(), $tabs = array())
+    {
+        $tab_html = '<div class="nav-tabs-custom">';
+        $tab_html .= '<ul class="nav nav-tabs pull-right">';
+        $tab_iterator = count($tabs);
+        if ($tab_iterator > 0) {
+            $tabs_headers = array_reverse($tabs);
+            $tabs_content=array();
+            foreach ($tabs_headers as $header => $content) {
+                $link_ref = '#tab_' . $tab_iterator . '-' . $tab_iterator;
+                $class = ($tab_iterator == 1) ? ' class="active"' : '';
+                $tab_html .= '<li' . $class . ' id="dynamic_tab_'.$tab_iterator.'"><a href="' . $link_ref . '" data-toggle="tab">' . $header . '</a></li>';
+                $tab_iterator --;
+                $tabs_content[]=$content;
+            }
+        }
+        if (! empty($options['header']))
+            $tab_html .= '<li class="pull-left header"><i class="fa fa-th"></i>' . $options['header'] . '</li>';
+        $tab_html .= '</ul>';
+            
+        if (count($tabs_content) > 0) {
+            $tab_iterator = count($tabs);
+            // content for each tab
+            $tab_html .= '<div class="tab-content">';
+            foreach ($tabs_content as $content) {
+                $class = ($tab_iterator == 1) ? 'active' : '';
+                $div_id = 'tab_' . $tab_iterator . '-' . $tab_iterator;
+                $tab_html .= '<div class="tab-pane ' . $class . '" id="' . $div_id . '">' . $content . '</div>';                
+                $tab_iterator --;
+            }
+            $tab_html .= '</div>'; //end div tab-content
+        }
+        
+        $tab_html .= '</div>'; //end div nav-tabs-custom
+        
+        echo $tab_html;
+    }
+    
+    
 }
