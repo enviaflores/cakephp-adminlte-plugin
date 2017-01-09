@@ -14,6 +14,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
 
     public $_timeLine = array();
     
+    //required vars for tabs helpers
     public $_contentBlockOptions = array();
     public $_contentBlockTabs = array();
     public $_currentTab = null;

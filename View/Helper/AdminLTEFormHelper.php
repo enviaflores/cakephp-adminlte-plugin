@@ -3868,6 +3868,7 @@ EOF;
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
     
+    //CKEditor helper
     function ckeditor($fieldName, $options = array())
     {
         $this->Html->script('AdminLTE.ckeditor/ckeditor', array(
