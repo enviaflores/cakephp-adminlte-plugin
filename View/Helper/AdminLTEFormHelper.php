@@ -1082,12 +1082,13 @@ class AdminLTEFormHelper extends AppHelper
             $radioOptions = (array) $options['options'];
             unset($options['options']);
         }
-
+        
         $label = $this->_getLabel($fieldName, $options);
         if ($options['type'] !== 'radio') {
             unset($options['label']);
         }
-
+        
+        
         $error = $this->_extractOption('error', $options, null);
         unset($options['error']);
 
@@ -1106,7 +1107,7 @@ class AdminLTEFormHelper extends AppHelper
         $type = $options['type'];
         $out = array(
             'before' => $options['before'],
-            'label' => $label,
+            'label' => (!empty($options['hide_label'])) ? '' : $label,
             'between' => $options['between'],
             'after' => $options['after']
         );
