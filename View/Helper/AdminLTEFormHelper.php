@@ -1082,12 +1082,13 @@ class AdminLTEFormHelper extends AppHelper
             $radioOptions = (array) $options['options'];
             unset($options['options']);
         }
-
+        
         $label = $this->_getLabel($fieldName, $options);
         if ($options['type'] !== 'radio') {
             unset($options['label']);
         }
-
+        
+        
         $error = $this->_extractOption('error', $options, null);
         unset($options['error']);
 
@@ -3866,5 +3867,84 @@ EOF;
     function isAssoc($arr)
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+    
+    //CKEditor helper
+    function ckeditor($fieldName, $options = array())
+    {
+        $this->Html->script('AdminLTE.ckeditor/ckeditor', array(
+            'inline' => false
+        ));
+        
+        $this->Html->script('AdminLTE.ckeditor/adapters/jquery', array(
+            'inline' => false
+        ));
+        
+        $extraOptions = array();
+        
+        $ckeditorOpts = array();
+
+        
+        $extraOptions['label'] = false;
+        
+        if (! empty($options['label'])) {
+            
+            $extraOptions['label'] = $options['label'];
+            
+            unset($options['label']);
+        }
+        
+        
+        if (! empty($options['filebrowser'])) {
+            $ckeditorOpts['filebrowserBrowseUrl'] = '/simpla_template/filemanager/index.html';
+        }
+        
+        if (! empty($ckeditorOpts['extraPlugins'])) {
+            $ckeditorOpts['extraPlugins'] = join(',', $ckeditorOpts['extraPlugins']);
+        }
+        
+        $ckeditorOpts['config.entities'] = false;
+        $ckeditorOpts['config.basicEntities'] = false;
+        $ckeditorOpts['config.entities_greek'] = false;
+        $ckeditorOpts['config.entities_latin'] = false;
+        
+        // PARAMETROS PARA FULLPAGE EDIT
+        
+        if (! empty($options['full_page'])) {
+            $ckeditorOpts['fullPage'] = true;
+        }
+        
+        if (! empty($options['enable_allowed_content'])) {
+            $ckeditorOpts['allowedContent'] = true;
+        }
+        
+        if (! empty($options['extra_allowed_content'])) {
+            $ckeditorOpts['extraAllowedContent'] = '*{*}';
+        }
+        
+        if (array_key_exists('inline', $options) && $options['inline'] == true) {
+            
+            if (! empty($extraOptions['grid-size'])) {
+                $extra_class = 'grid_' . $extraOptions['grid-size'];
+                unset($extraOptions['grid-size']);
+            }
+            
+            $return = ((! empty($extraOptions['label'])) ? '<label for="' . $fieldName . '">' . $extraOptions['label'] . '</label>' : '') . $this->Html->useTag('block', array(
+                'id' => $fieldName,
+                'class' => 'CkEditorInline ' . $extra_class,
+                'contenteditable' => 'true'
+            ), $extraOptions['value']);
+            
+            $this->_View->append("scriptAddTemplate", "\$('div[id=" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "]').ckeditor(function(){},\$.parseJSON('" . json_encode($ckeditorOpts) . "'));\n");
+        } else {
+            FB::info($ckeditorOpts,"CKEDITOR_OPTIONS");
+            $this->Html->_noEqualEights = true;
+            $return = $this->input($fieldName, array(
+                'type' => 'textarea'
+            ) + $options + $extraOptions);
+            $this->_View->append("scriptAddTemplate", "\$('textarea[id=" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "]').ckeditor(function(){},\$.parseJSON('" . json_encode($ckeditorOpts) . "'));\n");
+        }
+        
+        return $return;
     }
 }
