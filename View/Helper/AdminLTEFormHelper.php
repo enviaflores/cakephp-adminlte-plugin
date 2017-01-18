@@ -1107,7 +1107,7 @@ class AdminLTEFormHelper extends AppHelper
         $type = $options['type'];
         $out = array(
             'before' => $options['before'],
-            'label' => (!empty($options['hide_label'])) ? '' : $label,
+            'label' => $label,
             'between' => $options['between'],
             'after' => $options['after']
         );
