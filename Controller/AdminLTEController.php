@@ -1,6 +1,6 @@
 <?php
-FB::info(CakePlugin::path('AdminLTE') . '/Vendor/autoload.php', __METHOD__);
-require_once CakePlugin::path('AdminLTE') . '/Vendor/autoload.php';
+FB::info(CakePlugin::path('AdminLTE') . 'Vendor/autoload.php', __METHOD__);
+require_once CakePlugin::path('AdminLTE') . 'Vendor/autoload.php';
 
 App::uses('Controller', 'Controller');
 
@@ -61,50 +61,50 @@ class AdminLTEController extends Controller
     public function beforeRender()
     {
         parent::beforeRender();
-
+        
         if ($this->admin_lte_options & self::BOXED_LAYOUT && $this->admin_lte_options & self::FIXED_LAYOUT) {
             throw new InternalErrorException('Cannot use both layout boxed and fixed.');
         }
-
+        
         $AdminLTE_BodyClass = array();
-
+        
         $AdminLTE_BodyClass[] = 'hold-transition';
-
+        
         if ($this->admin_lte_options & self::BOXED_LAYOUT)
             $AdminLTE_BodyClass[] = 'layout-boxed';
-
+        
         $AdminLTE_BodyClass[] = 'skin-' . $this->admin_lte_skin;
-
+        
         if ($this->admin_lte_options & self::FIXED_LAYOUT)
             $AdminLTE_BodyClass[] = 'fixed';
-
+        
         if ($this->admin_lte_options & self::COLLAPSED_SIDEBAR)
             $AdminLTE_BodyClass[] = 'sidebar-collapse';
-
+        
         if ($this->admin_lte_options & self::TOP_NAVIGATION) {
             defined('AdminLTE_TopNavigation', true);
             $AdminLTE_BodyClass[] = 'layout-top-nav';
         }
-
+        
         if ($this->admin_lte_options & self::CONTROL_SIDEBAR)
             define('AdminLTE_ControlSideBar', true);
-
+        
         $AdminLTE_BodyClass[] = 'sidebar-mini';
-
+        
         if ($this->name == 'CakeError') {
             $this->layout = 'AdminLTE.error';
             $AdminLTE_BodyClass = array(
                 'hold-transition login-page skin-' . $this->admin_lte_skin
             );
         }
-
+        
         define('AdminLTE_BodyClass', join(' ', $AdminLTE_BodyClass));
         define('AdminLTE_Skin', 'skin-' . $this->admin_lte_skin);
         define('AdminLTE_Header', $this->admin_lte_header);
-
+        
         if ($this->name == 'CakeError')
             return;
-
+        
         if (! empty($this->admin_lte_breadcrumb)) {
             $_admin_lte_breadcrum = '<ol class="breadcrumb">';
             foreach ($this->admin_lte_breadcrumb as $bcData)
@@ -112,13 +112,13 @@ class AdminLTEController extends Controller
             $_admin_lte_breadcrum .= '</ol >';
             define('AdminLTE_Breadcrumb', $_admin_lte_breadcrum);
         }
-
+        
         if ($this->admin_lte_options & self::FIXED_LAYOUT || $this->admin_lte_options & self::BOXED_LAYOUT)
             $this->layout = 'AdminLTE.admin-lte';
-        else
+        else 
             if ($this->admin_lte_options & self::LOGIN_LAYOUT)
                 $this->layout = 'AdminLTE.login';
-
+        
         if ($this->admin_lte_options & self::EMPTY_LAYOUT)
             $this->layout = 'AdminLTE.empty';
     }

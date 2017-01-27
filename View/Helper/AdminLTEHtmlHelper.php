@@ -14,11 +14,12 @@ class AdminLTEHtmlHelper extends HtmlHelper
 
     public $_timeLine = array();
     
-    //required vars for tabs helpers
+    // required vars for tabs helpers
     public $_contentBlockOptions = array();
+
     public $_contentBlockTabs = array();
+
     public $_currentTab = null;
-    
 
     public function __construct(View $View, $settings = array( ))
     {
@@ -46,7 +47,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-logo.ctp';
             return ob_get_clean();
-        } else
+        } else 
             if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp')) {
                 $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-logo.css';
                 if (file_exists($css_file)) {
@@ -86,7 +87,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-nav-bar.ctp';
             return ob_get_clean();
-        } else
+        } else 
             if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp')) {
                 $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-nav-bar.css';
                 if (file_exists($css_file)) {
@@ -158,9 +159,9 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * See: https://datatables.net/extensions/responsive/examples/column-control/classes.html
      *
-     * @param unknown $fieldName
-     * @param array $options
-     * @param array $data
+     * @param unknown $fieldName            
+     * @param array $options            
+     * @param array $data            
      * @return string
      */
     public function dataTableStruct($fieldName, $options = array(), $data = array())
@@ -171,43 +172,43 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->script('AdminLTE.datatables/1.10.12/bootstrap', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.datatables/1.10.12/responsive', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.datatables/1.10.12/buttons', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.datatables/1.10.12/buttons/colVis', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.datatables/1.10.12/buttons/html5', array(
             'inline' => false
         ));
-
+        
         $this->script('AdminLTE.adminlte/datatables', array(
             'inline' => false
         ));
-
+        
         $this->css('AdminLTE.datatables/bootstrap', array(
             'inline' => false
         ));
-
+        
         $this->css('AdminLTE.datatables/responsive', array(
             'inline' => false
         ));
-
+        
         $this->css('AdminLTE.datatables/buttons/bootstrap', null, array(
             'inline' => false
         ));
-
+        
         $this->css('AdminLTE.datatables/buttons/datatables', null, array(
             'inline' => false
         ));
-
+        
         if ($fieldName !== false) {
             $html = '<div class="table-responsive">';
             $html .= '<table id ="' . Inflector::variable($fieldName) . '" style="width: 100%" class="table responsive table-striped table-bordered nowrap">';
@@ -239,20 +240,20 @@ class AdminLTEHtmlHelper extends HtmlHelper
     {
         if (empty($options['dialog-header']))
             $options['dialog-header'] = $fieldName;
-
+        
         if (empty($options['dialog-content']))
             $options['dialog-content'] = '&nbsp;';
-
+        
         FB::info($options, __METHOD__);
         if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false && empty($options['save-btn-label'])) {
             $options['save-btn-label'] = 'Save changes';
         }
-
+        
         if (empty($options['close-btn-label']))
             $options['close-btn-label'] = 'Close';
-
+        
         $dialogId = Inflector::variable($fieldName . 'Dialog');
-
+        
         FB::info($options, __METHOD__);
         if (empty($options['dialog-footer'])) {
             $options['dialog-footer'] .= <<<EOF
@@ -260,7 +261,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
 EOF;
             if (isset($options['save-btn-content']) && ! empty($options['save-btn-content']))
                 $options['dialog-footer'] .= $options['save-btn-content'];
-            else
+            else 
                 if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false) {
                     $options['dialog-footer'] .= <<<EOF
                     <button id="{$dialogId}SaveBtn" type="button" class="btn btn-primary">{$options['save-btn-label']}</button>
@@ -271,14 +272,14 @@ EOF;
         $style_wh = array();
         if (isset($options['height']) && ! empty($options['height']))
             $style_wh[] = 'height:' . $options['height'];
-
+        
         if (isset($options['width']) && ! empty($options['width']))
             $style_wh[] = 'width:' . $options['width'];
-
+        
         $style_wh_str = '';
         if (! empty($style_wh))
             $style_wh_str = ' style="' . str_replace('%', '%%', join(';', $style_wh)) . '" ';
-
+        
         FB::info($style_wh_str, __METHOD__);
         $html_data .= <<<EOF
         <div id="{$dialogId}" tabindex="-1" role="dialog" class="modal fade">
@@ -300,7 +301,7 @@ EOF;
             $options['dialog-content'],
             $options['dialog-footer']
         )));
-
+        
         return $dialogId;
     }
 
@@ -321,27 +322,27 @@ EOF;
         }
         if (! isset($option['button-size']))
             $options['button-size'] = '';
-
+        
         if (! isset($options['button-type']))
             $options['button-type'] = 'btn-primary';
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-
+        
         $style = '';
-
+        
         if (isset($options['style']))
             $style = ' style="' . $options['style'] . '"';
-
+        
         if (isset($options['nolabel']))
             $fieldName = '';
-
+        
         $icon_str = '';
         if (isset($options['button-icon']))
             $icon_str = '<i class="fa fa-' . $options['button-icon'] . '">';
-
+        
         $html_data = <<<EOF
         <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}>{$icon_str}{$fieldName}</button>
 EOF;
@@ -354,11 +355,11 @@ EOF;
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-
+        
         $data_toggle = '';
         if (isset($options['data-toggle']))
             $data_toggle = ' data-toggle="' . $options['data-toggle'] . '"';
-
+        
         $html_data = <<<EOF
         <button id="{$field_id}" class="btn btn-box-tool" type="button" {$data_toggle}><i class="fa fa-{$options['icon']}"></i></button>
 EOF;
@@ -372,19 +373,19 @@ EOF;
         $fieldNotification = '';
         if (! empty($options['button-notification-color']) && ! empty($options['button-notification-label']))
             $fieldNotification = '<span class="badge bg-' . $options['button-icon'] . '">' . $options['button-notification-label'] . '</span>';
-
+        
         if (empty($options['href']))
             $options['href'] = '#';
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-
+        
         $on_click = '';
         if (isset($options['onclick']))
             $on_click = ' onclick="' . $options['onclick'] . '"';
-
+        
         $html_data = <<<EOF
         <a id="{$field_id}" href="{$options['href']}" class="btn btn-app" {$on_click}>{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
 EOF;
@@ -396,7 +397,7 @@ EOF;
         if (empty($options['button-type'])) {
             $options['button-type'] = 'btn-primary';
         }
-
+        
         $html_data = <<<EOF
         <div class="btn-group">
             <button type="button" class="btn {$options['button-type']} dropdown-toggle" data-toggle="dropdown">
@@ -405,12 +406,12 @@ EOF;
             <ul class="dropdown-menu dropdown-menu-arrow" role="menu">%s</ul>
         </div>
 EOF;
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'Button');
-
+        
         $menu_opts = array();
         foreach ($options['menu'] as $opt_menu_data) {
             if (empty($opt_menu_data['href']))
@@ -426,7 +427,7 @@ EOF;
                     break;
             }
         }
-
+        
         return vsprintf($html_data, join('', $menu_opts));
     }
 
@@ -445,9 +446,9 @@ EOF;
             'body-class' => '',
             'footer-class' => ''
         );
-
+        
         $options += $defaultOpts;
-
+        
         $timeLine = <<<EOF
     <li class="time-label"><span class="bg-{$options['label-color']}"> {$label} </span></li>
     <li>
@@ -466,7 +467,7 @@ EOF;
         </div>
     </li>
 EOF;
-
+        
         $this->_timeLine[] = $timeLine;
     }
 
@@ -483,12 +484,12 @@ EOF;
             'value' => 0
         );
         $options += $defaultOpts;
-
+        
         if (isset($options['id']))
             $field_id = $options['id'];
         else
             $field_id = Inflector::variable($fieldName . 'ProgressBar');
-
+        
         $progressBar = <<<EOF
 <p>{$options['label']}</p>
 <div class="progress">
@@ -502,7 +503,7 @@ EOF;
     }
 
     public function contentBlockStart($options = array())
-    {        
+    {
         ob_start();
         $this->_contentBlockOptions = $options;
         return null;
@@ -514,59 +515,92 @@ EOF;
         $options = $this->_contentBlockOptions;
         $this->_contentBlockOptions = array();
         $tabs = $this->_contentBlockTabs;
-        return $this->contentBlock($buffer, $options,$tabs);
-        
+        return $this->contentBlock($buffer, $options, $tabs);
     }
-    
-    public function contentTabStart($tab_title) {
+
+    public function contentTabStart($tab_title)
+    {
         $this->_currentTab = $tab_title;
-        ob_start();       
+        ob_start();
         return null;
     }
-    
-    public function contentTabEnd() {
+
+    public function contentTabEnd()
+    {
         $this->_contentBlockTabs[$this->_currentTab] = ob_get_clean();
         $this->_currentTab = null;
         return null;
     }
-    
-    public function contentBlock($content, $options = array(), $tabs = array())
+
+    public function contentBlock($buffer, $options = array(), $tabs = array())
     {
-        $tab_html = '<div class="nav-tabs-custom">';
-        $tab_html .= '<ul class="nav nav-tabs pull-right">';
+        $_html = '<div class="nav-tabs-custom">';
+        $_html .= '<ul class="nav nav-tabs pull-right">';
+        
         $tab_iterator = count($tabs);
+        
+        if ($options['header'] !== false && ! is_array($options['header'])) {
+            
+            $_tmpHeader = $options['header'];
+            unset($options['header']);
+            $options['header']['title'] = $_tmpHeader;
+        }
+        
+        FB::info($options);
+        
+        $_defaultOptions = array(
+            'variant' => 'default',
+            'color' => 'primary'
+        );
+        
+        $_options = array_merge($_defaultOptions, $options);
+        
+        $_html .= '<div class="box-header' . ((! empty($_options['header']['border'])) ? ' with-border' : '') . '">';
+        $_html .= '<h3 class="box-title">' . ((! empty($_options['header']['icon'])) ? '<i class="fa fa-' . $_options['header']['icon'] . '"></i> ' : '') . $_options['header']['title'] . '</h3>';
+        if (! empty($_options['box-tools'])) {
+            $_html .= '<div class="box-tools pull-right">';
+            if (! empty($_options['box-tools']['label']))
+                $_html .= '<span class="label label-'.$_options['color'].'">' . $_options['box-tools']['label'] . '</span>';
+            if (! empty($_options['box-tools']['collapsable']))
+                $_html .= '<button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="' . $_options['box-tools']['collapsable'] . '"><i class="fa fa-minus"></i></button>';
+            if (! empty($_options['box-tools']['remove']))
+                $_html .= '<button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="' . $_options['box-tools']['remove'] . '"><i class="fa fa-times"></i></button>';
+            $_html .= '</div>';
+        }
+        $_html .= '</div>';
+        $_html .= '</ul>';
+        
+        $_html .= '<div class="box-body">';
+        
         if ($tab_iterator > 0) {
+            $tabs_content = array();
             $tabs_headers = array_reverse($tabs);
-            $tabs_content=array();
             foreach ($tabs_headers as $header => $content) {
                 $link_ref = '#tab_' . $tab_iterator . '-' . $tab_iterator;
                 $class = ($tab_iterator == 1) ? ' class="active"' : '';
-                $tab_html .= '<li' . $class . ' id="dynamic_tab_'.$tab_iterator.'"><a href="' . $link_ref . '" data-toggle="tab">' . $header . '</a></li>';
+                $_html .= '<li' . $class . ' id="dynamic_tab_' . $tab_iterator . '"><a href="' . $link_ref . '" data-toggle="tab">' . $header . '</a></li>';
                 $tab_iterator --;
-                $tabs_content[]=$content;
+                $tabs_content[] = $content;
             }
-        }
-        if (! empty($options['header']))
-            $tab_html .= '<li class="pull-left header"><i class="fa fa-th"></i>' . $options['header'] . '</li>';
-        $tab_html .= '</ul>';
             
-        if (count($tabs_content) > 0) {
-            $tab_iterator = count($tabs);
-            // content for each tab
-            $tab_html .= '<div class="tab-content">';
+            $_html .= '<div class="tab-content">';
             foreach ($tabs_content as $content) {
                 $class = ($tab_iterator == 1) ? 'active' : '';
                 $div_id = 'tab_' . $tab_iterator . '-' . $tab_iterator;
-                $tab_html .= '<div class="tab-pane ' . $class . '" id="' . $div_id . '">' . $content . '</div>';                
+                $_html .= '<div class="tab-pane ' . $class . '" id="' . $div_id . '">' . $content . '</div>';
                 $tab_iterator --;
             }
-            $tab_html .= '</div>'; //end div tab-content
+            $_html .= '</div>'; // end div tab-content
+        } else {
+            $_html .= $buffer;
         }
         
-        $tab_html .= '</div>'; //end div nav-tabs-custom
+        $_html .= '</div>';
         
-        echo $tab_html;
+        if (! empty($options['footer']))
+            $_html .= '<div class="box-footer">' . $options['footer'] . '</div>';
+        
+        $_html .= '</div>'; // end div nav-tabs-custom
+        echo $_html;
     }
-    
-    
 }
