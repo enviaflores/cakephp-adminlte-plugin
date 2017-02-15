@@ -101,7 +101,52 @@ if (! empty($body_additional_scripts))
  	<?php echo $this->fetch('scriptAddTemplate'); ?>
  	});
  	<?php echo $this->fetch('scriptBody'); ?>
- 	$(function(){$(document).ready(function(){$(document.body).applyTemplateSetup();});});
+ 	$(function(){$(document).ready(function(){
+
+		$("#ajax_loader").hide();
+
+ 		$(document).ajaxSend(function() {
+			  $("#ajax_loader").show();
+		});
+
+ 		$(document).ajaxComplete(function() {
+ 			$("#ajax_loader").hide();
+ 		});
+ 		
+ 	 	//Error handling
+ 		window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+ 			AdminLTENoty('warning',errorMsg);
+ 		    return false;
+ 		}
+
+ 		//Remove error indicators
+ 		$(':input').on('focus change select2:open', function(e) {
+ 			div_target=$(this).attr('id');		
+ 			$('div[for="'+div_target+'"]').removeClass('has-error');
+ 		});
+ 	 	
+ 	 	$(document.body).applyTemplateSetup();});
+ 	});
+
+ 	//General validations forms
+ 	function is_valid_data(target_form,field_exceptions){
+ 		is_valid=true;
+ 		
+ 		$(target_form).find(':input').each(function() {
+ 	       var elemento= this;
+ 	       
+ 	       if(elemento.id=='' || jQuery.inArray(elemento.id, field_exceptions) != -1 || elemento.type=='hidden')
+ 	    	   return;
+ 	       if(elemento.type != 'file')
+ 	       		elemento.value=$.trim(elemento.value);
+ 	       if(elemento.value == '' || elemento.value.length == 0){
+ 	           $('div[for="'+elemento.id+'"]').addClass('has-error');
+ 	           is_valid = false;
+ 	       }
+ 	    });
+
+ 		return is_valid;
+ 	}
  </script>
 </body>
 </html>

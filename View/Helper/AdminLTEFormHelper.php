@@ -1645,7 +1645,6 @@ class AdminLTEFormHelper extends AppHelper
         
         unset($options['hiddenField']);
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $options['id'] . "\"]').iCheck({checkboxClass: 'icheckbox_square-blue',radioClass: 'iradio_square-blue',increaseArea: '20%'});\n");
-        
         return $output . $this->Html->useTag('checkbox', $options['name'], array_diff_key($options, array(
             'name' => null
         )));
@@ -4012,7 +4011,9 @@ EOF;
             
             $this->_View->append("scriptAddTemplate", "\$('div[id=" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "]').ckeditor(function(){},\$.parseJSON('" . json_encode($ckeditorOpts) . "'));\n");
         } else {
-            FB::info($ckeditorOpts, "CKEDITOR_OPTIONS");
+            //FB::info($ckeditorOpts, "CKEDITOR_JS_OPTIONS");
+            //FB::info($options, "CKEDITOR_PARAM_OPTIONS");
+            //FB::info($extraOptions, "CKEDITOR_EXTRA_OPTIONS");
             $this->Html->_noEqualEights = true;
             $return = $this->input($fieldName, array(
                 'type' => 'textarea'

@@ -534,73 +534,40 @@ EOF;
 
     public function contentBlock($buffer, $options = array(), $tabs = array())
     {
-        $_html = '<div class="nav-tabs-custom">';
-        $_html .= '<ul class="nav nav-tabs pull-right">';
-        
+        $tab_html = '<div class="nav-tabs-custom">';
+        $tab_html .= '<ul class="nav nav-tabs pull-right">';
         $tab_iterator = count($tabs);
-        
-        if ($options['header'] !== false && ! is_array($options['header'])) {
-            
-            $_tmpHeader = $options['header'];
-            unset($options['header']);
-            $options['header']['title'] = $_tmpHeader;
-        }
-        
-        FB::info($options);
-        
-        $_defaultOptions = array(
-            'variant' => 'default',
-            'color' => 'primary'
-        );
-        
-        $_options = array_merge($_defaultOptions, $options);
-        
-        $_html .= '<div class="box-header' . ((! empty($_options['header']['border'])) ? ' with-border' : '') . '">';
-        $_html .= '<h3 class="box-title">' . ((! empty($_options['header']['icon'])) ? '<i class="fa fa-' . $_options['header']['icon'] . '"></i> ' : '') . $_options['header']['title'] . '</h3>';
-        if (! empty($_options['box-tools'])) {
-            $_html .= '<div class="box-tools pull-right">';
-            if (! empty($_options['box-tools']['label']))
-                $_html .= '<span class="label label-'.$_options['color'].'">' . $_options['box-tools']['label'] . '</span>';
-            if (! empty($_options['box-tools']['collapsable']))
-                $_html .= '<button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="' . $_options['box-tools']['collapsable'] . '"><i class="fa fa-minus"></i></button>';
-            if (! empty($_options['box-tools']['remove']))
-                $_html .= '<button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="' . $_options['box-tools']['remove'] . '"><i class="fa fa-times"></i></button>';
-            $_html .= '</div>';
-        }
-        $_html .= '</div>';
-        $_html .= '</ul>';
-        
-        $_html .= '<div class="box-body">';
-        
         if ($tab_iterator > 0) {
-            $tabs_content = array();
             $tabs_headers = array_reverse($tabs);
+            $tabs_content=array();
             foreach ($tabs_headers as $header => $content) {
                 $link_ref = '#tab_' . $tab_iterator . '-' . $tab_iterator;
                 $class = ($tab_iterator == 1) ? ' class="active"' : '';
-                $_html .= '<li' . $class . ' id="dynamic_tab_' . $tab_iterator . '"><a href="' . $link_ref . '" data-toggle="tab">' . $header . '</a></li>';
+                $tab_html .= '<li' . $class . ' id="dynamic_tab_'.$tab_iterator.'"><a href="' . $link_ref . '" data-toggle="tab">' . $header . '</a></li>';
                 $tab_iterator --;
-                $tabs_content[] = $content;
+                $tabs_content[]=$content;
             }
-            
-            $_html .= '<div class="tab-content">';
-            foreach ($tabs_content as $content) {
-                $class = ($tab_iterator == 1) ? 'active' : '';
-                $div_id = 'tab_' . $tab_iterator . '-' . $tab_iterator;
-                $_html .= '<div class="tab-pane ' . $class . '" id="' . $div_id . '">' . $content . '</div>';
-                $tab_iterator --;
-            }
-            $_html .= '</div>'; // end div tab-content
-        } else {
-            $_html .= $buffer;
         }
+        if (! empty($options['header']))
+            $tab_html .= '<li class="pull-left header"><i class="fa fa-th"></i>' . $options['header'] . '</li>';
+            $tab_html .= '</ul>';
         
-        $_html .= '</div>';
+            if (count($tabs_content) > 0) {
+                $tab_iterator = count($tabs);
+                // content for each tab
+                $tab_html .= '<div class="tab-content">';
+                foreach ($tabs_content as $content) {
+                    $class = ($tab_iterator == 1) ? 'active' : '';
+                    $div_id = 'tab_' . $tab_iterator . '-' . $tab_iterator;
+                    $tab_html .= '<div class="tab-pane ' . $class . '" id="' . $div_id . '">' . $content . '</div>';
+                    $tab_iterator --;
+                }
+                $tab_html .= '</div>'; //end div tab-content
+            }
         
-        if (! empty($options['footer']))
-            $_html .= '<div class="box-footer">' . $options['footer'] . '</div>';
+            $tab_html .= '</div>'; //end div nav-tabs-custom
         
-        $_html .= '</div>'; // end div nav-tabs-custom
-        echo $_html;
+            echo $tab_html;
     }
+
 }
