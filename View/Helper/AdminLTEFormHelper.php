@@ -3403,6 +3403,34 @@ EOF;
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options, null) . "\"]').daterangepicker();");
         return $toReturn;
     }
+    
+    function datePicker($fieldName, $options = array())
+    {
+        
+        $this->Html->css('AdminLTE.datepicker', array(
+            'inline' => false
+        ));
+        
+        $this->Html->script('AdminLTE.datepicker/bootstrap-datepicker', array(
+            'inline' => false
+        ));
+        
+        $options = $this->_initInputField($fieldName, $options);
+        $options = $this->addClass($options, 'form-control');
+        $options['type'] = 'text';
+        //$options['readonly'] = true;
+        $options = $this->addClass($options, 'form-control pull-right');
+        $toReturn = '<label>' . $fieldName . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $fieldName, $options) . '</div>';
+      
+    
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "\"]').datepicker({dateFormat : 'yy-mm-dd',timeFormat : 'hh:mm:ss',autoclose : true});\n");
+    /*
+        return $this->input($fieldName, $options + array(
+            'readonly' => true
+        ));*/
+        
+        return $toReturn;
+    }
 
     /**
      * Parse the value for a datetime selected value
