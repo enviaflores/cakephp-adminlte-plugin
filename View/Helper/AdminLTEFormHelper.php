@@ -3420,10 +3420,13 @@ EOF;
         $options['type'] = 'text';
         //$options['readonly'] = true;
         $options = $this->addClass($options, 'form-control pull-right');
-        $toReturn = '<label>' . $fieldName . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $fieldName, $options) . '</div>';
+        $labeltag='';
+        if ($options['label'] !== false)
+            $labeltag = '<label>' . $options['label'] . '</label>';
+        $toReturn = $labeltag.'<div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $fieldName, $options) . '</div>';
       
     
-        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "\"]').datepicker({dateFormat : 'yy-mm-dd',timeFormat : 'hh:mm:ss',autoclose : true});\n");
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "\"]').datepicker({dateFormat : 'yy-mm-dd',autoclose : true,todayHighlight : true});\n");
     /*
         return $this->input($fieldName, $options + array(
             'readonly' => true
