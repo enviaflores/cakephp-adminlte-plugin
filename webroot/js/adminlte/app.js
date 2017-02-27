@@ -181,7 +181,8 @@ $(function() {
     }).css("width", "100%");
     a.sidebarPushMenu && $.AdminLTE.pushMenu.activate(a.sidebarToggleSelector);
     a.enableBSToppltip && $("body").tooltip({
-        selector: a.BSTooltipSelector
+        selector: a.BSTooltipSelector,
+        trigger: 'click'
     });
     a.enableBoxWidget && $.AdminLTE.boxWidget.activate();
     a.enableFastclick && "undefined" != typeof FastClick && FastClick.attach(document.body);

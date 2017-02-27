@@ -42,6 +42,12 @@ class AdminLTEFormHelper extends AppHelper
         'meridian' => array()
     );
 
+    protected $feedbackIcons = array(
+        'email' => 'envelope',
+        'cell' => 'phone',
+        'phone' => 'phone'
+    );
+
     /**
      * List of fields created, used with secure forms.
      *
@@ -1149,10 +1155,25 @@ class AdminLTEFormHelper extends AppHelper
             $output = $this->Html->tag($tag, $output, $divOptions);
         }
         
-        return $this->Html->tag('div', $output, array(
-            'class' => 'form-group',
-            'for' => $this->domId($fieldName)
-        ));
+        if (! empty($options['inline-help']) && ! empty($out['label'])) {
+            $out['label'] .= '&nbsp;<i class="fa fa-fw fa-question"  data-toggle="tooltip" data-original-title="' . $options['inline-help'] . '"></i>';
+            unset($options['inline-help']);
+        }
+        
+        if (! empty($options['has-feedback'])) {
+            $icon = 'ban-circle';
+            if (! empty($this->feedbackIcons[$options['has-feedback']]))
+                $icon = $this->feedbackIcons[$options['has-feedback']];
+            return $this->Html->useTag('block', array(
+                'class' => 'form-group has-feedback'
+            ), $out['label'] . $out['input'] . $this->Html->useTag('span', array(
+                'class' => 'glyphicon glyphicon-' . $icon . ' form-control-feedback'
+            ), null));
+        } else
+            return $this->Html->tag('div', $output, array(
+                'class' => 'form-group',
+                'for' => $this->domId($fieldName)
+            ));
     }
 
     /**
@@ -1860,7 +1881,6 @@ class AdminLTEFormHelper extends AppHelper
 
     public function text($fieldName, $options = array())
     {
-        FB::info(func_get_args(), __METHOD__);
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options['type'] = 'text';
@@ -2622,8 +2642,6 @@ EOF;
      */
     public function select($fieldName, $options = array(), $attributes = array())
     {
-        FB::info(func_get_args(), __METHOD__);
-        
         if (! empty($attributes['two-side']))
             return $this->select_twoside($fieldName, $options, $attributes);
         
@@ -2830,7 +2848,7 @@ EOF;
             ));
         }
         
-        $this->_View->append("scriptAddTemplate", "\$('select[id=\"" . $id . "\"]').multiselect(".$twp_side_opts.");\n");
+        $this->_View->append("scriptAddTemplate", "\$('select[id=\"" . $id . "\"]').multiselect(" . $twp_side_opts . ");\n");
         
         return $_html;
     }
@@ -4012,7 +4030,6 @@ EOF;
             
             $this->_View->append("scriptAddTemplate", "\$('div[id=" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "]').ckeditor(function(){},\$.parseJSON('" . json_encode($ckeditorOpts) . "'));\n");
         } else {
-            FB::info($ckeditorOpts, "CKEDITOR_OPTIONS");
             $this->Html->_noEqualEights = true;
             $return = $this->input($fieldName, array(
                 'type' => 'textarea'
@@ -4021,5 +4038,118 @@ EOF;
         }
         
         return $return;
+    }
+
+    public function image($fieldName, $options = array())
+    {
+        $this->Html->script('AdminLTE.jasny/jasny-3.2.0-beta1', array(
+            'inline' => false
+        ));
+        $this->Html->css('AdminLTE.jasny/jasny-3.2.0-beta1', array(
+            'inline' => false
+        ));
+        if (! empty($options['with-preview']['resize'])) {
+            $this->Html->css('AdminLTE.cropper/cropper', array(
+                'inline' => false
+            ));
+            $this->Html->script('AdminLTE.cropper/cropper', array(
+                'inline' => false
+            ));
+        }
+        $width = 'width: 200px;';
+        $height = 'height : 150px;';
+        if (! empty($options['with-preview']['width']))
+            $width = 'width: ' . $options['with-preview']['width'] . ';';
+        if (! empty($options['with-preview']['height']))
+            $height = 'height: ' . $options['with-preview']['height'] . ';';
+        if ($options['with-preview']['width'] === false)
+            $width = '';
+        if ($options['with-preview']['height'] === false)
+            $height = '';
+        $options = $this->_initInputField($fieldName, $options);
+        $html = '<div class="form-group"><label>' . $options['label']; // Open 1
+        
+        if (! empty($options['with-preview']['resize']))
+            $html .= ' <span id="resizeImgInfo' . $options['id'] . '"></span>';
+        
+        $html .= '</label><div>'; // Open 2
+        $html .= '<div id="fileInputPreview' . $options['id'] . '" data-provides="fileinput" class="fileinput fileinput-new"><input type="hidden" value="" name="' . $options['name'] . '">'; // Open 3
+        $html .= '<div id="imgPreviewDiv' . $options['id'] . '" style=" ' . $width . $height . ' line-height: 150px;" data-trigger="fileinput" class="fileinput-preview thumbnail">'; // Open 4
+        $html .= '<img src="';
+        if (! empty($options['value'])) {
+            $html .= $options['value'];
+        }
+        $html .= '">';
+        
+        $html .= '</div>'; // Close 4
+        $html .= '<div><span class="btn btn-primary btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">' . __('Change') . '</span><input type="file" name="' . $options['name'] . '"></span>'; // Open 5
+        $html .= ' <a  href="#" class="btn btn-primary fileinput-exists" data-dismiss="fileinput">' . __('Remove') . '</a>';
+        if (! empty($options['with-preview']['resize']))
+            $html .= ' <a  href="#imgPreviewDiv' . $options['id'] . 'Dialog" data-toggle="modal" class="btn btn-primary fileinput-exists">' . __('Crop') . '</a>';
+        $html .= '</div>'; // Close 4
+        $html .= '</div>'; // Close 3
+        $html .= '</div>'; // Close 2
+        $html .= '</div>'; // Close 1
+        
+        if (! empty($options['with-preview']['resize'])) {
+            $html .= $this->hidden($fieldName . 'X', array(
+                'val' => 0
+            ));
+            $html .= $this->hidden($fieldName . 'Y', array(
+                'val' => 0
+            ));
+            $html .= $this->hidden($fieldName . 'W', array(
+                'val' => $options['with-preview']['resize']['width']
+            ));
+            $html .= $this->hidden($fieldName . 'H', array(
+                'val' => $options['with-preview']['resize']['height']
+            ));
+            
+            $resize_width = 'width: 200px;';
+            $resize_height = 'height : 150px;';
+            if (! empty($options['with-preview']['resize']['width']))
+                $resize_width = 'width: ' . $options['with-preview']['resize']['width'] . 'px;';
+            if (! empty($options['with-preview']['resize']['height']))
+                $resize_height = 'height: ' . $options['with-preview']['resize']['height'] . 'px;';
+            
+            $dialogBody = <<<EOF
+<div class="{$options['id']}-resize-wrapper">
+    <img class="{$options['id']}-cropper" src="">
+</div>
+EOF;
+            $dialogFooter = '<button class="btn btn-sm btn-default" data-dismiss="modal" type="button" id="' . $options['id'] . 'DoneCrop">' . __('Done') . '</button>';
+            $this->Html->dialog('imgPreviewDiv' . $options['id'], array(
+                'dialog-header' => __('Resize') . ' ' . $options['label'],
+                'dialog-content' => $dialogBody,
+                'dialog-footer' => $dialogFooter
+            ));
+            $this->_View->append("scriptAddTemplate", "
+                \$('#imgPreviewDiv" . $options['id'] . "Dialog').on('show.bs.modal', function() {
+                     var sI = new Image();
+                     sI.src = $('div[id=imgPreviewDiv" . $options['id'] . "]').children('img').attr('src');
+                     $('." . $options['id'] . "-resize-wrapper').css('width', sI.width+'px');
+                     $('." . $options['id'] . "-resize-wrapper').css('height', sI.height+'px');
+                    \$('." . $options['id'] . "-cropper').cropper({
+                        aspectRatio: " . $options['with-preview']['resize']['width'] . " / " . $options['with-preview']['resize']['height'] . ",
+                        data: {
+                            x: $('#" . $options['id'] . "X').val(),
+                            y: $('#" . $options['id'] . "Y').val(),
+                            width: $('#" . $options['id'] . "H').val(),
+                            height:  $('#" . $options['id'] . "W').val()
+                        },
+                        done: function(data) {
+                            $('#" . $options['id'] . "X').val(data.x);
+                            $('#" . $options['id'] . "Y').val(data.y);
+                            $('#" . $options['id'] . "H').val(data.height);
+                            $('#" . $options['id'] . "W').val(data.width);
+                        }
+                    });
+                    \$('." . $options['id'] . "-cropper').cropper('setImgSrc', $('div[id=imgPreviewDiv" . $options['id'] . "]').children('img').attr('src'));
+                });
+                \$('#imgPreviewDiv" . $options['id'] . "Dialog').on('hidden.bs.modal', function() {
+                    $('#resizeImgInfo" . $options['id'] . "').html(' " . __('Crop Data: ') . "' + JSON.stringify($('." . $options['id'] . "-cropper').cropper('getData')));
+                }); ");
+        }
+        return $html;
     }
 }
