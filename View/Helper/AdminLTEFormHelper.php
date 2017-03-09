@@ -2740,6 +2740,7 @@ EOF;
             ));
         }
         
+        
         $additional_select_js = '';
         $additional_select_js_has_changed = false;
         
@@ -3423,7 +3424,7 @@ EOF;
         $labeltag='';
         if ($options['label'] !== false)
             $labeltag = '<label>' . $options['label'] . '</label>';
-        $toReturn = $labeltag.'<div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $fieldName, $options) . '</div>';
+        $toReturn = $labeltag.'<div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $options['name'], $options) . '</div>';
       
     
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "\"]').datepicker({dateFormat : 'yy-mm-dd',autoclose : true,todayHighlight : true});\n");
