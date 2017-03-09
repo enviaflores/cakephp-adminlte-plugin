@@ -343,8 +343,12 @@ EOF;
         if (isset($options['button-icon']))
             $icon_str = '<i class="fa fa-' . $options['button-icon'] . '">';
         
+        $onclick_str = '';
+        if (isset($options['onclick']))
+            $onclick_str = ' onclick="' . $options['onclick'] . '" ';
+        
         $html_data = <<<EOF
-        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}>{$icon_str}{$fieldName}</button>
+        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}{$onclick_str}>{$icon_str}{$fieldName}</button>
 EOF;
         return $html_data;
     }
@@ -560,7 +564,7 @@ EOF;
         if (! empty($_options['box-tools'])) {
             $_html .= '<div class="box-tools pull-right">';
             if (! empty($_options['box-tools']['label']))
-                $_html .= '<span class="label label-'.$_options['color'].'">' . $_options['box-tools']['label'] . '</span>';
+                $_html .= '<span class="label label-' . $_options['color'] . '">' . $_options['box-tools']['label'] . '</span>';
             if (! empty($_options['box-tools']['collapsable']))
                 $_html .= '<button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="' . $_options['box-tools']['collapsable'] . '"><i class="fa fa-minus"></i></button>';
             if (! empty($_options['box-tools']['remove']))

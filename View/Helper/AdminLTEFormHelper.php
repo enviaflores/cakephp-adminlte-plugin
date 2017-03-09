@@ -4083,19 +4083,26 @@ EOF;
 
     public function image($fieldName, $options = array())
     {
-        $this->Html->script('AdminLTE.jasny/jasny-3.2.0-beta1', array(
-            'inline' => false
-        ));
-        $this->Html->css('AdminLTE.jasny/jasny-3.2.0-beta1', array(
-            'inline' => false
-        ));
+        if (! defined('adminlteformhelper.image.included_helpers_jasny')) {
+            $this->Html->script('AdminLTE.jasny/jasny-3.2.0-beta1', array(
+                'inline' => false
+            ));
+            
+            $this->Html->css('AdminLTE.jasny/jasny-3.2.0-beta1', array(
+                'inline' => false
+            ));
+            define('adminlteformhelper.image.included_helpers_jasny', true);
+        }
         if (! empty($options['with-preview']['resize'])) {
-            $this->Html->css('AdminLTE.cropper/cropper', array(
-                'inline' => false
-            ));
-            $this->Html->script('AdminLTE.cropper/cropper', array(
-                'inline' => false
-            ));
+            if (! defined('adminlteformhelper.image.included_helpers_cropper')) {
+                $this->Html->css('AdminLTE.cropper/cropper', array(
+                    'inline' => false
+                ));
+                $this->Html->script('AdminLTE.cropper/cropper', array(
+                    'inline' => false
+                ));
+                define('adminlteformhelper.image.included_helpers_cropper', true);
+            }
         }
         $width = 'width: auto;';
         $height = 'height : auto;';
@@ -4116,7 +4123,7 @@ EOF;
         $html .= '</label><div>'; // Open 2
         $html .= '<div id="fileInputPreview' . $options['id'] . '" data-provides="fileinput" class="fileinput fileinput-new"><input type="hidden" value="" name="' . $options['name'] . '">'; // Open 3
         $html .= '<div id="imgPreviewDiv' . $options['id'] . '" style=" ' . $width . $height . ' line-height: 150px;" data-trigger="fileinput" class="fileinput-preview thumbnail">'; // Open 4
-        $html .= '<img src="';
+        $html .= '<img class="img-responsive" src="';
         if (! empty($options['value'])) {
             $html .= $options['value'];
         }
@@ -4146,13 +4153,16 @@ EOF;
                 'val' => $options['with-preview']['resize']['height']
             ));
             
-            $resize_width = 'width: 200px;';
-            $resize_height = 'height : 150px;';
-            if (! empty($options['with-preview']['resize']['width']))
+            $resize_width = 'width: auto;';
+            $resize_height = 'height : auto;';
+            if (! empty($options['with-preview']['resize']['width'])) {
                 $resize_width = 'width: ' . $options['with-preview']['resize']['width'] . 'px;';
-            if (! empty($options['with-preview']['resize']['height']))
+                $resize_width_dialog = ($options['with-preview']['resize']['width'] + 20) . 'px;';
+            }
+            if (! empty($options['with-preview']['resize']['height'])) {
                 $resize_height = 'height: ' . $options['with-preview']['resize']['height'] . 'px;';
-            
+                $resize_height_dialog = ($options['with-preview']['resize']['height'] + 20) . 'px;';
+            }
             $dialogBody = <<<EOF
 <div class="{$options['id']}-resize-wrapper">
     <img class="{$options['id']}-cropper" src="">
@@ -4162,7 +4172,9 @@ EOF;
             $this->Html->dialog('imgPreviewDiv' . $options['id'], array(
                 'dialog-header' => __('Resize') . ' ' . $options['label'],
                 'dialog-content' => $dialogBody,
-                'dialog-footer' => $dialogFooter
+                'dialog-footer' => $dialogFooter,
+                'width' => $resize_width_dialog,
+                'height' => $resize_height_dialog
             ));
             $this->_View->append("scriptAddTemplate", "
                 \$('#imgPreviewDiv" . $options['id'] . "Dialog').on('show.bs.modal', function() {
