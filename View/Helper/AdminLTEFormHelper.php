@@ -3879,6 +3879,7 @@ EOF;
         $size_rows = array();
         $empty_rows = 0;
         $counting_spaces = 0;
+        $settings = array();
         foreach (func_get_args() as $idx => $argument) {
             if (is_int($argument)) {
                 $size_rows[$idx] = $argument;
@@ -3891,7 +3892,10 @@ EOF;
                     if (is_array($argument) && array_key_exists('size', $argument)) {
                         $size_rows[$idx] = null;
                         $counting_spaces += $argument['size'];
-                    }
+                    } else 
+                        if (is_array($argument) && array_key_exists('settings', $argument)) {
+                            $settings = $argument['settings'];
+                        }
         }
         $toProcess = array();
         if ($empty_rows > 0)
@@ -3899,6 +3903,8 @@ EOF;
         
         foreach (func_get_args() as $idx => $argument) {
             if (is_array($argument)) {
+                if (array_key_exists('settings', $argument))
+                    continue;
                 if (array_key_exists('size', $argument) && array_key_exists('content', $argument)) {
                     $toProcess[] = $argument;
                 } else {
@@ -3919,7 +3925,6 @@ EOF;
                     }
         }
         
-        debug($toProcess);
         $toDisplay = array();
         $toProcessTotal = count($toProcess);
         $toProcessCount = 1;
@@ -3935,7 +3940,7 @@ EOF;
                 $extra_class = 'hidden-xs hidden-sm ';
             
             if (! empty($tp['class']))
-                $extra_class .= ' ' . $tp['class'].' ';
+                $extra_class .= ' ' . $tp['class'] . ' ';
                 
                 // Deal with flooring tp.size.
             $toDiplayRows += $tp['size'];
@@ -3947,7 +3952,23 @@ EOF;
             $toProcessCount ++;
         }
         
-        return "<div class='row' style='align-items: center;'>" . join("\n", $toDisplay) . "</div>";
+        $mainDivExtraClass = '';
+        $mainDivPreHtml = '';
+        $mainDivPostHtml = '';
+        $mainDivExtraStyle = '';
+        if (! empty($settings['class']))
+            $mainDivExtraClass = ' ' . $settings['class'];
+        
+        if (! empty($settings['style']))
+            $mainDivExtraStyle = ' ' . $settings['style'];
+        
+        if (! empty($settings['pre']))
+            $mainDivPreHtml = ' ' . $settings['pre'];
+        
+        if (! empty($settings['post']))
+            $mainDivPostHtml = ' ' . $settings['post'];
+        
+        return $mainDivPreHtml . "<div class='row" . $mainDivExtraClass . "' style='align-items: center;" . $mainDivExtraStyle . "'>" . join("\n", $toDisplay) . "</div>" . $mainDivPostHtml;
     }
 
     function array_key_js($v, $k, $idx)
