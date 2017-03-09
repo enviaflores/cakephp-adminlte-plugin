@@ -341,7 +341,7 @@ EOF;
         
         $icon_str = '';
         if (isset($options['button-icon']))
-            $icon_str = '<i class="fa fa-' . $options['button-icon'] . '">';
+            $icon_str = '<i class="fa fa-' . $options['button-icon'] . '"></i>';
         
         $onclick_str = '';
         if (isset($options['onclick']))
