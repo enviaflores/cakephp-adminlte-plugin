@@ -3918,16 +3918,36 @@ EOF;
                         );
                     }
         }
+        
+        debug($toProcess);
         $toDisplay = array();
+        $toProcessTotal = count($toProcess);
+        $toProcessCount = 1;
+        $toDiplayRows = 0;
         foreach ($toProcess as $tp) {
-            $extra_class = '';
+            $tp['size'] = floor($tp['size']);
+            if (($tp['size'] * 2) >= 12)
+                $extra_class = 'col-xs-12 ';
+            else
+                $extra_class = 'col-xs-' . ($tp['size'] * 2) . ' ';
+            
             if ($tp['content'] == '&nbsp;')
                 $extra_class = 'hidden-xs hidden-sm ';
             
+            if (! empty($tp['class']))
+                $extra_class .= ' ' . $tp['class'].' ';
+                
+                // Deal with flooring tp.size.
+            $toDiplayRows += $tp['size'];
+            
+            if ($toProcessCount == $toProcessTotal && (12 - $toDiplayRows) > 0)
+                $tp['size'] += (12 - $toDiplayRows);
+            
             $toDisplay[] = "<div class='" . $extra_class . "col-md-" . $tp['size'] . "'>" . $tp['content'] . "</div>";
+            $toProcessCount ++;
         }
         
-        return "<div class='row' style='display: flex;align-items: center;'>" . join("\n", $toDisplay) . "</div>";
+        return "<div class='row' style='align-items: center;'>" . join("\n", $toDisplay) . "</div>";
     }
 
     function array_key_js($v, $k, $idx)
@@ -4056,15 +4076,15 @@ EOF;
                 'inline' => false
             ));
         }
-        $width = 'width: 200px;';
-        $height = 'height : 150px;';
+        $width = 'width: auto;';
+        $height = 'height : auto;';
         if (! empty($options['with-preview']['width']))
             $width = 'width: ' . $options['with-preview']['width'] . ';';
         if (! empty($options['with-preview']['height']))
             $height = 'height: ' . $options['with-preview']['height'] . ';';
-        if ($options['with-preview']['width'] === false)
+        if (isset($options['with-preview']['width']) && $options['with-preview']['width'] === false)
             $width = '';
-        if ($options['with-preview']['height'] === false)
+        if (isset($options['with-preview']['height']) && $options['with-preview']['height'] === false)
             $height = '';
         $options = $this->_initInputField($fieldName, $options);
         $html = '<div class="form-group"><label>' . $options['label']; // Open 1
