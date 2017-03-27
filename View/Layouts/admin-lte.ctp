@@ -67,7 +67,7 @@ if (! empty($head_additional_scripts))
     </div>
 	<?php echo $this->fetch('modal-dialogs'); ?>
 <!-- jQuery 2.2.0 -->
-<?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.1', array('inline' => true)); ?>
+<?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.4', array('inline' => true)); ?>
 <!-- Bootstrap 3.3.5 -->
 <?php echo $this->Html->script('AdminLTE.bootstrap/bootstrap-3.3.6', array('inline' => true)); ?>
 <!-- SlimScroll -->
@@ -77,7 +77,7 @@ if (! empty($head_additional_scripts))
 <!-- Bootbox 4.4.0 -->
 <?php echo $this->Html->script('AdminLTE.bootbox/bootbox-4.4.0', array('inline' => true)); ?>
 <!-- Noty 2.3.8 -->
-<?php echo $this->Html->script('AdminLTE.noty/noty-2.3.8', array('inline' => true)); ?>
+<?php echo $this->Html->script('AdminLTE.noty/packaged/noty-2.3.8', array('inline' => true)); ?>
 <!-- Center 1.1.1 -->
 <?php echo $this->Html->script('AdminLTE.center/center-1.1.1', array('inline' => true)); ?>
 <!-- Msg 1.0.7 -->

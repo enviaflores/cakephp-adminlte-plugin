@@ -60,7 +60,6 @@ class AdminLTEWidgetsHelper extends HtmlHelper
 
     public function defaultBoxEnd()
     {
-        FB::info($this->_defaultBoxOptions,__METHOD__);
         $buffer = ob_get_clean();
         $_box_html_str = '<div class="box box-' . $this->_defaultBoxOptions['variant'] . '">';
         if ($this->_defaultBoxOptions['header'] !== false) {

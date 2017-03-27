@@ -28,7 +28,7 @@
 <body class="<?php echo AdminLTE_BodyClass; ?>">
 <?php echo $this->fetch('content'); ?>
 <!-- jQuery 2.2.1 -->
-<?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.1', array('inline' => true)); ?>
+<?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.4', array('inline' => true)); ?>
 <!-- Bootstrap 3.3.5 -->
 <?php echo $this->Html->script('AdminLTE.bootstrap/bootstrap-3.3.6', array('inline' => true)); ?>
 <!-- SlimScroll -->

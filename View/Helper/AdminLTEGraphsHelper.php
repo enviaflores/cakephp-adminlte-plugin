@@ -9,13 +9,12 @@ class AdminLTEGraphsHelper extends HtmlHelper
         $this->script('AdminLTE.chart/chart-2.1.6', array(
             'inline' => false
         ));
-        
+
         $options += array(
             'title' => __('Title'),
             'height' => '250'
         );
         $options = $this->_initInputField($chartName, $options);
-        FB::info($options, __METHOD__);
         $html = <<<EOF
 <div class="box box-info">
     <div class="box-header with-border">

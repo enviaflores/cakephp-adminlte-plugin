@@ -9,6 +9,8 @@
  or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
 
  For details please refer to: http://www.datatables.net
+ AutoFill 1.2.1
+ ?2008-2014 SpryMedia Ltd - datatables.net/license
 */
 (function(r,l,p){var n=function(d,m){var h=function(c,b){if(!(this instanceof h))throw"Warning: AutoFill must be initialised with the keyword 'new'";if(!d.fn.dataTableExt.fnVersionCheck("1.7.0"))throw"Warning: AutoFill requires DataTables 1.7 or greater";this.c={};this.s={filler:{height:0,width:0},border:{width:2},drag:{startX:-1,startY:-1,startTd:null,endTd:null,dragging:!1},screen:{interval:null,y:0,height:0,scrollTop:0},scroller:{top:0,bottom:0},columns:[]};this.dom={table:null,filler:null,borderTop:null,
 borderRight:null,borderBottom:null,borderLeft:null,currentTarget:null};this.fnSettings=function(){return this.s};this._fnInit(c,b);return this};h.prototype={_fnInit:function(c,b){var a=this;this.s.dt=m.Api?(new m.Api(c)).settings()[0]:c.fnSettings();this.s.init=b||{};this.dom.table=this.s.dt.nTable;d.extend(!0,this.c,h.defaults,b);this._initColumns();var e=d("<div/>",{"class":"AutoFill_filler"}).appendTo("body");this.dom.filler=e[0];this.s.filler.height=e.height();this.s.filler.width=e.width();e[0].style.display=
