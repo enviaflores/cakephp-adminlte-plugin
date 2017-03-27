@@ -5,10 +5,10 @@
  * <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span></span></a></li>
  * <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span></span></a></li>
  * <span class="pull-right-container">
-<small class="label pull-right bg-yellow">12</small>
-<small class="label pull-right bg-green">16</small>
-<small class="label pull-right bg-red">5</small>
-</span>
+ <small class="label pull-right bg-yellow">12</small>
+ <small class="label pull-right bg-green">16</small>
+ <small class="label pull-right bg-red">5</small>
+ </span>
  */
 if (Configure::read('AdminLTELeftSideMainMenu')) {
     $AdminLTE_SideBarMenu = array();
@@ -42,7 +42,7 @@ if (Configure::read('AdminLTELeftSideMainMenu')) {
                             }
                             $treeview_menu[] = '<li' . (($active_link == true) ? ' class="active"' : '') . '><a href="' . $treeview_menu_data['a-href'] . '"' . ((! empty($treeview_menu_data['onclick'])) ? ' onclick="' . $treeview_menu_data['onclick'] . '"' : '') . '><i class="fa ' . $treeview_menu_data['icon'] . ((! empty($treeview_menu_data['icon-color'])) ? '  text-' . $labels_data_menus['icon-color'] : '') . '"></i>' . $treeview_menu_data['label'] . '</a></li>';
                         }
-                    $AdminLTE_SideBarMenu[] = '<li class="treeview' . (($active_submenu == true) ? ' active' : '') . '"><a href="' . (! empty($treeview_data['a-href']) ? $treeview_data['a-href'] : '#') . '"><i class="fa ' . $treeview_data['icon'] . '"></i> <span>' . $treeview_data['label'] . '</span>' . ((! empty($treeview_data['small-label'])) ? '<small class="label pull-right bg-' . $treeview_data['small-label']['color'] . '">' . $treeview_data['small-label']['label'] . '</small>' : '') . ((! empty($treeview_menu)) ? '<i class="fa fa-angle-left pull-right"></i>' : '') . '</a>' . ((! empty($treeview_menu)) ? '<ul class="treeview-menu">' . implode($treeview_menu) . '</ul>' : '') . '</li>';
+                    $AdminLTE_SideBarMenu[] = '<li class="treeview' . (($active_submenu == true) ? ' active' : '') . '"><a href="' . (! empty($treeview_data['a-href']) ? $treeview_data['a-href'] : '#') . '">' . (! empty($treeview_data['icon']) ? '<i class="fa ' . $treeview_data['icon'] . '"></i>' : '') . ' <span>' . $treeview_data['label'] . '</span>' . ((! empty($treeview_data['small-label'])) ? '<small class="label pull-right bg-' . $treeview_data['small-label']['color'] . '">' . $treeview_data['small-label']['label'] . '</small>' : '') . ((! empty($treeview_menu)) ? '<i class="fa fa-angle-left pull-right"></i>' : '') . '</a>' . ((! empty($treeview_menu)) ? '<ul class="treeview-menu">' . implode($treeview_menu) . '</ul>' : '') . '</li>';
                 }
                 break;
         }
