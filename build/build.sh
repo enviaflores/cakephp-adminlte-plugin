@@ -103,8 +103,10 @@ do
 
         if [ $checkmd5 -eq 0 ]; then
             mkdir -p ${HERE}/../webroot/js/${dir_file}
+            mkdir -p ${HERE}/../webroot/css/${dir_file}
             echo "${CLEANCSS} --skip-rebase -o ${HERE}/../webroot/js/$dir_file/`basename $dest_file` plugins/$dest_file"
-        ${CLEANCSS} --skip-rebase --source-map-inline-sources -o ${HERE}/../webroot/js/$dir_file/`basename $dest_file` plugins/$dest_file
+            ${CLEANCSS} --skip-rebase --source-map-inline-sources -o ${HERE}/../webroot/js/$dir_file/`basename $dest_file` plugins/$dest_file
+            ${CLEANCSS} --skip-rebase --source-map-inline-sources -o ${HERE}/../webroot/css/$dir_file/`basename $dest_file` plugins/$dest_file
         fi
     fi
 done

@@ -2207,13 +2207,11 @@ EOF;
                         }
                     }
 
-                    if (! empty($options['wysihtml5_options'])) {
-                        $wysihtml5_opts = Zend\Json\Json::encode($options['wysihtml5_options'], false, array(
-                            'enableJsonExprFinder' => true
-                        ));
-                        unset($options['wysihtml5_options']);
-                    }
-                    $this->_View->append("scriptAddTemplate", "\$('textarea[id=\"" . $options['id'] . "\"]').wysihtml5(" . $wysihtml5_opts . ");\n");
+                    $codemirror_opts = Zend\Json\Json::encode($options['codemirror'], false, array(
+                        'enableJsonExprFinder' => true
+                    ));
+                    unset($options['codemirror']);
+                    $this->_View->append("scriptAddTemplate", "var codemirror_".$options['id']." = CodeMirror.fromTextArea(document.getElementById('".$options['id']."'), " . $codemirror_opts . ");\n");
                 }
 
         /**
@@ -2779,13 +2777,16 @@ EOF;
         if (! empty($attributes['two-side']))
             return $this->select_twoside($fieldName, $options, $attributes);
 
-        $this->Html->css('AdminLTE.select2/select2', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.select2/select2', array(
-            'inline' => false
-        ));
+        if (! defined('adminlteformhelper.select.included_helpers_select2')) {
+            $this->Html->css('AdminLTE.select2/select2', array(
+                'inline' => false
+            ));
 
+            $this->Html->script('AdminLTE.select2/select2', array(
+                'inline' => false
+            ));
+            define('adminlteformhelper.select.included_helpers_select2', true);
+        }
         $select = array();
         $style = null;
         $tag = null;
