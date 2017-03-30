@@ -2211,7 +2211,7 @@ EOF;
                         'enableJsonExprFinder' => true
                     ));
                     unset($options['codemirror']);
-                    $this->_View->append("scriptAddTemplate", "var codemirror_".$options['id']." = CodeMirror.fromTextArea(document.getElementById('".$options['id']."'), " . $codemirror_opts . ");\n");
+                    $this->_View->append("scriptAddTemplate", "var codemirror_" . $options['id'] . " = CodeMirror.fromTextArea(document.getElementById('" . $options['id'] . "'), " . $codemirror_opts . ");\n");
                 }
 
         /**
@@ -2900,7 +2900,9 @@ EOF;
         $additional_select_js_has_changed = false;
 
         if (isset($attributes['value'])) {
-            $additional_select_js .= '.val(' . $attributes['value'] . ')';
+            $additional_select_js .= is_array($attributes['value']) ? ".val(" . Zend\Json\Json::encode($attributes['value'], false, array(
+                'enableJsonExprFinder' => true
+            )) . ")" : ".val(" . $attributes['value'] . ")";
             $additional_select_js_has_changed = true;
         }
 
