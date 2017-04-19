@@ -1,0 +1,2 @@
+(function(a){a.fn.datepicker.dates.pl={days:"Niedziela Poniedzia\u0142ek Wtorek \u015aroda Czwartek Pi\u0105tek Sobota".split(" "),daysShort:"Niedz. Pon. Wt. \u015ar. Czw. Pi\u0105t. Sob.".split(" "),daysMin:"Ndz. Pn. Wt. \u015ar. Czw. Pt. Sob.".split(" "),months:"Stycze\u0144 Luty Marzec Kwiecie\u0144 Maj Czerwiec Lipiec Sierpie\u0144 Wrzesie\u0144 Pa\u017adziernik Listopad Grudzie\u0144".split(" "),monthsShort:"Sty. Lut. Mar. Kwi. Maj Cze. Lip. Sie. Wrz. Pa\u017a. Lis. Gru.".split(" "),today:"Dzisiaj",
+weekStart:1,clear:"Wyczy\u015b\u0107",format:"dd.mm.yyyy"}})(jQuery);

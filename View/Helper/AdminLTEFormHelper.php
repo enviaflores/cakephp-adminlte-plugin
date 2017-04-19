@@ -1078,12 +1078,22 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function input($fieldName, $options = array())
     {
-        $this->setEntity($fieldName);
+        if ($options['type'] === 'daterangepicker') {
+            unset($options['type']);
+            return $this->dateRangePicker($fieldName, $options);
+        }
+
+        if ($options['type'] === 'datepicker') {
+            unset($options['type']);
+            return $this->datePicker($fieldName, $options);
+        }
+
         $options = $this->_parseOptions($options);
+
+        $this->setEntity($fieldName);
 
         $divOptions = $this->_divOptions($options);
         unset($options['div']);
-
         if ($options['type'] === 'radio' && isset($options['options'])) {
             $radioOptions = (array) $options['options'];
             unset($options['options']);
@@ -2920,9 +2930,12 @@ EOF;
 
     public function select_twoside($fieldName, $options = array(), $attributes = array())
     {
-        $this->Html->script('AdminLTE.multiselect/multiselect-2.3.5', array(
-            'inline' => false
-        ));
+        if (! defined('adminlteformhelper.select_twoside.included_helpers_multiselect')) {
+            $this->Html->script('AdminLTE.multiselect/multiselect-2.3.5', array(
+                'inline' => false
+            ));
+            define('adminlteformhelper.select_twoside.included_helpers_multiselect', true);
+        }
 
         $attributes = $this->_initInputField($fieldName, array_merge((array) $attributes, array(
             'secure' => static::SECURE_SKIP
@@ -2947,19 +2960,20 @@ EOF;
         $_html .= '<select name="' . $attributes_from['name'] . '" id="' . $id . '" class="form-control" size="8" multiple="multiple">';
 
         $values_matrix = array();
-        foreach ($options as $opt_idx => $opt_label) {
-            if (is_array($opt_label)) {
-                $_html .= '<optgroup label="' . $opt_idx . '">';
-                foreach ($opt_label as $opt_group_idx => $opt_group_label) {
-                    $values_matrix[$opt_group_idx] = $opt_group_label;
-                    $_html .= '<option value="' . $opt_group_idx . '">' . $opt_group_label . '</option>';
+        if (! empty($options))
+            foreach ($options as $opt_idx => $opt_label) {
+                if (is_array($opt_label)) {
+                    $_html .= '<optgroup label="' . $opt_idx . '">';
+                    foreach ($opt_label as $opt_group_idx => $opt_group_label) {
+                        $values_matrix[$opt_group_idx] = $opt_group_label;
+                        $_html .= '<option value="' . $opt_group_idx . '">' . $opt_group_label . '</option>';
+                    }
+                    $_html .= '</optgroup>';
+                } else {
+                    $values_matrix[$opt_idx] = $opt_label;
+                    $_html .= '<option value="' . $opt_idx . '">' . $opt_label . '</option>';
                 }
-                $_html .= '</optgroup>';
-            } else {
-                $values_matrix[$opt_idx] = $opt_label;
-                $_html .= '<option value="' . $opt_idx . '">' . $opt_label . '</option>';
             }
-        }
 
         $_html .= '</select>';
         $_html .= '</div>';
@@ -2973,8 +2987,9 @@ EOF;
 
         $_html .= '<div class="col-xs-5">';
         $_html .= '<select name="' . $attributes_to['name'] . '" id="' . $id . '_to" class="form-control" size="8" multiple="multiple">';
-        foreach ($attributes['value'] as $val_idx)
-            $_html .= '<option value="' . $val_idx . '">' . $values_matrix[$val_idx] . '</option>';
+        if (! empty($attributes['value']))
+            foreach ($attributes['value'] as $val_idx)
+                $_html .= '<option value="' . $val_idx . '">' . $values_matrix[$val_idx] . '</option>';
         $_html .= '</select>';
         $_html .= '</div>';
         $_html .= '</div>';
@@ -3586,23 +3601,91 @@ EOF;
         return $opt;
     }
 
-    public function dateRange($fieldName, $options = array())
+    public function datePicker($fieldName, $options = array())
     {
-        $this->Html->css('AdminLTE.daterangepicker', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.moment/moment-2.10.2', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.daterangepicker/daterangepicker', array(
-            'inline' => false
-        ));
+        if (! defined('adminlteformhelper.checkbox.included_helpers_datepicker')) {
+            $this->Html->css('AdminLTE.datepicker/1.7.0/css/bootstrap-datepicker3', array(
+                'inline' => false
+            ));
+            $this->Html->script('AdminLTE.datepicker/1.7.0/js/bootstrap-datepicker', array(
+                'inline' => false
+            ));
+            define('adminlteformhelper.checkbox.included_helpers_datepicker', true);
+        }
+
         $options = $this->_initInputField($fieldName, $options);
-        $options = $this->addClass($options, 'form-control');
-        $options['type'] = 'text';
-        $options = $this->addClass($options, 'form-control pull-right');
-        $toReturn = '<label>' . $fieldName . '</label><div class="input-group"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>' . $this->Html->useTag('input', $fieldName, $options) . '</div>';
-        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options, null) . "\"]').daterangepicker();");
+
+        $label_str = '<label>' . $fieldName . '</label>';
+
+        if (isset($options['label']))
+            if ($options['label'] === false)
+                $label_str = '';
+            else
+                $label_str = '<label>' . $options['label'] . '</label>';
+
+        $toReturn = <<<EOF
+<div class="form-group">
+    {$label_str}
+    <div class="input-group date">
+        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+        <input class="form-control pull-right"  id="{$options['id']}" type="text">
+    </div>
+</div>
+EOF;
+       $datepicker_opts = '';
+        if (! empty($options['datepicker_options'])) {
+            $datepicker_opts = Zend\Json\Json::encode($options['datepicker_options'], false, array(
+                'enableJsonExprFinder' => true
+            ));
+            unset($options['datepicker_options']);
+        }
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options, null) . "\"]').datepicker(" . $datepicker_opts . ");");
+
+        return $toReturn;
+    }
+
+    public function dateRangePicker($fieldName, $options = array())
+    {
+        if (! defined('adminlteformhelper.checkbox.included_helpers_daterangepicker')) {
+            $this->Html->css('AdminLTE.daterangepicker/daterangepicker', array(
+                'inline' => false
+            ));
+            $this->Html->script('AdminLTE.moment/moment-2.10.2', array(
+                'inline' => false
+            ));
+            $this->Html->script('AdminLTE.daterangepicker/daterangepicker', array(
+                'inline' => false
+            ));
+            define('adminlteformhelper.checkbox.included_helpers_daterangepicker', true);
+        }
+
+        $options = $this->_initInputField($fieldName, $options);
+
+        $label_str = '<label>' . $fieldName . '</label>';
+        if (isset($options['label']))
+            if ($options['label'] === false)
+                $label_str = '';
+            else
+                $label_str = '<label>' . $options['label'] . '</label>';
+
+        $toReturn = <<<EOF
+<div class="form-group">
+    {$label_str}
+    <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+        <input class="form-control pull-right" id="{$options['id']}" type="text">
+    </div>
+</div>
+EOF;
+
+        $daterangepicker_opts = '';
+        if (! empty($options['daterangepicker_options'])) {
+            $daterangepicker_opts = Zend\Json\Json::encode($options['daterangepicker_options'], false, array(
+                'enableJsonExprFinder' => true
+            ));
+            unset($options['datetimepicker_options']);
+        }
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options, null) . "\"]').daterangepicker(" . $daterangepicker_opts . ");");
         return $toReturn;
     }
 
