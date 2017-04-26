@@ -29,6 +29,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->_tags['span'] = '<span %s>%s</span>';
     }
 
+    /**
+     * If exist, it print the Javascript, Css and Html Elements files for get logo
+     *
+     * @return string
+     */
     public function getMainHeaderLogo()
     {
         if (file_exists(APP . 'View/Elements/main-header-logo.ctp') && is_readable(APP . 'View/Elements/main-header-logo.ctp')) {
@@ -69,6 +74,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
             }
     }
 
+    /**
+     * If exist, it print the Javascript, Css and Html Elements files for get navbar
+     *
+     * @return string
+     */
     public function getMainHeaderNavBar()
     {
         if (file_exists(APP . 'View/Elements/main-header-nav-bar.ctp') && is_readable(APP . 'View/Elements/main-header-nav-bar.ctp')) {
@@ -109,11 +119,23 @@ class AdminLTEHtmlHelper extends HtmlHelper
             }
     }
 
+    /**
+     * Set Html tags used by this helper.
+     *
+     * @param $key
+     * @param $value
+     */
     public function setTag($key, $value)
     {
         $this->_tags[$key] = $value;
     }
 
+    /**
+     * Initializes a Html section using ob_start()
+     *
+     * @param array $options
+     * @return null
+     */
     public function sectionStart($options = array())
     {
         array_push($this->_sectionBlockOptions, $options);
@@ -121,6 +143,9 @@ class AdminLTEHtmlHelper extends HtmlHelper
         return null;
     }
 
+    /**
+     * Finalize a Html section using ob_get_clean()
+     */
     public function sectionEnd()
     {
         $buffer = ob_get_clean();
@@ -128,6 +153,12 @@ class AdminLTEHtmlHelper extends HtmlHelper
         print $this->useTag('section', $options, $buffer);
     }
 
+    /**
+     * Initializes a html div using ob_start()
+     *
+     * @param array $options
+     * @return null
+     */
     public function divStart($options = array())
     {
         array_push($this->_divBlockOptions, $options);
@@ -135,6 +166,9 @@ class AdminLTEHtmlHelper extends HtmlHelper
         return null;
     }
 
+    /**
+     * Finalize a html div using ob_get_clean()
+     */
     public function divEnd()
     {
         $buffer = ob_get_clean();
@@ -236,6 +270,17 @@ class AdminLTEHtmlHelper extends HtmlHelper
         }
     }
 
+    /**
+     * Creates a modal dialog in the block modal-dialogs,
+     * if it does not exist it will create the block
+     *
+     * ### Usage
+     *
+     *
+     * @param $fieldName
+     * @param array $options
+     * @return mixed
+     */
     public function dialog($fieldName, $options = array())
     {
         if (empty($options['dialog-header']))
