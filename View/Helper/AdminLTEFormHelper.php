@@ -1078,6 +1078,10 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function input($fieldName, $options = array())
     {
+        if (empty($options['type'])) {
+            $options['type'] = 'text';
+        }
+
         if ($options['type'] === 'daterangepicker') {
             unset($options['type']);
             return $this->dateRangePicker($fieldName, $options);
