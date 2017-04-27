@@ -271,14 +271,21 @@ class AdminLTEHtmlHelper extends HtmlHelper
     }
 
     /**
-     * Creates a modal dialog in the block modal-dialogs,
-     * if it does not exist it will create the block
+     * Creates a bootstrap modal in the block modal-dialogs,
+     * if it does not exist it will create the block.
      *
-     * ### Usage
+     * ### Options
+     * - `dialog-header` - Header title of the modal.
+     * - `dialog-content` - The Html content for the body of the dialog.
+     * - `save-btn-label` - Label of the save button.
+     * - `close-btn-label` - Label of the cancel button.
+     * - `dialog-footer` - Html code in footer dialog.
+     * - `save-btn-content` - Html code for add to dialog-footer.
+     * - `close-btn-class` - Class style from bootstrap for button close, can be btn-default, btn-primary, etc.
+     * - `save-btn-class` - Class style from bootstrap for button save, can be btn-default, btn-primary, etc.
      *
-     *
-     * @param $fieldName
-     * @param array $options
+     * @param String $fieldName If dialog-header option don't exist, takes the value of $fieldName
+     * @param array $options Array of options.
      * @return mixed
      */
     public function dialog($fieldName, $options = array())
@@ -299,15 +306,21 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $dialogId = Inflector::variable($fieldName . 'Dialog');
 
         if (empty($options['dialog-footer'])) {
+            if(empty($options['close-btn-class']))
+                $options['close-btn-class'] = 'btn-default';
+
+            if(empty($options['save-btn-class']))
+                $options['save-btn-class'] = 'btn-primary';
+
             $options['dialog-footer'] .= <<<EOF
-                <button id="{$dialogId}CloseBtn" type="button" class="btn btn-default" data-dismiss="modal">{$options['close-btn-label']}</button>
+                <button id="{$dialogId}CloseBtn" type="button" class="btn {$options['close-btn-class']}" data-dismiss="modal">{$options['close-btn-label']}</button>
 EOF;
             if (isset($options['save-btn-content']) && ! empty($options['save-btn-content']))
                 $options['dialog-footer'] .= '&nbsp;' . $options['save-btn-content'];
             else
                 if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false) {
                     $options['dialog-footer'] .= <<<EOF
-                    <button id="{$dialogId}SaveBtn" type="button" class="btn btn-primary">{$options['save-btn-label']}</button>
+                    <button id="{$dialogId}SaveBtn" type="button" class="btn {$options['save-btn-class']}">{$options['save-btn-label']}</button>
 EOF;
                 }
         }
@@ -346,6 +359,24 @@ EOF;
         return $dialogId;
     }
 
+    /**
+     * Creates a `<button>` tag. The type attribute defaults to `type="submit"`
+     * You can change it to a different value by using `$options['type']`.
+     *
+     * ### Options:
+     *
+     * - `type` - type of button that can take the next options:
+     *          `app`
+     *          `dropdown`
+     *          `box-tool-icon`
+     * - `button-size` - Size of the button
+     * - `button-type` - Class style from bootstrap that can be btn-default, btn-primary, etc.
+     *
+     * @param string $fieldName The button's caption.
+     * @param array $options Array of options and HTML attributes.
+     * @return string A HTML button tag.
+     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::button
+     */
     public function button($fieldName, $options = array())
     {
         if (! empty($options['type'])) {
