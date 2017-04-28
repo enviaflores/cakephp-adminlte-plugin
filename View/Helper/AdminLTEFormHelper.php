@@ -1903,6 +1903,13 @@ class AdminLTEFormHelper extends AppHelper
         )));
     }
 
+    /**
+     * Print an input text
+     *
+     * @param $fieldName
+     * @param array $options
+     * @return mixed
+     */
     public function text($fieldName, $options = array())
     {
         $options = $this->_initInputField($fieldName, $options);
@@ -1993,6 +2000,13 @@ EOF;
         return $this->Html->useTag('input', $options['name'], $options);
     }
 
+    /**
+     * Return a password input
+     *
+     * @param mixed $fieldName Label for the input
+     * @param array $options Array of options to append options into.
+     * @return string
+     */
     public function password($fieldName, $options = array())
     {
         $options = $this->_initInputField($fieldName, $options);
@@ -2023,6 +2037,16 @@ EOF;
         ), '<i></i>'));
     }
 
+    /**
+     * Return a phone input using the javascript plugin
+     *
+     * ### Options
+     * - `plugin-options` - Options for the javascript plugin
+     *
+     * @param mixed $fieldName Label for the input
+     * @param array $options Array of options to append options into.
+     * @return string
+     */
     public function phone($fieldName, $options = array())
     {
         $this->Html->css('AdminLTE.intl-tel-input/intl-tel-input', array(
@@ -2053,6 +2077,13 @@ EOF;
         return $this->Html->useTag('input', $options['name'], $options);
     }
 
+    /**
+     * Return an email input
+     *
+     * @param mixed $fieldName Label for the input
+     * @param array $options Array of options to append options into.
+     * @return string
+     */
     public function email($fieldName, $options = array())
     {
         $options = $this->_initInputField($fieldName, $options);
@@ -2324,6 +2355,19 @@ EOF;
         return $this->Html->useTag('file', $options['name'], array_diff_key($options, $exclude));
     }
 
+    /**
+     * Return a Html button tag.
+     *
+     * ### Options
+     *
+     * - `btn-type` - Class from bootstrap for use how style of button.
+     * - `escape` - Check htmlspecialchars in $title
+     * - `name` - Name to use in button tag
+     *
+     * @param string $title Text to use in button
+     * @param array $options Html attributes
+     * @return string
+     */
     public function button($title, $options = array())
     {
         $options += array(
@@ -3605,6 +3649,18 @@ EOF;
         return $opt;
     }
 
+    /**
+     * Return a DatePicker element
+     *
+     * ### Options
+     *
+     * - `label` - Label for the DatePicker input
+     * - `id` - Id for the DatePicker input
+     *
+     * @param mixed $fieldName Label for the input
+     * @param array $options Array of options to append options into.
+     * @return string
+     */
     public function datePicker($fieldName, $options = array())
     {
         if (! defined('adminlteformhelper.checkbox.included_helpers_datepicker')) {
@@ -3648,6 +3704,18 @@ EOF;
         return $toReturn;
     }
 
+    /**
+     * Return a DateRangePicker element
+     *
+     * ### Options
+     *
+     * - `label` - Label for the DatePicker input
+     * - `id` - Id for the DatePicker input
+     *
+     * @param mixed $fieldName Label for the input
+     * @param array $options Array of options to append options into.
+     * @return string
+     */
     public function dateRangePicker($fieldName, $options = array())
     {
         if (! defined('adminlteformhelper.checkbox.included_helpers_daterangepicker')) {
@@ -4270,12 +4338,34 @@ EOF;
         }
     }
 
+    /**
+     * It verify if an array have all its values associates.
+     *
+     * @param $arr array Variable to evaluate.
+     * @return bool
+     */
     function isAssoc($arr)
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
     // CKEditor helper
+    /**
+     * Editor for create Web content, copy formatting, advanced paste from word
+     *
+     * ### Options
+     *
+     * - `label` - The tab label of the content page.
+     * - `enable_allowed_content` - Allowed content rules.
+     * - `filebrowser` - Launch an external file manager.
+     * - `full_page` - Indicates whether the content to be edited is being input as a full HTML page.
+     * - `extra_allowed_content` - This option makes it possible to set additional allowed content rules.
+     *
+     * @param string $fieldName Id for CKEditor
+     * @param array $options Html attributes and CKEditor options
+     * @return string
+     * @link http://docs.ckeditor.com/#!/api/CKEDITOR.config
+     */
     function ckeditor($fieldName, $options = array())
     {
         $this->Html->script('AdminLTE.ckeditor/ckeditor', array(
