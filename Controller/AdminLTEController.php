@@ -60,6 +60,9 @@ class AdminLTEController extends Controller
         parent::beforeFilter();
     }
 
+    /**
+     * Set the layout to use, with the options passed on the controller
+     */
     public function beforeRender()
     {
         parent::beforeRender();
@@ -125,16 +128,33 @@ class AdminLTEController extends Controller
             $this->layout = 'AdminLTE.empty';
     }
 
+    /**
+     * Set the layout to use, using the constants below:
+     *
+     * BOXED_LAYOUT, FIXED_LAYOUT, COLLAPSED_SIDEBAR, TOP_NAVIGATION, CONTROL_SIDEBAR, LOGIN_LAYOUT, EMPTY_LAYOUT
+     *
+     * @param $options
+     */
     public function setLayoutOptions($options)
     {
         $this->admin_lte_options = $options;
     }
 
+    /**
+     * Set the layout header
+     *
+     * @param string $header Text to use how header of the layout.
+     */
     public function setLayoutHeader($header)
     {
         $this->admin_lte_header = $header;
     }
 
+    /**
+     * Set the breadcrumb information
+     *
+     * @param array $elements The elements of the breadcrumb.
+     */
     public function setBreadcrumb($elements = array())
     {
         $this->admin_lte_breadcrumb = $elements;

@@ -133,7 +133,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * Initializes a Html section using ob_start()
      *
-     * @param array $options
+     * @param array $options An array of Html attributes
      * @return null
      */
     public function sectionStart($options = array())
@@ -144,7 +144,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
     }
 
     /**
-     * Finalize a Html section using ob_get_clean()
+     * Finalize a Html section using ob_get_clean(), print the result
      */
     public function sectionEnd()
     {
@@ -156,7 +156,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * Initializes a html div using ob_start()
      *
-     * @param array $options
+     * @param array $options An array of Html attributes
      * @return null
      */
     public function divStart($options = array())
@@ -167,7 +167,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
     }
 
     /**
-     * Finalize a html div using ob_get_clean()
+     * Finalize a html div using ob_get_clean(), print the result
      */
     public function divEnd()
     {
@@ -176,6 +176,12 @@ class AdminLTEHtmlHelper extends HtmlHelper
         print $this->useTag('divLTE', $options, $buffer);
     }
 
+    /**
+     * Initializes the sidebar tag in the right side of the screen using ob_start()
+     *
+     * @param array $options An array of Html attributes
+     * @return null
+     */
     public function controlSideBarStart($options = array())
     {
         $this->_controlSideBarStartOptions = array_merge($this->_controlSideBarStartOptions, $options);
@@ -183,6 +189,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
         return null;
     }
 
+    /**
+     * Finalize the sidebar tag in the right side of the screen using ob_get_clean()
+     *
+     * @param array $options
+     */
     public function controlSideBarEnd($options = array())
     {
         $buffer = ob_get_clean();
