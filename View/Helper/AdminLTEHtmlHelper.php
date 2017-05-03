@@ -436,6 +436,11 @@ EOF;
         return $html_data;
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     * @return string
+     */
     public function buttonBoxToolIcon($fieldName, $options = array())
     {
         if (isset($options['id']))
@@ -453,6 +458,11 @@ EOF;
         return $html_data;
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     * @return string
+     */
     public function buttonApp($fieldName, $options = array())
     {
         if (empty($options['button-icon']))
@@ -479,6 +489,11 @@ EOF;
         return $html_data;
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     * @return string
+     */
     public function buttonDropDown($fieldName, $options = array())
     {
         if (empty($options['button-type'])) {
@@ -523,11 +538,23 @@ EOF;
         return vsprintf($html_data, join('', $menu_opts));
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     */
     public function startTimeLine($fieldName, $options = array())
     {
         $this->_timeLine = array();
     }
 
+    /**
+     * @param $label
+     * @param $header
+     * @param $body
+     * @param $footer
+     * @param $time
+     * @param array $options
+     */
     public function addTimeLine($label, $header, $body, $footer, $time, $options = array())
     {
         $defaultOpts = array(
@@ -563,11 +590,24 @@ EOF;
         $this->_timeLine[] = $timeLine;
     }
 
+    /**
+     *
+     */
     public function endTimeLine()
     {
         echo '<ul class="timeline">' . join("\n", $this->_timeLine) . '<li><i class="fa fa-clock-o bg-gray"></i></li></ul>';
     }
 
+    /**
+     * Print a progress bar with a fieldname
+     *
+     * ### Options
+     * - `type` - Style of adminlte progress bar.
+     * - `label` - Label that is used how the title.
+     *
+     * @param string $fieldName Title of the progress bar.
+     * @param array $options Array of options
+     */
     public function pogressbar($fieldName, $options = array())
     {
         $defaultOpts = array(
@@ -594,6 +634,10 @@ EOF;
         $this->_View->append("scriptBody", "var _set$field_id = function(percentage){ $('#$field_id').attr('style','width: ' + percentage + '%');};\n");
     }
 
+    /**
+     * @param array $options
+     * @return null
+     */
     public function contentBlockStart($options = array())
     {
         ob_start();
@@ -610,6 +654,10 @@ EOF;
         return $this->contentBlock($buffer, $options, $tabs);
     }
 
+    /**
+     * @param $tab_title
+     * @return null
+     */
     public function contentTabStart($tab_title)
     {
         $this->_currentTab = $tab_title;
@@ -617,6 +665,9 @@ EOF;
         return null;
     }
 
+    /**
+     * @return null
+     */
     public function contentTabEnd()
     {
         $this->_contentBlockTabs[$this->_currentTab] = ob_get_clean();
@@ -624,6 +675,11 @@ EOF;
         return null;
     }
 
+    /**
+     * @param $buffer
+     * @param array $options
+     * @param array $tabs
+     */
     public function contentBlock($buffer, $options = array(), $tabs = array())
     {
         $_html = '<div class="nav-tabs-custom">';

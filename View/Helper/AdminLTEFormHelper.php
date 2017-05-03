@@ -2017,6 +2017,11 @@ EOF;
         ), null);
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     * @return mixed
+     */
     public function colorpicker($fieldName, $options = array())
     {
         $this->Html->css('AdminLTE.colorpicker/colorpicker', array(
@@ -2431,6 +2436,11 @@ EOF;
         return $this->Html->useTag('button', $options, $title);
     }
 
+    /**
+     * @param $fieldName
+     * @param array $attributes
+     * @return string
+     */
     public function splitButton($fieldName, $attributes = array())
     {
         $attributes += array(
@@ -2976,6 +2986,12 @@ EOF;
         return implode("\n", $select);
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     * @param array $attributes
+     * @return string
+     */
     public function select_twoside($fieldName, $options = array(), $attributes = array())
     {
         if (! defined('adminlteformhelper.select_twoside.included_helpers_multiselect')) {
@@ -3129,6 +3145,10 @@ EOF;
         return $this->select($fieldName . ".day", $this->_generateOptions('day'), $attributes);
     }
 
+    /**
+     * @param $field_data
+     * @return string
+     */
     public function dynamicField($field_data)
     {
         switch ($field_data['type']) {
@@ -4212,6 +4232,9 @@ EOF;
         return $this->_inputDefaults;
     }
 
+    /**
+     * @return string
+     */
     public function inputRow()
     {
         $size_rows = array();
@@ -4309,6 +4332,11 @@ EOF;
         return $mainDivPreHtml . "<div class='row" . $mainDivExtraClass . "' style='align-items: center;" . $mainDivExtraStyle . "'>" . join("\n", $toDisplay) . "</div>" . $mainDivPostHtml;
     }
 
+    /**
+     * @param $v
+     * @param $k
+     * @param $idx
+     */
     function array_key_js($v, $k, $idx)
     {
         if (is_array($v)) {
@@ -4319,6 +4347,10 @@ EOF;
         }
     }
 
+    /**
+     * @param $array
+     * @return string
+     */
     function js_array($array)
     {
         $idx = count($this->_jsArrayHelper);
@@ -4442,6 +4474,11 @@ EOF;
         return $return;
     }
 
+    /**
+     * @param $fieldName
+     * @param array $options
+     * @return string
+     */
     public function image($fieldName, $options = array())
     {
         if (! defined('adminlteformhelper.image.included_helpers_jasny')) {
