@@ -17,17 +17,55 @@ class AdminLTEWidgetsHelper extends HtmlHelper
      * 'progress-bar => array( 'percentage' => '70', 'description' => 'description' )
      * )
      */
+    /**
+     * @param array $options array(
+     *            'type' => 'info|more_info',
+     *            'full-color' => 'red',
+     *            'color' => 'yellow',
+     *            'fa-icon' => 'calendar',
+     *            'number' => 45,
+     *            'text' => 'New Order',
+     *            'href' => 'https://www.google.com',
+     *            'href-icon' => 'hand-o-right',
+     *            'progress' => array(
+     *                'percentage' => 67,
+     *                'description' => 'Sesenta y siete',
+     *            )
+     * @return string
+     * @link https://adminlte.io/themes/AdminLTE/pages/widgets.html
+     */
     public function infoBox($options = array())
     {
-        $html_data = '<div class="info-box' . ((! empty($options['full-color'])) ? ' bg-' . $options['full-color'] : '') . '">';
-        if (! empty($options['fa-icon']))
-            $html_data .= '<span class="info-box-icon ' . ((! empty($options['color'])) ? ' bg-' . $options['color'] : '') . '"><i class="fa fa-' . $options['fa-icon'] . '"></i></span>';
-        $html_data .= '<div class="info-box-content"><span class="info-box-text">' . $options['text'] . '</span><span class="info-box-number">' . $options['number'] . '</span>';
+        $html_data = '<div class="'.(($options['type'] == 'more_info') ? 'small': 'info').'-box' . ((! empty($options['full-color'])) ? ' bg-' . $options['full-color'] : '') . '">';
 
-        if (! empty($options['progress']))
-            $html_data .= '<div class="progress"><div class="progress-bar" style="width: ' . $options['progress']['percentage'] . '%"></div></div><span class="progress-description">' . $options['progress']['description'] . '</span>';
+        if($options['type'] == 'more_info'){
+            if(!empty($options['number']) || !empty($options['text'])) {
+                $html_data .= '<div class="inner">
+                                    <h3>' . (!empty($options['number']) ? $options['number']: '') . '</h3>
+                                    <p>' . (!empty($options['text']) ? $options['text']: '') . '</p>
+                                </div>';
+            }
 
-        $html_data .= '</div>';
+            if(!empty($options['fa-icon']))
+                $html_data.='<div class="icon">
+                                <i class="fa fa-'.$options['fa-icon'].'"></i>
+                            </div>';
+
+            if(!empty($options['href']))
+                $html_data .= '<a href="'.$options['href'].'" class="small-box-footer">
+                                '.(!empty($options['href-text']) ? $options['href-text']: 'More info').' <i class="fa fa-'.(!empty($options['href-icon']) ? $options['href-icon']: 'arrow-circle-right').'"></i>
+                              </a>';
+        }elseif($options['type'] == 'info'){
+            if (! empty($options['fa-icon']))
+                $html_data .= '<span class="info-box-icon ' . ((! empty($options['color'])) ? ' bg-' . $options['color'] : '') . '"><i class="fa fa-' . $options['fa-icon'] . '"></i></span>';
+
+            $html_data .= '<div class="info-box-content"><span class="info-box-text">' . $options['text'] . '</span><span class="info-box-number">' . $options['number'] . '</span>';
+
+            if (! empty($options['progress']))
+                $html_data .= '<div class="progress"><div class="progress-bar" style="width: ' . $options['progress']['percentage'] . '%"></div></div><span class="progress-description">' . $options['progress']['description'] . '</span>';
+            $html_data .= '</div>';
+        }
+
         $html_data .= '</div>';
 
         return $html_data;
