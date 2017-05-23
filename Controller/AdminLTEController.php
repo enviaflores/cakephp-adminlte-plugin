@@ -87,7 +87,7 @@ class AdminLTEController extends Controller
             $AdminLTE_BodyClass[] = 'sidebar-collapse';
 
         if ($this->admin_lte_options & self::TOP_NAVIGATION) {
-            defined('AdminLTE_TopNavigation', true);
+            //defined('AdminLTE_TopNavigation', true);
             $AdminLTE_BodyClass[] = 'layout-top-nav';
         }
 
@@ -123,6 +123,8 @@ class AdminLTEController extends Controller
         else
             if ($this->admin_lte_options & self::LOGIN_LAYOUT)
                 $this->layout = 'AdminLTE.login';
+        elseif($this->admin_lte_options & self::TOP_NAVIGATION)
+            $this->layout = 'AdminLTE.top-nav';
 
         if ($this->admin_lte_options & self::EMPTY_LAYOUT)
             $this->layout = 'AdminLTE.empty';

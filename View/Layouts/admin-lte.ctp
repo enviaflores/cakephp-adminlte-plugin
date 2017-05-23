@@ -48,7 +48,7 @@ if (! empty($head_additional_scripts))
 
 ?>
 
-    <?php echo '<style type="text/css">'.$this->fetch('cssHead').'</style>'; ?></style>
+    <?php echo '<style type="text/css">'.$this->fetch('cssHead').'</style>'; ?>
     <?php echo $this->fetch('scriptHead'); ?>
 </head>
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
