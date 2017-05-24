@@ -211,26 +211,26 @@ class AdminLTEHtmlHelper extends HtmlHelper
      */
     public function dataTableStruct($fieldName, $options = array(), $data = array())
     {
-        $this->script('AdminLTE.datatables/datatables-1.10.12', array(
+        $this->script('AdminLTE.datatables/1.10.15/js/jquery.dataTables', array(
             'inline' => false
         ));
-        $this->script('AdminLTE.datatables/1.10.12/bootstrap', array(
-            'inline' => false
-        ));
-
-        $this->script('AdminLTE.datatables/1.10.12/responsive', array(
+        $this->script('AdminLTE.datatables/1.10.15/js/dataTables.bootstrap', array(
             'inline' => false
         ));
 
-        $this->script('AdminLTE.datatables/1.10.12/buttons', array(
+        $this->script('AdminLTE.datatables/1.10.15/extensions/Responsive/js/dataTables.responsive', array(
             'inline' => false
         ));
 
-        $this->script('AdminLTE.datatables/1.10.12/buttons/colVis', array(
+        $this->script('AdminLTE.datatables/1.10.15/extensions/Buttons/js/dataTables.buttons', array(
             'inline' => false
         ));
 
-        $this->script('AdminLTE.datatables/1.10.12/buttons/html5', array(
+        $this->script('AdminLTE.datatables/1.10.15/extensions/Buttons/js/buttons.colVis', array(
+            'inline' => false
+        ));
+
+        $this->script('AdminLTE.datatables/1.10.15/extensions/Buttons/js/buttons.html5', array(
             'inline' => false
         ));
 
@@ -238,19 +238,23 @@ class AdminLTEHtmlHelper extends HtmlHelper
             'inline' => false
         ));
 
-        $this->css('AdminLTE.datatables/bootstrap', array(
+        $this->css('AdminLTE.datatables/1.10.15/css/dataTables.bootstrap', array(
             'inline' => false
         ));
 
-        $this->css('AdminLTE.datatables/responsive', array(
+        $this->css('AdminLTE.datatables/1.10.15/extensions/Responsive/css/responsive.dataTables', array(
             'inline' => false
         ));
 
-        $this->css('AdminLTE.datatables/buttons/bootstrap', null, array(
+        $this->css('AdminLTE.datatables/1.10.15/extensions/Responsive/css/responsive.bootstrap', array(
             'inline' => false
         ));
 
-        $this->css('AdminLTE.datatables/buttons/datatables', null, array(
+        $this->css('AdminLTE.datatables/1.10.15/extensions/Buttons/css/buttons.dataTables', null, array(
+            'inline' => false
+        ));
+
+        $this->css('AdminLTE.datatables/1.10.15/extensions/Buttons/css/buttons.bootstrap', null, array(
             'inline' => false
         ));
 

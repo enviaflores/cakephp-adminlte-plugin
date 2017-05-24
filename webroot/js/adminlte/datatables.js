@@ -17,3 +17,4 @@ jQuery.fn.dataTableExt.oApi.filterOnReturn = function (oSettings) {
     });
     return this;
 };
+
