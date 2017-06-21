@@ -12,6 +12,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
         'color' => 'dark'
     );
 
+    public $_controlSideBarTabs = array(
+        'control_tabs' => '',
+        'control_panes' => array()
+    );
+
     public $_timeLine = array();
 
     // required vars for tabs helpers
@@ -187,6 +192,63 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->_controlSideBarStartOptions = array_merge($this->_controlSideBarStartOptions, $options);
         ob_start();
         return null;
+    }
+
+    public function controlSideBarStruct($tabs_options = array())
+    {
+        $tab_options_default = array(
+            'fa-icon' => 'wrench',
+            'ul_li_class' => '',
+            'tab_pane_class' => ''
+        );
+        $tabs_default = array(
+            'control_tabs' => '',
+            'control_panes' => array()
+        );
+        $tabs_li = array();
+
+        if(is_array($tabs_options['control_panes'])){
+            foreach ($tabs_options['control_panes'] as $tab => $options){
+                if(!is_string($tab)){
+                    return $tabs_default;
+                }else{
+                    $final_options = array_merge($options, $tab_options_default);
+                    $this->_controlSideBarTabs['control_panes'][$tab] = '';
+                    $tabs_li[] = '<li class="'.$final_options['ul_li_class'].'">
+                                        <a href="#'.$tab.'" data-toggle="tab" aria-expanded="false"><i class="fa fa-'.$final_options['fa-icon'].'"></i></a>
+                                    </li>';
+                }
+            }
+            $this->_controlSideBarTabs['control_tabs'] = implode('', $tabs_li);
+        }
+        return $this->_controlSideBarTabs;
+    }
+
+    public function controlSideBarStr($options = array())
+    {
+        $html = '';
+        $tab_panes = array();
+        $active = true;
+
+        if(!empty($options['control_tabs'])){
+            $html .= $options['control_tabs'];
+        }
+        if(!empty($options['control_panes'])){
+            foreach($options['control_tabs'] as $tab => $value){
+                if(is_string($tab)){
+                    $tab_panes[] = '<div id="'.$tab.'" class="tab-pane '.($active ? "active": "").'">
+                                        <div>
+                                            '.$value.'
+                                        </div>
+                                    </div>';
+                }
+                $active = false;
+            }
+            $html .= '<div class="tab-content">
+                        '.implode('', $tab_panes).'
+                    </div>';
+        }
+        return $html;
     }
 
     /**
