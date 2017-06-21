@@ -12,11 +12,6 @@ class AdminLTEHtmlHelper extends HtmlHelper
         'color' => 'dark'
     );
 
-    public $_controlSideBarTabs = array(
-        'control_tabs' => '',
-        'control_panes' => array()
-    );
-
     public $_timeLine = array();
 
     // required vars for tabs helpers
@@ -194,61 +189,86 @@ class AdminLTEHtmlHelper extends HtmlHelper
         return null;
     }
 
+    /**
+     * Return html structure of control-sidebar
+     *
+     * $tabs_functions = array(
+     *      'control_tabs' => '',
+     *      'control_panes' => array(
+     *          'tab_one' => array(
+     *              'fa_icon' => 'wrench',
+     *              'tab_li_class' => 'class_tab',
+     *              'tab_pane_class' => 'class_pane',
+     *              'content' => 'html code'
+     *          )
+     *      )
+     * );
+     *
+     * ### Options
+     * - `control_tabs` - String Html code of head tabs.
+     * - `control_panes` - Array|String Html for tabs content.
+     *     - `tab_one` - Index from tab.
+     *         - `fa_icon` - Icon of tab.
+     *         - `tab_li_class` - Class of li tag in tabs header.
+     *         - `tab_pane_class` - Class of div tag in panes.
+     *         - `content` - Html code of content in body tabs.
+     *
+     * @param array $tabs_options Options and contents of the tabs
+     * @return string Tabs and panes of sidebar
+     */
     public function controlSideBarStruct($tabs_options = array())
     {
         $tab_options_default = array(
-            'fa-icon' => 'wrench',
-            'ul_li_class' => '',
-            'tab_pane_class' => ''
-        );
-        $tabs_default = array(
-            'control_tabs' => '',
-            'control_panes' => array()
+            'fa_icon' => 'wrench',
+            'tab_li_class' => '',
+            'tab_pane_class' => '',
+            'content' => ''
         );
         $tabs_li = array();
-
-        if(is_array($tabs_options['control_panes'])){
-            foreach ($tabs_options['control_panes'] as $tab => $options){
-                if(!is_string($tab)){
-                    return $tabs_default;
-                }else{
-                    $final_options = array_merge($options, $tab_options_default);
-                    $this->_controlSideBarTabs['control_panes'][$tab] = '';
-                    $tabs_li[] = '<li class="'.$final_options['ul_li_class'].'">
-                                        <a href="#'.$tab.'" data-toggle="tab" aria-expanded="false"><i class="fa fa-'.$final_options['fa-icon'].'"></i></a>
-                                    </li>';
-                }
-            }
-            $this->_controlSideBarTabs['control_tabs'] = implode('', $tabs_li);
-        }
-        return $this->_controlSideBarTabs;
-    }
-
-    public function controlSideBarStr($options = array())
-    {
+        $tabs_panes = array();
+        $error_building_sidebar = '<!-- ERROR BUILDING SIDEBAR -->';
         $html = '';
-        $tab_panes = array();
         $active = true;
 
-        if(!empty($options['control_tabs'])){
-            $html .= $options['control_tabs'];
-        }
-        if(!empty($options['control_panes'])){
-            foreach($options['control_tabs'] as $tab => $value){
-                if(is_string($tab)){
-                    $tab_panes[] = '<div id="'.$tab.'" class="tab-pane '.($active ? "active": "").'">
+        if(!empty($tabs_options['control_panes']) && is_array($tabs_options['control_panes'])){
+            foreach ($tabs_options['control_panes'] as $tab => $options){
+                try{
+                    $final_options = array_merge($tab_options_default, $options);
+                    $tabs_li[] = '<li class="'.$final_options['tab_li_class'].'">
+                                        <a href="#'.$tab.'" data-toggle="tab" aria-expanded="false"><i class="fa fa-'.$final_options['fa_icon'].'"></i></a>
+                                    </li>';
+
+                    $tabs_panes[] ='<div id="'.$tab.'" class="tab-pane '.$final_options['tab_pane_class'].' '.($active ? 'active': '').'">
                                         <div>
-                                            '.$value.'
+                                            '.$final_options['content'].'
                                         </div>
                                     </div>';
+                    $active = false;
+                } catch (Exception $e){
+                    return $error_building_sidebar;
                 }
-                $active = false;
             }
-            $html .= '<div class="tab-content">
-                        '.implode('', $tab_panes).'
-                    </div>';
+            if(!empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs'])){
+                $html .= $tabs_options['control_tabs'];
+            }else
+                $html .= '<!-- Create the tabs -->
+                        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+                            '.implode('', $tabs_li).'
+                        </ul>';
+
+            $html .= '<!-- Tab panes -->
+                        <div class="tab-content">
+                            '.implode('', $tabs_panes).'
+                        </div>';
+        }elseif((!empty($tabs_options['control_panes']) && is_string($tabs_options['control_panes'])) && (!empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs']))){
+            $html .= $tabs_options['control_tabs'].'
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            '.$tabs_options['control_panes'].'
+                        </div>';
         }
-        return $html;
+
+        return (!empty($html) ? $html: $error_building_sidebar);
     }
 
     /**
