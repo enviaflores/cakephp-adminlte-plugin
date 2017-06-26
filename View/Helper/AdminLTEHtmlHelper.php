@@ -190,6 +190,88 @@ class AdminLTEHtmlHelper extends HtmlHelper
     }
 
     /**
+     * Return html structure of control-sidebar
+     *
+     * $tabs_functions = array(
+     *      'control_tabs' => '',
+     *      'control_panes' => array(
+     *          'tab_one' => array(
+     *              'fa_icon' => 'wrench',
+     *              'tab_li_class' => 'class_tab',
+     *              'tab_pane_class' => 'class_pane',
+     *              'content' => 'html code'
+     *          )
+     *      )
+     * );
+     *
+     * ### Options
+     * - `control_tabs` - String Html code of head tabs.
+     * - `control_panes` - Array|String Html for tabs content.
+     *     - `tab_one` - Index from tab.
+     *         - `fa_icon` - Icon of tab.
+     *         - `tab_li_class` - Class of li tag in tabs header.
+     *         - `tab_pane_class` - Class of div tag in panes.
+     *         - `content` - Html code of content in body tabs.
+     *
+     * @param array $tabs_options Options and contents of the tabs
+     * @return string Tabs and panes of sidebar
+     */
+    public function controlSideBarStruct($tabs_options = array())
+    {
+        $tab_options_default = array(
+            'fa_icon' => 'wrench',
+            'tab_li_class' => '',
+            'tab_pane_class' => '',
+            'content' => ''
+        );
+        $tabs_li = array();
+        $tabs_panes = array();
+        $error_building_sidebar = '<!-- ERROR BUILDING SIDEBAR -->';
+        $html = '';
+        $active = true;
+
+        if(!empty($tabs_options['control_panes']) && is_array($tabs_options['control_panes'])){
+            foreach ($tabs_options['control_panes'] as $tab => $options){
+                try{
+                    $final_options = array_merge($tab_options_default, $options);
+                    $tabs_li[] = '<li class="'.$final_options['tab_li_class'].'">
+                                        <a href="#'.$tab.'" data-toggle="tab" aria-expanded="false"><i class="fa fa-'.$final_options['fa_icon'].'"></i></a>
+                                    </li>';
+
+                    $tabs_panes[] ='<div id="'.$tab.'" class="tab-pane '.$final_options['tab_pane_class'].' '.($active ? 'active': '').'">
+                                        <div>
+                                            '.$final_options['content'].'
+                                        </div>
+                                    </div>';
+                    $active = false;
+                } catch (Exception $e){
+                    return $error_building_sidebar;
+                }
+            }
+            if(!empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs'])){
+                $html .= $tabs_options['control_tabs'];
+            }else
+                $html .= '<!-- Create the tabs -->
+                        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+                            '.implode('', $tabs_li).'
+                        </ul>';
+
+            $html .= '<!-- Tab panes -->
+                        <div class="tab-content">
+                            '.implode('', $tabs_panes).'
+                        </div>';
+        }elseif((!empty($tabs_options['control_panes']) && is_string($tabs_options['control_panes'])) && (!empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs']))){
+            $html .= $tabs_options['control_tabs'].'
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            '.$tabs_options['control_panes'].'
+                        </div>';
+        }
+
+        return (!empty($html) ? $html: $error_building_sidebar);
+    }
+
+    /**
      * Finalize the sidebar tag in the right side of the screen using ob_get_clean()
      *
      * @param array $options
@@ -407,32 +489,41 @@ EOF;
                     break;
             }
         }
-        if (! isset($option['button-size']))
+
+        if (! array_key_exists('button-size', $options))
             $options['button-size'] = '';
 
-        if (! isset($options['button-type']))
+        if (! array_key_exists('button-type', $options))
             $options['button-type'] = 'btn-primary';
 
-        if (isset($options['id']))
+        if (array_key_exists('id', $options)) {
             $field_id = $options['id'];
-        else
+            unset($options['id']);
+        } else
             $field_id = Inflector::variable($fieldName . 'Button');
 
         $style = '';
-
-        if (isset($options['style']))
+        if (array_key_exists('style', $options)) {
             $style = ' style="' . $options['style'] . '"';
+            unset($options['style']);
+        }
 
-        if (isset($options['nolabel']))
+        if (array_key_exists('nolabel', $options)) {
             $fieldName = '';
+            unset($options['nolabel']);
+        }
 
         $icon_str = '';
-        if (isset($options['button-icon']))
+        if (array_key_exists('button-icon', $options)){
             $icon_str = '<i class="fa fa-' . $options['button-icon'] . '"></i>';
+            unset($options['button-icon']);
+        }
 
         $onclick_str = '';
-        if (isset($options['onclick']))
-            $onclick_str = ' onclick="' . $options['onclick'] . '" ';
+        if (isset($options['onclick'])) {
+            $onclick_str = ' onclick="' . $options['onclick'] . '"';;
+            unset($options['onclick']);
+        }
 
         $html_data = <<<EOF
         <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}{$onclick_str}>{$icon_str}{$fieldName}</button>

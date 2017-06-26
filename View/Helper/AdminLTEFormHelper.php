@@ -1672,8 +1672,6 @@ class AdminLTEFormHelper extends AppHelper
             unset($options['default']);
         }
 
-        FB::info($options);
-
         $options += array(
             'value' => 1,
             'required' => false
@@ -2888,7 +2886,6 @@ EOF;
             $options = array();
         }
 
-        FB::info($options, __METHOD__);
         if (isset($attributes['type'])) {
             unset($attributes['type']);
         }
@@ -2970,7 +2967,7 @@ EOF;
         if (isset($attributes['value'])) {
             $additional_select_js .= is_array($attributes['value']) ? ".val(" . Zend\Json\Json::encode($attributes['value'], false, array(
                 'enableJsonExprFinder' => true
-            )) . ")" : ".val(" . $attributes['value'] . ")";
+            )) . ")" : ".val('" . $attributes['value'] . "')";
             $additional_select_js_has_changed = true;
         }
 
@@ -3712,7 +3709,7 @@ EOF;
     </div>
 </div>
 EOF;
-       $datepicker_opts = '';
+        $datepicker_opts = '';
         if (! empty($options['datepicker_options'])) {
             $datepicker_opts = Zend\Json\Json::encode($options['datepicker_options'], false, array(
                 'enableJsonExprFinder' => true
@@ -4329,7 +4326,11 @@ EOF;
         if (! empty($settings['post']))
             $mainDivPostHtml = ' ' . $settings['post'];
 
-        return $mainDivPreHtml . "<div class='row" . $mainDivExtraClass . "' style='align-items: center;" . $mainDivExtraStyle . "'>" . join("\n", $toDisplay) . "</div>" . $mainDivPostHtml;
+        $idString = '';
+        if (! empty($settings['id']))
+            $idString = " id='" . $settings['id'] . "' ";
+
+        return $mainDivPreHtml . "<div ".$idString." class='row" . $mainDivExtraClass . "' style='align-items: center;" . $mainDivExtraStyle . "'>" . join("\n", $toDisplay) . "</div>" . $mainDivPostHtml;
     }
 
     /**
