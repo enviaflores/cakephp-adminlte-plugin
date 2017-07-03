@@ -49,24 +49,12 @@
     <header class="main-header">
         <nav class="navbar navbar-static-top">
             <div class="container">
-                <div class="navbar-header">
-                    <?php echo $this->element('AdminLTE.top-navbar-logo') ?>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-                    <?php echo $this->element('AdminLTE.top-navbar-menu') ?>
-                </div>
-                <!-- /.navbar-collapse -->
-                <!-- Navbar Right Menu -->
-                <div class="navbar-custom-menu">
-                    <?php echo $this->element('AdminLTE.header-custom-menu') ?>
-                </div>
-                <!-- /.navbar-custom-menu -->
+                <?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?>
             </div>
             <!-- /.container-fluid -->
         </nav>
     </header>
+
     <!-- Full Width Column -->
     <div class="content-wrapper">
         <div class="container">
@@ -75,6 +63,7 @@
         </div>
         <!-- /.container -->
     </div>
+
     <!-- /.content-wrapper -->
     <footer class="main-footer">
         <div class="container">
@@ -82,9 +71,12 @@
         </div>
         <!-- /.container -->
     </footer>
+
+    <!-- Control Sidebar -->
+    <?php echo $this->element('AdminLTE.control-sidebar'); ?>
 </div>
 <!-- ./wrapper -->
-
+<?php echo $this->fetch('modal-dialogs'); ?>
 <!-- jQuery 2.2.0 -->
 <?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.4', array('inline' => true)); ?>
 <!-- Bootstrap 3.3.5 -->
@@ -93,6 +85,10 @@
 <?php echo $this->Html->script('AdminLTE.slimScroll/slimscroll-1.3.8', array('inline' => true)); ?>
 <!-- FastClick -->
 <?php echo $this->Html->script('AdminLTE.fastclick/fastclick', array('inline' => true)); ?>
+<!-- Bootbox 4.4.0 -->
+<?php echo $this->Html->script('AdminLTE.bootbox/bootbox-4.4.0', array('inline' => true)); ?>
+<!-- Noty 2.3.8 -->
+<?php echo $this->Html->script('AdminLTE.noty/packaged/noty-2.3.8', array('inline' => true)); ?>
 <?php
 /**
  * Additional BodyScripts
@@ -103,5 +99,14 @@ if (! empty($body_additional_scripts))
 ?>
 <!-- AdminLTE App -->
 <?php echo $this->Html->script('AdminLTE.adminlte/app', array('inline' => true)); ?>
+<!-- AdminLTE Dynamic Script -->
+<?php echo $this->fetch('script'); ?>
+<script>
+    $(this).addTemplateSetup(function(){
+        <?php echo $this->fetch('scriptAddTemplate'); ?>
+    });
+    <?php echo $this->fetch('scriptBody'); ?>
+    $(function(){$(document).ready(function(){$(document.body).applyTemplateSetup();});});
+</script>
 </body>
 </html>
