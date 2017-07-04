@@ -489,32 +489,41 @@ EOF;
                     break;
             }
         }
-        if (! isset($option['button-size']))
+
+        if (! array_key_exists('button-size', $options))
             $options['button-size'] = '';
 
-        if (! isset($options['button-type']))
+        if (! array_key_exists('button-type', $options))
             $options['button-type'] = 'btn-primary';
 
-        if (isset($options['id']))
+        if (array_key_exists('id', $options)) {
             $field_id = $options['id'];
-        else
+            unset($options['id']);
+        } else
             $field_id = Inflector::variable($fieldName . 'Button');
 
         $style = '';
-
-        if (isset($options['style']))
+        if (array_key_exists('style', $options)) {
             $style = ' style="' . $options['style'] . '"';
+            unset($options['style']);
+        }
 
-        if (isset($options['nolabel']))
+        if (array_key_exists('nolabel', $options)) {
             $fieldName = '';
+            unset($options['nolabel']);
+        }
 
         $icon_str = '';
-        if (isset($options['button-icon']))
+        if (array_key_exists('button-icon', $options)){
             $icon_str = '<i class="fa fa-' . $options['button-icon'] . '"></i>';
+            unset($options['button-icon']);
+        }
 
         $onclick_str = '';
-        if (isset($options['onclick']))
-            $onclick_str = ' onclick="' . $options['onclick'] . '" ';
+        if (isset($options['onclick'])) {
+            $onclick_str = ' onclick="' . $options['onclick'] . '"';;
+            unset($options['onclick']);
+        }
 
         $html_data = <<<EOF
         <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}{$onclick_str}>{$icon_str}{$fieldName}</button>
