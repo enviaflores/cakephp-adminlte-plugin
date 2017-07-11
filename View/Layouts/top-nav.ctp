@@ -57,10 +57,8 @@
 
     <!-- Full Width Column -->
     <div class="content-wrapper">
-        <div class="container">
-            <?php echo $this->fetch('content'); ?>
-            <!-- /.content -->
-        </div>
+        <?php echo $this->fetch('content'); ?>
+        <!-- /.content -->
         <!-- /.container -->
     </div>
 
