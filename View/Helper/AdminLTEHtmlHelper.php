@@ -286,6 +286,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * See: https://datatables.net/extensions/responsive/examples/column-control/classes.html
      *
+     * ##Options
+     * - headers - Headers for table
+     * - nowrap - If is set to false, take the width of the "columnDefs" in dataTable initialization.
+     * Ex. "columnDefs": [ {"width": "30%", "targets": 0}]
+     *
      * @param unknown $fieldName
      * @param array $options
      * @param array $data
@@ -341,8 +346,12 @@ class AdminLTEHtmlHelper extends HtmlHelper
         ));
 
         if ($fieldName !== false) {
+            $class = '';
+
+            $class .= (isset($options['nowrap']) && ($options['nowrap'] === false) ? '': ' nowrap');
+
             $html = '<div class="table-responsive">';
-            $html .= '<table id ="' . Inflector::variable($fieldName) . '" style="width: 100%" class="table responsive table-striped table-bordered nowrap">';
+            $html .= '<table id ="' . Inflector::variable($fieldName) . '" style="width: 100%" class="table responsive table-striped table-bordered '.$class.'">';
             $html .= '<thead>' . ((! empty($options['headers'])) ? $this->tableHeaders($options['headers']) : '') . '</thead>';
             if (empty($data))
                 $html .= '<tbody>' . ((! empty($options['body'])) ? $options['body'] : '') . '</tbody>';
