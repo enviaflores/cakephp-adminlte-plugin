@@ -892,7 +892,11 @@ EOF;
   				$meridian = "a.m.";
   			}
         if($include_time){
-          $date .= " " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+
+          if($language == 'es')
+            $date .= " a las " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+          else
+            $date .= "  " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
         }
       }
 
