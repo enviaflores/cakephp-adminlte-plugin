@@ -853,4 +853,54 @@ EOF;
         $_html .= '</div>'; // end div nav-tabs-custom
         echo $_html;
     }
+    public function prettyDate($lastDate=null, $include_time=true , $abbreviated=false, $language = 'es'){
+      $new_date = explode(' ',$lastDate);
+      list($year,$month,$day) = explode('-',$new_date[0]);
+
+      if($language == 'es'){
+        $months = array(1=>'Ene',2=>'Feb',3=>'Mar',4=>'Abr',5=>'May',6=>'Jun',7=>'Jul',8=>'Ago',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dic');
+        $monthsComplete = array(1=>'Enero',2=>'Febrero',3=>'Marzo',4=>'Abril',5=>'Mayo',6=>'Junio',7=>'Julio',8=>'Agosto',9=>'Septiembre',10=>'Octubre',11=>'Noviembre',12=>'Diciembre');
+      }else{
+        $months = array(1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec');
+        $monthsComplete = array(1=>'January',2=>'February',3=>'March',4=>'April',5=>'May',6=>'June',7=>'July',8=>'August',9=>'September',10=>'October',11=>'November',12=>'December');
+      }
+
+  		if($abbreviated){
+        $date = $day."/".$months[intval($month)]."/".$year;
+
+        if($language != 'es')
+          $date = $months[intval($month)]."/".$day."/".$year;
+
+  		}else{
+        $date = $day." de ".$monthsComplete[intval($month)]." del ".$year;
+
+        if($language != 'es')
+          $date = $monthsComplete[intval($month)] . " " . $day . ", " . $year;
+      }
+
+      if(!empty($new_date[1])){
+        list($hour,$min,$sec) = explode(':',$new_date[1]);
+        if($hour>=12){
+  				if($hour>12){
+  					$hour = $hour-12;
+  					if(strlen($hour)==1 ){
+  						$hour = "0".$hour;
+  					}
+  				}
+  				$meridian = "p.m.";
+  			}else{
+  				$meridian = "a.m.";
+  			}
+        if($include_time){
+
+          if($language == 'es')
+            $date .= " a las " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+          else
+            $date .= "  " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+        }
+      }
+
+      return $date;
+
+  	}
 }
