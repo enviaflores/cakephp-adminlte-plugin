@@ -46,8 +46,8 @@
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
 <body class="hold-transition <?php echo AdminLTE_BodyClass; ?>">
 <div class="wrapper">
-    <header class="main-header">
-        <nav class="navbar navbar-static-top">
+    <header class="main-header" style="padding-bottom: 50px;">
+        <nav class="navbar navbar-fixed-top">
             <div class="container">
                 <?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?>
             </div>

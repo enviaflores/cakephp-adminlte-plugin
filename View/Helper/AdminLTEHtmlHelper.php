@@ -279,7 +279,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
     public function controlSideBarEnd($options = array())
     {
         $buffer = ob_get_clean();
-        $_sidebar_html_str = '<aside class="control-sidebar control-sidebar-' . $this->_controlSideBarStartOptions['color'] . '">' . $buffer . '</aside><div class="control-sidebar-bg"></div>';
+        $_sidebar_html_str = '<aside class="control-sidebar control-sidebar-' . $this->_controlSideBarStartOptions['color'] . '" style="position: fixed;">' . $buffer . '</aside><div class="control-sidebar-bg"></div>';
         define('AdminLTE_ControlSideBar_HTML', $_sidebar_html_str);
     }
 
