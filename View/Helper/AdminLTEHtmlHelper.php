@@ -288,8 +288,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
      *
      * ##Options
      * - headers - Headers for table
-     * - nowrap - If is set to false, take the width of the "columnDefs" in dataTable initialization.
-     * Ex. "columnDefs": [ {"width": "30%", "targets": 0}]
+     * - nowrap - If is set to false, take the table width 100%.
      *
      * @param unknown $fieldName
      * @param array $options
