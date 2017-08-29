@@ -12,6 +12,8 @@
     <?php echo $this->Html->css('AdminLTE.font-awesome'); ?>
     <!-- Ionicons -->
     <?php echo $this->Html->css('AdminLTE.ionicons'); ?>
+    <!-- Msg -->
+    <?php echo $this->Html->css('AdminLTE.msg'); ?>
     <!-- AdminLTE -->
     <?php echo $this->Html->css('AdminLTE.AdminLTE'); ?>
     <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -87,6 +89,8 @@
 <?php echo $this->Html->script('AdminLTE.bootbox/bootbox-4.4.0', array('inline' => true)); ?>
 <!-- Noty 2.3.8 -->
 <?php echo $this->Html->script('AdminLTE.noty/packaged/noty-2.3.8', array('inline' => true)); ?>
+<!-- Msg 1.0.7 -->
+<?php echo $this->Html->script('AdminLTE.msg/msg-1.0.7', array('inline' => true)); ?>
 <?php
 /**
  * Additional BodyScripts
