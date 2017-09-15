@@ -20,6 +20,8 @@ class AdminLTEController extends Controller
 
     const EMPTY_LAYOUT = 64;
 
+    protected $_mergeParent = 'AdminLTEController';
+    
     public $components = array(
         'Flash'
     );
