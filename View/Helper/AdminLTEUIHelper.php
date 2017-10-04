@@ -26,6 +26,7 @@ class AdminLTEUIHelper extends HtmlHelper
     {
         $this->_contentBlockTabs[$this->_currentTab] = ob_get_clean();
         $this->_currentTab = null;
+        $html = "";
         if ($finishtab !== false) {
             $li_tabs_headers = array();
             $divs_tab_content = array();
