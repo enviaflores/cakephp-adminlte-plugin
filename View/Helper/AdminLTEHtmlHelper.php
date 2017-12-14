@@ -533,8 +533,18 @@ EOF;
             unset($options['onclick']);
         }
 
+        $attributes_str = '';
+        if (array_key_exists('attributes', $options) && is_array($options['attributes'])){
+            $attrb = [];
+            foreach ($options['attributes'] as $attr => $value){
+                $attrb[] = $attr.'="'.$value.'"';
+            }
+            $attributes_str = implode(' ', $attrb);
+            unset($options['attributes']);
+        }
+
         $html_data = <<<EOF
-        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}{$onclick_str}>{$icon_str}{$fieldName}</button>
+        <button id="{$field_id}" class="btn {$options['button-size']} {$options['button-type']}"{$style}{$onclick_str}{$attributes_str}>{$icon_str}{$fieldName}</button>
 EOF;
         return $html_data;
     }
