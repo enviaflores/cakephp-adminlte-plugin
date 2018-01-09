@@ -3724,7 +3724,7 @@ EOF;
     {$label_str}
     <div class="input-group date">
         <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-        <input class="form-control pull-right"  id="{$options['id']}" type="text">
+        <input class="form-control pull-right" name="{$options['name']}" id="{$options['id']}" type="text">
     </div>
 </div>
 EOF;
