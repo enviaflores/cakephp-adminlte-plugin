@@ -6,7 +6,7 @@ class AdminLTEGraphsHelper extends HtmlHelper
 
     public function chartJS($chartName, $options = array())
     {
-        $this->script('AdminLTE.chart/chart-2.1.6', array(
+        $this->script('AdminLTE.chartjs/Chart-2.7.1', array(
             'inline' => false
         ));
 
