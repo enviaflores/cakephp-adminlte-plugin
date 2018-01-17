@@ -7,4 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Zend\\Json\\' => array($vendorDir . '/zendframework/zend-json/src'),
+    'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
+    'Spatie\\ImageOptimizer\\' => array($vendorDir . '/spatie/image-optimizer/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
 );
