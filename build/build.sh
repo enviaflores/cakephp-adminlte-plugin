@@ -36,7 +36,7 @@ compile_less () {
 }
 
 
-find . -type f \( -iname \*.jpeg -o -iname \*.png -o -iname \*.map \) -type f -print0 | while read -d $'\0' i
+find . -type f \( -iname \*.jpeg -o -iname \*.png -o -iname \*.map \ -o -iname \*.gif \) -type f -print0 | while read -d $'\0' i
 do
     if [ ! -d "$i" ]; then
         dest_file=`echo $i | sed 's/\.\/plugins\///'`

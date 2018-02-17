@@ -1,4 +1,4 @@
-if ("undefined" === typeof jQuery) throw Error("AdminLTE requires jQuery");
+if ("undefined" === typeof jQuery) throw Error("AdminLTE strictly requires jQuery");
 
 var AdminLTEReloadPage = function(block_message) {
     for (i = 0; i < document.forms.length; i++) {
@@ -12,6 +12,7 @@ var blockUI = function(content){
     if(!content)
         content = '<i style="font-size: 30px" class="fa fa-refresh fa-spin"></i>'
 	$.msg({
+	    bgPath : '/admin_lte/js/msg/1.0.7/',
         fadeIn : 0,
         autoUnblock : false,
         content : content
