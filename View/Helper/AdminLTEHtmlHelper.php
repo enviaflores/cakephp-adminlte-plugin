@@ -564,9 +564,13 @@ EOF;
         $data_toggle = '';
         if (isset($options['data-toggle']))
             $data_toggle = ' data-toggle="' . $options['data-toggle'] . '"';
+            
+        $data_widget = '';
+        if (isset($options['data-widget']))
+            $data_widget = ' data-widget="' . $options['data-widget'] . '"';
 
         $html_data = <<<EOF
-        <button id="{$field_id}" class="btn btn-box-tool" type="button" {$data_toggle}><i class="fa fa-{$options['icon']}"></i></button>
+        <button id="{$field_id}" class="btn btn-box-tool" type="button" {$data_toggle} {$data_widget}><i class="fa fa-{$options['button-icon']}"></i></button>
 EOF;
         return $html_data;
     }
