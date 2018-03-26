@@ -11,6 +11,15 @@ class ComposerStaticInit33290fd4b1765a501cad76b15e1fbe27
         array (
             'Zend\\Json\\' => 10,
         ),
+        'S' => 
+        array (
+            'Symfony\\Component\\Process\\' => 26,
+            'Spatie\\ImageOptimizer\\' => 22,
+        ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -18,6 +27,23 @@ class ComposerStaticInit33290fd4b1765a501cad76b15e1fbe27
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-json/src',
         ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
+        ),
+        'Spatie\\ImageOptimizer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/image-optimizer/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+    );
+
+    public static $classMap = array (
+        'Eventviva\\ImageResize' => __DIR__ . '/..' . '/eventviva/php-image-resize/lib/ImageResize.php',
+        'Eventviva\\ImageResizeException' => __DIR__ . '/..' . '/eventviva/php-image-resize/lib/ImageResize.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -25,6 +51,7 @@ class ComposerStaticInit33290fd4b1765a501cad76b15e1fbe27
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit33290fd4b1765a501cad76b15e1fbe27::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit33290fd4b1765a501cad76b15e1fbe27::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit33290fd4b1765a501cad76b15e1fbe27::$classMap;
 
         }, null, ClassLoader::class);
     }
