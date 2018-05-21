@@ -2061,8 +2061,14 @@ EOF;
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options['type'] = 'hidden';
-        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $options['id'] . "\"]').paletteColorPicker(" . json_encode($options['palettepicker_options']) . "
-);\n");
+        $_callback = '';
+        if (isset($options['palettepicker_options']['onchange_callback'])) {
+            $_callback = ',onchange_callback: function( clicked_color ) {'.$options['palettepicker_options']['onchange_callback'].'}';
+            unset($options['palettepicker_options']['onchange_callback']);
+        }
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $options['id'] . "\"]').paletteColorPicker({
+        colors : ".json_encode($options['palettepicker_options']['colors']).$_callback."
+        });\n");
         unset($options['palettepicker_options']);
         
         $toReturn = <<<EOF
