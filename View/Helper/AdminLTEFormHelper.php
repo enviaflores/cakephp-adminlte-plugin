@@ -2049,6 +2049,32 @@ EOF;
         ), '<i></i>'));
     }
 
+    public function palettecolorpicker($fieldName, $options = array())
+    {
+        $this->Html->css('AdminLTE.palette-color-picker/palette-color-picker', array(
+            'inline' => false
+        ));
+        $this->Html->script('AdminLTE.palette-color-picker/palette-color-picker', array(
+            'inline' => false
+        ));
+        
+        $options = $this->_initInputField($fieldName, $options);
+        $options = $this->addClass($options, 'form-control');
+        $options['type'] = 'hidden';
+        $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $options['id'] . "\"]').paletteColorPicker(" . json_encode($options['palettepicker_options']) . "
+);\n");
+        unset($options['palettepicker_options']);
+        
+        $toReturn = <<<EOF
+<div class="form-group">
+<label for="{$options['id']}">{$options['label']}</label> <br>
+    {$this->Html->useTag('input', $options['name'], $options)}
+</div>
+EOF;
+
+    return $toReturn;
+    }
+
     /**
      * Return a phone input using the javascript plugin
      *
