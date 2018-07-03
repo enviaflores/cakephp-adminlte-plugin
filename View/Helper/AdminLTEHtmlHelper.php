@@ -290,7 +290,7 @@ class AdminLTEHtmlHelper extends HtmlHelper
      * - headers - Headers for table
      * - nowrap - If is set to false, take the table width 100%.
      *
-     * @param unknown $fieldName
+     * @param string $fieldName
      * @param array $options
      * @param array $data
      * @return string
