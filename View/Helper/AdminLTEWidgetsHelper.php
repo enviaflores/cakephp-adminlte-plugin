@@ -41,8 +41,8 @@ class AdminLTEWidgetsHelper extends HtmlHelper
         $html_data = '<div class="' . ((! empty($options['type']) && $options['type'] == 'more_info') ? 'small' : 'info') . '-box' . ((! empty($options['full-color'])) ? ' bg-' . $options['full-color'] : '') . '">';
         
         if (! empty($options['type']) && $options['type'] == 'more_info') {
-            if (! empty($options['number']) || ! empty($options['text']))
-                $html_data .= '<div class="inner"><h3>' . (! empty($options['number']) ? $options['number'] : '') . '</h3> <p>' . (! empty($options['text']) ? $options['text'] : '') . '</p></div>';
+            if (isset($options['number']) || ! empty($options['text']))
+                $html_data .= '<div class="inner"><h3>' . (isset($options['number']) ? intval($options['number']) : '0') . '</h3> <p>' . (! empty($options['text']) ? $options['text'] : '') . '</p></div>';
             
             if (! empty($options['fa-icon']))
                 $html_data .= '<div class="icon"><i class="fa fa-' . $options['fa-icon'] . '"></i></div>';
