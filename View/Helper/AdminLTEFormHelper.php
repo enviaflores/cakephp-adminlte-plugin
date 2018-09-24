@@ -2073,7 +2073,6 @@ EOF;
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options['type'] = 'text';
-        $this->_View->append("scriptAddTemplate", "\$('div[for=\"" . $options['id'] . "\"]').colorpicker();\n");
         
         $label_str = '';
         
@@ -2094,7 +2093,8 @@ EOF;
         ), $this->Html->useTag('input', $options['name'], $options) . $this->Html->useTag('block', array(
             'class' => 'input-group-btn'
         ), $this->button($button_label, array(
-            'id' => $button_id
+            'id' => $button_id,
+            'type' => 'button'
         ))));
     }
 
