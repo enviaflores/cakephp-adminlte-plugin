@@ -50,6 +50,15 @@ if (! empty($head_additional_scripts))
 
     <?php echo '<style type="text/css">'.$this->fetch('cssHead').'</style>'; ?>
     <?php echo $this->fetch('scriptHead'); ?>
+    <?php if(Configure::read('RaygunCake.apiKey')): ?>
+<script type="text/javascript">
+  !function(a,b,c,d,e,f,g,h){a.RaygunObject=e,a[e]=a[e]||function(){
+  (a[e].o=a[e].o||[]).push(arguments)},f=b.createElement(c),g=b.getElementsByTagName(c)[0],
+  f.async=1,f.src=d,g.parentNode.insertBefore(f,g),h=a.onerror,a.onerror=function(b,c,d,f,g){
+  h&&h(b,c,d,f,g),g||(g=new Error(b)),a[e].q=a[e].q||[],a[e].q.push({
+  e:g})}}(window,document,"script","//cdn.raygun.io/raygun4js/raygun.min.js","rg4js");
+</script>
+    <?php endif; ?>
 </head>
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
 <body class="<?php echo AdminLTE_BodyClass; ?>">
@@ -103,5 +112,12 @@ if (! empty($body_additional_scripts))
  	<?php echo $this->fetch('scriptBody'); ?>
  	$(function(){$(document).ready(function(){$(document.body).applyTemplateSetup();});});
  </script>
+ <?php if(Configure::read('RaygunCake.apiKey')): ?>
+<script type="text/javascript">
+  rg4js('apiKey', '<?php echo Configure::read('RaygunCake.apiKey');  ?>');
+  rg4js('enableCrashReporting', true);
+  rg4js('enablePulse', true);
+</script>
+    <?php endif; ?>
 </body>
 </html>

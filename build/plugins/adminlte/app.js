@@ -12,7 +12,7 @@ var blockUI = function(content){
     if(!content)
         content = '<i style="font-size: 30px" class="fa fa-refresh fa-spin"></i>'
 	$.msg({
-	    bgPath : '/admin_lte/js/msg/1.0.7/',
+	    bgPath : '/admin_l_t_e/js/msg/1.0.7/',
         fadeIn : 0,
         autoUnblock : false,
         content : content
