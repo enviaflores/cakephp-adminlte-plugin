@@ -3,10 +3,63 @@ App::uses('HtmlHelper', 'View/Helper');
 
 class AdminLTEWidgetsHelper extends HtmlHelper
 {
-
     public $_defaultBoxOptions = array(
         'variant' => 'default'
     );
+    public $helpers = ['Html'];
+    private $available_map_layers = [
+        'heatmap', 'traffic'
+    ];
+    private $available_map_types = [
+        'roadmap', 'satellite',
+        'hybrid', 'terrain'
+    ];
+    private $map_options = [
+        // By default Monterrey center
+        'center' => [
+            'latitude' => 25.686613,
+            'longitude' => -100.316116
+        ],
+        'zoom' => 8,
+        'type' => 'roadmap',
+        'layer' => [], // This is an array because some layers need params
+        'markers' => []
+    ];
+
+    public function __construct(View $view, $settings = array()) {
+        parent::__construct($view, $settings);
+
+        if (!empty($settings['map_options'])) {
+            $map_options = $settings['map_options'];
+
+            if (!empty($map_options['center'])) {
+                $this->map_options['center'] = $map_options['center'];
+            }
+            if (!empty($map_options['zoom'])) {
+                $this->map_options['zoom'] = $map_options['zoom'];
+            }
+            if (!empty($map_options['type']) && in_array($map_options['type'], $this->available_map_types)) {
+                $this->map_options['type'] = $map_options['type'];
+            }
+            if (!empty($map_options['markers']) && is_array($map_options['markers'])) {
+                $this->map_options['markers'] = $map_options['markers'];
+            }
+            if (!empty($map_options['layer']['type']) && in_array($map_options['layer']['type'], $this->available_map_layers)) {
+                $this->map_options['layer'] = $map_options['layer'];
+            }
+        }
+    }
+
+    public function drawMap() {
+        $google_maps_key = Configure::read('google_maps_key');
+        $map_options = $this->map_options;
+
+        if (empty($google_maps_key)) {
+            throw new BadRequestException('Missing Google Maps API key');
+        }
+        $this->_View->set(compact('google_maps_key', 'map_options'));
+        return $this->_View->render('AdminLTE.Elements/map', false);
+    }
 
     /*
      * array (
