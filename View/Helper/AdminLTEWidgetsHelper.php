@@ -51,6 +51,10 @@ class AdminLTEWidgetsHelper extends HtmlHelper
     }
 
     public function drawMap() {
+        /*
+         * The google maps API KEY is read from the container (Main) Project
+         * because every project can have a different API Key
+         */
         $google_maps_key = Configure::read('google_maps_key');
         $map_options = $this->map_options;
 
