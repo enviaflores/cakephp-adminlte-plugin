@@ -56,12 +56,14 @@ class AdminLTEWidgetsHelper extends HtmlHelper
          * because every project can have a different API Key
          */
         $google_maps_key = Configure::read('google_maps_key');
+        $pusher_cluster = Configure::read('Pusher.cluster');
+        $pusher_key = Configure::read('Pusher.api_key');
         $map_options = $this->map_options;
 
         if (empty($google_maps_key)) {
             throw new BadRequestException('Missing Google Maps API key');
         }
-        $this->_View->set(compact('google_maps_key', 'map_options'));
+        $this->_View->set(compact('google_maps_key', 'map_options', 'pusher_cluster', 'pusher_key'));
         return $this->_View->render('AdminLTE.Elements/map', false);
     }
 

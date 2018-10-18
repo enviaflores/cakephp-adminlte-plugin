@@ -64,8 +64,8 @@
             // Enable pusher logging - don't include this in production
             Pusher.logToConsole = <?= ((Configure::read('debug') > 0) ? 'true' : 'false') ?>;
 
-            var pusher = new Pusher('810e43c63bf0d8e80ad8', {
-                cluster: 'us2',
+            var pusher = new Pusher('<?= $pusher_key ?>', {
+                cluster: '<?= $pusher_cluster ?>',
                 forceTLS: true
             });
 
