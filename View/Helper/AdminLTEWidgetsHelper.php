@@ -20,10 +20,13 @@ class AdminLTEWidgetsHelper extends HtmlHelper
             'latitude' => 25.686613,
             'longitude' => -100.316116
         ],
+        'disable_default_ui' => false,
         'zoom' => 8,
         'type' => 'roadmap',
         'layer' => [], // This is an array because some layers need params
-        'markers' => []
+        'markers' => [],
+        'debuggable' => true,
+        'container_size' => 6 // Fully supported Only when debuggable is false, in any other case the row in divided in 2 cols
     ];
 
     public function __construct(View $view, $settings = array()) {
@@ -47,6 +50,15 @@ class AdminLTEWidgetsHelper extends HtmlHelper
             if (!empty($map_options['layer']['type']) && in_array($map_options['layer']['type'], $this->available_map_layers)) {
                 $this->map_options['layer'] = $map_options['layer'];
             }
+            if (isset($map_options['debuggable'])) {
+                $this->map_options['debuggable'] = $map_options['debuggable'];
+            }
+            if (!empty($map_options['container_size'])) {
+                $this->map_options['container_size'] = $map_options['container_size'];
+            }
+            if (isset($map_options['disable_default_ui'])) {
+                $this->map_options['disable_default_ui'] = $map_options['disable_default_ui'];
+            }
         }
     }
 
@@ -64,7 +76,7 @@ class AdminLTEWidgetsHelper extends HtmlHelper
             throw new BadRequestException('Missing Google Maps API key');
         }
         $this->_View->set(compact('google_maps_key', 'map_options', 'pusher_cluster', 'pusher_key'));
-        return $this->_View->render('AdminLTE.Elements/map', false);
+        return $this->_View->render('AdminLTE.Elements/map_container', false);
     }
 
     /*
