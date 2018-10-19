@@ -160,7 +160,13 @@ Control Side Bar
         });
 
         $('#get_geojson').click(function () {
-            var m_url = $('#url').val();
+            var m_url = $('#url').val(),
+                $geojson = $('#geojson'),
+                $geo_label = $('label[for="geojson"]');
+
+            $geojson.parents('.form-group').removeClass('has-error');
+            $geo_label.text('Or paste the GeoJson here');
+            $geojson.val('');
 
             if (m_url) {
                 try {
@@ -178,10 +184,18 @@ Control Side Bar
                     type: 'POST',
                     dataType: 'json',
                     success: function (json) {
+                        var $geojson = $('#geojson');
+
                         if (json.success) {
-                            $('#geojson').val(JSON.stringify(json.data, null, 2));
+                            $geojson.val(JSON.stringify(json.data, null, 2));
                             drawPolyline(json.data);
                         } else {
+                            $geojson.parents('.form-group').addClass('has-error');
+                            $('label[for="geojson"]').text('Invalid JSON');
+
+                            if (json.content !== 'undefined') {
+                                $geojson.val(json.content);
+                            }
                             alert(json.errorMsg);
                         }
                     }, error: function () {
@@ -192,11 +206,14 @@ Control Side Bar
                     }
                 });
             } else {
-                var m_data = $('#geojson').val();
+                var m_data = $geojson.val();
+
                 if (m_data) {
                     try {
                         m_data = JSON.parse(m_data);
                     } catch (e) {
+                        $geojson.parents('.form-group').addClass('has-error');
+                        $geo_label.text('Invalid JSON');
                         alert('Invalid JSON');
                         return;
                     }
@@ -205,6 +222,10 @@ Control Side Bar
                     alert('<?= __('No data in URL neither in GeoJson text area') ?>');
                 }
             }
+        });
+
+        $('#url').on('click', function () {
+            $(this).select();
         });
     });
     

@@ -17,8 +17,7 @@ class AdminLTEMapController  extends AppController {
             // Always must return a valid Json
             error_reporting(0);
             $this->autoRender = false;
-            $this->autoLayout = false;
-            $this->layout = 'AdminLTE.json';
+            $this->response->type('json');
 
             $response = [
                 'success' => false,
@@ -30,21 +29,28 @@ class AdminLTEMapController  extends AppController {
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_HEADER, false);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-                $result = curl_exec($ch);
+                $content = curl_exec($ch);
+
+                if (curl_errno($ch) !== 0) {
+                    $curl_error_msg = curl_error($ch);
+                }
                 curl_close($ch);
 
-                $result = json_decode($result, true);
+                if (isset($curl_error_msg)) {
+                    throw new Exception('Invalid request, ERR: ' . $curl_error_msg);
+                }
+
+                $result = json_decode($content, true);
                 if (json_last_error() !== JSON_ERROR_NONE) {
-                    throw new Exception(json_last_error_msg());
+                    $response['content'] = $content;
+                    throw new Exception('Invalid JSON, ERR: ' . json_last_error_msg());
                 }
                 $response['success'] = true;
                 $response['data'] = $result;
             } catch (Exception $ex) {
                 $response['errorMsg'] = $ex->getMessage();
             } finally {
-                $this->render(false);
-                echo json_encode($response);
-                die();
+                $this->response->body(json_encode($response));
             }
         }
     }
