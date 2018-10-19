@@ -1,37 +1,4 @@
-<?php
-/**
- * Include if exists CSS Styles
- */
-if (file_exists(dirname(__FILE__) . '/css/' . basename(__FILE__, 'ctp') . 'css')) {
-    $this->start('cssHead');
-    include_once dirname(__FILE__) . '/css/' . basename(__FILE__, 'ctp') . 'css';
-    $this->end();
-}
-/**
- * Include if exists JS Code
- */
-if (file_exists(dirname(__FILE__) . '/js/' . basename(__FILE__, 'ctp') . 'js')) {
-    $this->start('scriptBody');
-    include_once dirname(__FILE__) . '/js/' . basename(__FILE__, 'ctp') . 'js';
-    $this->end();
-}
-$this->Html->controlSideBarStart();
-?>
-Control Side Bar
-<?php
-    $this->Html->controlSideBarEnd();
-    $this->Html->sectionStart([
-        'class' => 'content-header'
-    ]);
-?>
-<h1>
-    Map Widget <small>Example for Google Maps Widget</small>
-</h1>
-<?= (defined('AdminLTE_Breadcrumb')) ? AdminLTE_Breadcrumb : '' ?>
-<?= $this->Html->sectionEnd(); ?>
-<?= $this->Html->sectionStart([
-    'class' => 'content'
-]) ?>
+<div id="map-widget">
 <?php
     $debug_col = [];
     if ($map_options['debuggable']) {
@@ -69,12 +36,19 @@ Control Side Bar
     var map = null;
 
     $(document).ready(function () {
-        map = new google.maps.Map(document.getElementById('map'), {
+        var map_options = {
             center: {lat: <?= $map_options['center']['latitude'] ?>, lng: <?= $map_options['center']['longitude'] ?>},
             zoom: <?= $map_options['zoom'] ?>,
             mapTypeId: '<?= $map_options['type'] ?>',
             disableDefaultUI: <?= $map_options['disable_default_ui'] ? 'true' : 'false' ?>
-        });
+        };
+
+        if (<?= $map_options['disable_zoom'] ? 'true' : 'false' ?>) {
+            map_options['gestureHandling'] = 'none';
+            map_options['zoomControl'] = false;
+        }
+
+        map = new google.maps.Map(document.getElementById('map'), map_options);
 
         if (typeof m_layer.type !== 'undefined') {
             switch (m_layer.type) {
@@ -224,8 +198,15 @@ Control Side Bar
             }
         });
 
-        $('#url').on('click', function () {
+        var $url = $('#url');
+        $url.on('click', function () {
             $(this).select();
+        });
+
+        $url.on('keyup', function(e) {
+            if(e.keyCode === 13) {
+                $(this).trigger('click');
+            }
         });
     });
     
@@ -313,4 +294,4 @@ Control Side Bar
         return response;
     }
 </script>
-<?= $this->Html->sectionEnd() ?>
+</div>
