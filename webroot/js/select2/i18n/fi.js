@@ -1,4 +1,3 @@
-/*
- Select2 4.0.0 | https://github.com/select2/select2/blob/master/LICENSE.md */
-(function(){if(jQuery&&jQuery.fn&&jQuery.fn.select2&&jQuery.fn.select2.amd)var b=jQuery.fn.select2.amd;return b.define("select2/i18n/fi",[],function(){return{inputTooLong:function(a){return"Ole hyv\u00e4 ja anna "+(a.input.length-a.maximum)+" merkki\u00e4 v\u00e4hemm\u00e4n"},inputTooShort:function(a){return"Ole hyv\u00e4 ja anna "+(a.minimum-a.input.length)+" merkki\u00e4 lis\u00e4\u00e4"},loadingMore:function(){return"Ladataan lis\u00e4\u00e4 tuloksia\u2026"},maximumSelected:function(a){return"Voit valita ainoastaan "+
-a.maximum+" kpl"},noResults:function(){return"Ei tuloksia"},searching:function(){}}}),{define:b.define,require:b.require}})();
+/*! Select2 4.0.5 | https://github.com/select2/select2/blob/master/LICENSE.md */
+
+(function(){if(jQuery&&jQuery.fn&&jQuery.fn.select2&&jQuery.fn.select2.amd)var e=jQuery.fn.select2.amd;return e.define("select2/i18n/fi",[],function(){return{errorLoading:function(){return"Tuloksia ei saatu ladattua."},inputTooLong:function(e){var t=e.input.length-e.maximum;return"Ole hyvä ja anna "+t+" merkkiä vähemmän"},inputTooShort:function(e){var t=e.minimum-e.input.length;return"Ole hyvä ja anna "+t+" merkkiä lisää"},loadingMore:function(){return"Ladataan lisää tuloksia…"},maximumSelected:function(e){return"Voit valita ainoastaan "+e.maximum+" kpl"},noResults:function(){return"Ei tuloksia"},searching:function(){return"Haetaan…"}}}),{define:e.define,require:e.require}})();
