@@ -27,6 +27,9 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->_tags['section'] = '<section %s>%s</section>';
         $this->_tags['divLTE'] = '<div %s>%s</div>';
         $this->_tags['span'] = '<span %s>%s</span>';
+        /*
+       
+        */
     }
 
     /**
@@ -599,9 +602,13 @@ EOF;
         $on_click = '';
         if (isset($options['onclick']))
             $on_click = ' onclick="' . $options['onclick'] . '"';
+        
+            $style = '';
+            if (isset($options['style']))
+                $style = ' style="' . $options['style'] . '"';
 
         $html_data = <<<EOF
-        <a id="{$field_id}" href="{$options['href']}" class="btn btn-app" {$on_click}>{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
+        <a id="{$field_id}" href="{$options['href']}" class="btn btn-app" {$on_click} {$style}>{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
 EOF;
         return $html_data;
     }
