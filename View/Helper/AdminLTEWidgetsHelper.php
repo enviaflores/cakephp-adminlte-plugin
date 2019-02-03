@@ -3,10 +3,96 @@ App::uses('HtmlHelper', 'View/Helper');
 
 class AdminLTEWidgetsHelper extends HtmlHelper
 {
-
     public $_defaultBoxOptions = array(
         'variant' => 'default'
     );
+    public $helpers = ['Html'];
+    private $available_map_layers = [
+        'heatmap', 'traffic'
+    ];
+    private $available_map_types = [
+        'roadmap', 'satellite',
+        'hybrid', 'terrain'
+    ];
+    private $default_map_options = null;
+    private $map_options = [
+        // By default Monterrey center
+        'center' => [
+            'latitude' => 25.686613,
+            'longitude' => -100.316116
+        ],
+        'disable_default_ui' => false,
+        'zoom' => 8,
+        'type' => 'roadmap',
+        'layer' => [], // This is an array because some layers need params
+        'markers' => [],
+        'debuggable' => true,
+        'container_size' => 6, // Fully supported Only when debuggable is false, in any other case the row in divided in 2 cols
+        'disable_zoom' => false
+    ];
+
+    public function __construct(View $view, $settings = array()) {
+        parent::__construct($view, $settings);
+
+        if (!empty($settings['map_options'])) {
+            $this->default_map_options = $this->map_options;
+            $this->__setMapOptions($settings['map_options']);
+        }
+    }
+
+    private function __setMapOptions(&$map_options) {
+        if (!empty($map_options['center'])) {
+            $this->map_options['center'] = $map_options['center'];
+        }
+        if (!empty($map_options['zoom'])) {
+            $this->map_options['zoom'] = $map_options['zoom'];
+        }
+        if (!empty($map_options['type']) && in_array($map_options['type'], $this->available_map_types)) {
+            $this->map_options['type'] = $map_options['type'];
+        }
+        if (!empty($map_options['markers']) && is_array($map_options['markers'])) {
+            $this->map_options['markers'] = $map_options['markers'];
+        }
+        if (!empty($map_options['layer']['type']) && in_array($map_options['layer']['type'], $this->available_map_layers)) {
+            $this->map_options['layer'] = $map_options['layer'];
+        }
+        if (isset($map_options['debuggable'])) {
+            $this->map_options['debuggable'] = $map_options['debuggable'];
+        }
+        if (!empty($map_options['container_size'])) {
+            $this->map_options['container_size'] = $map_options['container_size'];
+        }
+        if (isset($map_options['disable_default_ui'])) {
+            $this->map_options['disable_default_ui'] = $map_options['disable_default_ui'];
+        }
+        if (isset($map_options['disable_zoom'])) {
+            $this->map_options['disable_zoom'] = $map_options['disable_zoom'];
+        }
+    }
+
+    public function drawMap($map_options=null) {
+        /*
+         * Override default/pre-defined parameters?
+         */
+        if (is_array($map_options)) {
+            $this->map_options = $this->default_map_options;
+            $this->__setMapOptions($map_options);
+        }
+        /*
+         * The google maps API KEY is read from the container (Main) Project
+         * because every project can have a different API Key
+         */
+        $google_maps_key = Configure::read('google_maps_key');
+        $pusher_cluster = Configure::read('Pusher.cluster');
+        $pusher_key = Configure::read('Pusher.api_key');
+        $map_options = $this->map_options;
+
+        if (empty($google_maps_key)) {
+            throw new BadRequestException('Missing Google Maps API key');
+        }
+        $this->_View->set(compact('google_maps_key', 'map_options', 'pusher_cluster', 'pusher_key'));
+        return $this->_View->render('AdminLTE.Elements/map_container', false);
+    }
 
     /*
      * array (
