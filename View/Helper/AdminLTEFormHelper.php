@@ -1769,7 +1769,7 @@ class AdminLTEFormHelper extends AppHelper
         $out = array();
         $out[] = '<div class="iradio">';
         foreach ($options as $value => $input_label)
-            $out[] = '<input type="radio" name="' . $_options['name'] . '" id="' . $_options['id'] . '" value="' . $value . '" ' . ($_options['value'] == $value ? 'checked ' : '') . '>&nbsp;' . $input_label . '&nbsp;';
+            $out[] = '<input type="radio" name="' . $_options['name'] . '" id="' . $_options['id'] . '" value="' . $value . '" ' . ($_options['value'] == $value ? 'checked ' : '') . ' ' . (array_key_exists('disabled', $_options) ? 'disabled ' : '') . '>&nbsp;' . $input_label . '&nbsp;';
 
         $out[] = '</div>';
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $_options['id'] . "\"]').iCheck({checkboxClass: 'icheckbox_square-blue',radioClass: 'iradio_square-blue',increaseArea: '20%'});\n");

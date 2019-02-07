@@ -471,6 +471,8 @@ function sleep (time) {
 };
 
 
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+
 
 
 
