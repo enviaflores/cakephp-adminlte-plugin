@@ -28,8 +28,8 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $this->_tags['divLTE'] = '<div %s>%s</div>';
         $this->_tags['span'] = '<span %s>%s</span>';
         /*
-       
-        */
+         *
+         */
     }
 
     /**
@@ -55,26 +55,25 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-logo.ctp';
             return ob_get_clean();
-        } else
-            if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp')) {
-                $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-logo.css';
-                if (file_exists($css_file)) {
-                    $this->_View->start('cssHead');
-                    include_once $css_file;
-                    $this->_View->end();
-                }
-                $js_file = CakePlugin::path('AdminLTE') . 'View/Elements/js/main-header-logo.js';
-                if (file_exists($js_file)) {
-                    $this->_View->start('scriptBody');
-                    include_once $js_file;
-                    $this->_View->end();
-                }
-                ob_start();
-                require_once CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp';
-                return ob_get_clean();
-            } else {
-                return '<!-- [NoMainHeaderLogoDefined] -->';
+        } else if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp')) {
+            $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-logo.css';
+            if (file_exists($css_file)) {
+                $this->_View->start('cssHead');
+                include_once $css_file;
+                $this->_View->end();
             }
+            $js_file = CakePlugin::path('AdminLTE') . 'View/Elements/js/main-header-logo.js';
+            if (file_exists($js_file)) {
+                $this->_View->start('scriptBody');
+                include_once $js_file;
+                $this->_View->end();
+            }
+            ob_start();
+            require_once CakePlugin::path('AdminLTE') . 'View/Elements/main-header-logo.ctp';
+            return ob_get_clean();
+        } else {
+            return '<!-- [NoMainHeaderLogoDefined] -->';
+        }
     }
 
     /**
@@ -100,33 +99,34 @@ class AdminLTEHtmlHelper extends HtmlHelper
             ob_start();
             require_once APP . 'View/Elements/main-header-nav-bar.ctp';
             return ob_get_clean();
-        } else
-            if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp')) {
-                $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-nav-bar.css';
-                if (file_exists($css_file)) {
-                    $this->_View->start('cssHead');
-                    include_once $css_file;
-                    $this->_View->end();
-                }
-                $js_file = CakePlugin::path('AdminLTE') . 'View/Elements/js/main-header-nav-bar.js';
-                if (file_exists($js_file)) {
-                    $this->_View->start('scriptBody');
-                    include_once $js_file;
-                    $this->_View->end();
-                }
-                ob_start();
-                require_once CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp';
-                return ob_get_clean();
-            } else {
-                return '<!-- [NoMainHeaderNavBarDefined] -->';
+        } else if (file_exists(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp') && is_readable(CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp')) {
+            $css_file = CakePlugin::path('AdminLTE') . 'View/Elements/css/main-header-nav-bar.css';
+            if (file_exists($css_file)) {
+                $this->_View->start('cssHead');
+                include_once $css_file;
+                $this->_View->end();
             }
+            $js_file = CakePlugin::path('AdminLTE') . 'View/Elements/js/main-header-nav-bar.js';
+            if (file_exists($js_file)) {
+                $this->_View->start('scriptBody');
+                include_once $js_file;
+                $this->_View->end();
+            }
+            ob_start();
+            require_once CakePlugin::path('AdminLTE') . 'View/Elements/main-header-nav-bar.ctp';
+            return ob_get_clean();
+        } else {
+            return '<!-- [NoMainHeaderNavBarDefined] -->';
+        }
     }
 
     /**
      * Set Html tags used by this helper.
      *
-     * @param $key
-     * @param $value
+     * @param
+     *            $key
+     * @param
+     *            $value
      */
     public function setTag($key, $value)
     {
@@ -136,7 +136,8 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * Initializes a Html section using ob_start()
      *
-     * @param array $options An array of Html attributes
+     * @param array $options
+     *            An array of Html attributes
      * @return null
      */
     public function sectionStart($options = array())
@@ -159,7 +160,8 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * Initializes a html div using ob_start()
      *
-     * @param array $options An array of Html attributes
+     * @param array $options
+     *            An array of Html attributes
      * @return null
      */
     public function divStart($options = array())
@@ -182,7 +184,8 @@ class AdminLTEHtmlHelper extends HtmlHelper
     /**
      * Initializes the sidebar tag in the right side of the screen using ob_start()
      *
-     * @param array $options An array of Html attributes
+     * @param array $options
+     *            An array of Html attributes
      * @return null
      */
     public function controlSideBarStart($options = array())
@@ -196,27 +199,28 @@ class AdminLTEHtmlHelper extends HtmlHelper
      * Return html structure of control-sidebar
      *
      * $tabs_functions = array(
-     *      'control_tabs' => '',
-     *      'control_panes' => array(
-     *          'tab_one' => array(
-     *              'fa_icon' => 'wrench',
-     *              'tab_li_class' => 'class_tab',
-     *              'tab_pane_class' => 'class_pane',
-     *              'content' => 'html code'
-     *          )
-     *      )
+     * 'control_tabs' => '',
+     * 'control_panes' => array(
+     * 'tab_one' => array(
+     * 'fa_icon' => 'wrench',
+     * 'tab_li_class' => 'class_tab',
+     * 'tab_pane_class' => 'class_pane',
+     * 'content' => 'html code'
+     * )
+     * )
      * );
      *
      * ### Options
      * - `control_tabs` - String Html code of head tabs.
      * - `control_panes` - Array|String Html for tabs content.
-     *     - `tab_one` - Index from tab.
-     *         - `fa_icon` - Icon of tab.
-     *         - `tab_li_class` - Class of li tag in tabs header.
-     *         - `tab_pane_class` - Class of div tag in panes.
-     *         - `content` - Html code of content in body tabs.
+     * - `tab_one` - Index from tab.
+     * - `fa_icon` - Icon of tab.
+     * - `tab_li_class` - Class of li tag in tabs header.
+     * - `tab_pane_class` - Class of div tag in panes.
+     * - `content` - Html code of content in body tabs.
      *
-     * @param array $tabs_options Options and contents of the tabs
+     * @param array $tabs_options
+     *            Options and contents of the tabs
      * @return string Tabs and panes of sidebar
      */
     public function controlSideBarStruct($tabs_options = array())
@@ -233,45 +237,45 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $html_final = '';
         $active_tab = true;
 
-        if(!empty($tabs_options['control_panes']) && is_array($tabs_options['control_panes'])){
-            foreach ($tabs_options['control_panes'] as $tab => $options){
-                try{
+        if (! empty($tabs_options['control_panes']) && is_array($tabs_options['control_panes'])) {
+            foreach ($tabs_options['control_panes'] as $tab => $options) {
+                try {
                     $final_options = array_merge($tab_options_default, $options);
-                    $tabs_li[] = '<li class="'.($active_tab ? 'active': '').' '.$final_options['tab_li_class'].'">
-                                        <a href="#'.$tab.'" data-toggle="tab" aria-expanded="false"><i class="fa fa-'.$final_options['fa_icon'].'"></i></a>
+                    $tabs_li[] = '<li class="' . ($active_tab ? 'active' : '') . ' ' . $final_options['tab_li_class'] . '">
+                                        <a href="#' . $tab . '" data-toggle="tab" aria-expanded="false"><i class="fa fa-' . $final_options['fa_icon'] . '"></i></a>
                                     </li>';
 
-                    $tabs_panes[] ='<div id="'.$tab.'" class="tab-pane '.$final_options['tab_pane_class'].' '.($active_tab ? 'active': '').'">
+                    $tabs_panes[] = '<div id="' . $tab . '" class="tab-pane ' . $final_options['tab_pane_class'] . ' ' . ($active_tab ? 'active' : '') . '">
                                         <div>
-                                            '.$final_options['content'].'
+                                            ' . $final_options['content'] . '
                                         </div>
                                     </div>';
                     $active_tab = false;
-                } catch (Exception $e){
+                } catch (Exception $e) {
                     return $error_building_sidebar;
                 }
             }
-            if(!empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs'])){
+            if (! empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs'])) {
                 $html_final .= $tabs_options['control_tabs'];
-            }else
+            } else
                 $html_final .= '<!-- Create the tabs -->
                         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-                            '.implode('', $tabs_li).'
+                            ' . implode('', $tabs_li) . '
                         </ul>';
 
             $html_final .= '<!-- Tab panes -->
                         <div class="tab-content">
-                            '.implode('', $tabs_panes).'
+                            ' . implode('', $tabs_panes) . '
                         </div>';
-        }elseif((!empty($tabs_options['control_panes']) && is_string($tabs_options['control_panes'])) && (!empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs']))){
-            $html_final .= $tabs_options['control_tabs'].'
+        } elseif ((! empty($tabs_options['control_panes']) && is_string($tabs_options['control_panes'])) && (! empty($tabs_options['control_tabs']) && is_string($tabs_options['control_tabs']))) {
+            $html_final .= $tabs_options['control_tabs'] . '
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            '.$tabs_options['control_panes'].'
+                            ' . $tabs_options['control_panes'] . '
                         </div>';
         }
 
-        return (!empty($html_final) ? $html_final: $error_building_sidebar);
+        return (! empty($html_final) ? $html_final : $error_building_sidebar);
     }
 
     /**
@@ -350,10 +354,10 @@ class AdminLTEHtmlHelper extends HtmlHelper
         if ($fieldName !== false) {
             $class = '';
 
-            $class .= (isset($options['nowrap']) && ($options['nowrap'] === false) ? '': ' nowrap');
+            $class .= (isset($options['nowrap']) && ($options['nowrap'] === false) ? '' : ' nowrap');
 
             $html = '<div class="table-responsive">';
-            $html .= '<table id ="' . Inflector::variable($fieldName) . '" style="width: 100%" class="table responsive table-striped table-bordered '.$class.'">';
+            $html .= '<table id ="' . Inflector::variable($fieldName) . '" style="width: 100%" class="table responsive table-striped table-bordered ' . $class . '">';
             $html .= '<thead>' . ((! empty($options['headers'])) ? $this->tableHeaders($options['headers']) : '') . '</thead>';
             if (empty($data))
                 $html .= '<tbody>' . ((! empty($options['body'])) ? $options['body'] : '') . '</tbody>';
@@ -392,8 +396,10 @@ class AdminLTEHtmlHelper extends HtmlHelper
      * - `close-btn-class` - Class style from bootstrap for button close, can be btn-default, btn-primary, etc.
      * - `save-btn-class` - Class style from bootstrap for button save, can be btn-default, btn-primary, etc.
      *
-     * @param String $fieldName If dialog-header option don't exist, takes the value of $fieldName
-     * @param array $options Array of options.
+     * @param String $fieldName
+     *            If dialog-header option don't exist, takes the value of $fieldName
+     * @param array $options
+     *            Array of options.
      * @return mixed
      */
     public function dialog($fieldName, $options = array())
@@ -414,10 +420,10 @@ class AdminLTEHtmlHelper extends HtmlHelper
         $dialogId = Inflector::variable($fieldName . 'Dialog');
 
         if (empty($options['dialog-footer'])) {
-            if(empty($options['close-btn-class']))
+            if (empty($options['close-btn-class']))
                 $options['close-btn-class'] = 'btn-default';
 
-            if(empty($options['save-btn-class']))
+            if (empty($options['save-btn-class']))
                 $options['save-btn-class'] = 'btn-primary';
 
             $options['dialog-footer'] .= <<<EOF
@@ -425,12 +431,11 @@ class AdminLTEHtmlHelper extends HtmlHelper
 EOF;
             if (isset($options['save-btn-content']) && ! empty($options['save-btn-content']))
                 $options['dialog-footer'] .= '&nbsp;' . $options['save-btn-content'];
-            else
-                if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false) {
-                    $options['dialog-footer'] .= <<<EOF
+            else if (isset($options['save-btn-label']) && $options['save-btn-label'] !== false) {
+                $options['dialog-footer'] .= <<<EOF
                     <button id="{$dialogId}SaveBtn" type="button" class="btn {$options['save-btn-class']}">{$options['save-btn-label']}</button>
 EOF;
-                }
+            }
         }
         $html_data = '';
         $style_wh = array();
@@ -468,20 +473,23 @@ EOF;
     }
 
     /**
-     * Creates a `<button>` tag. The type attribute defaults to `type="submit"`
+     * Creates a `<button>` tag.
+     * The type attribute defaults to `type="submit"`
      * You can change it to a different value by using `$options['type']`.
      *
      * ### Options:
      *
      * - `type` - type of button that can take the next options:
-     *          `app`
-     *          `dropdown`
-     *          `box-tool-icon`
+     * `app`
+     * `dropdown`
+     * `box-tool-icon`
      * - `button-size` - Size of the button
      * - `button-type` - Class style from bootstrap that can be btn-default, btn-primary, etc.
      *
-     * @param string $fieldName The button's caption.
-     * @param array $options Array of options and HTML attributes.
+     * @param string $fieldName
+     *            The button's caption.
+     * @param array $options
+     *            Array of options and HTML attributes.
      * @return string A HTML button tag.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::button
      */
@@ -525,22 +533,23 @@ EOF;
         }
 
         $icon_str = '';
-        if (array_key_exists('button-icon', $options)){
+        if (array_key_exists('button-icon', $options)) {
             $icon_str = '<i class="fa fa-' . $options['button-icon'] . '"></i>';
             unset($options['button-icon']);
         }
 
         $onclick_str = '';
         if (isset($options['onclick'])) {
-            $onclick_str = ' onclick="' . $options['onclick'] . '"';;
+            $onclick_str = ' onclick="' . $options['onclick'] . '"';
+            ;
             unset($options['onclick']);
         }
 
         $attributes_str = '';
-        if (array_key_exists('attributes', $options) && is_array($options['attributes'])){
+        if (array_key_exists('attributes', $options) && is_array($options['attributes'])) {
             $attrb = [];
-            foreach ($options['attributes'] as $attr => $value){
-                $attrb[] = $attr.'="'.$value.'"';
+            foreach ($options['attributes'] as $attr => $value) {
+                $attrb[] = $attr . '="' . $value . '"';
             }
             $attributes_str = implode(' ', $attrb);
             unset($options['attributes']);
@@ -553,7 +562,9 @@ EOF;
     }
 
     /**
-     * @param $fieldName
+     *
+     * @param
+     *            $fieldName
      * @param array $options
      * @return string
      */
@@ -567,7 +578,7 @@ EOF;
         $data_toggle = '';
         if (isset($options['data-toggle']))
             $data_toggle = ' data-toggle="' . $options['data-toggle'] . '"';
-            
+
         $data_widget = '';
         if (isset($options['data-widget']))
             $data_widget = ' data-widget="' . $options['data-widget'] . '"';
@@ -579,7 +590,9 @@ EOF;
     }
 
     /**
-     * @param $fieldName
+     *
+     * @param
+     *            $fieldName
      * @param array $options
      * @return string
      */
@@ -602,10 +615,10 @@ EOF;
         $on_click = '';
         if (isset($options['onclick']))
             $on_click = ' onclick="' . $options['onclick'] . '"';
-        
-            $style = '';
-            if (isset($options['style']))
-                $style = ' style="' . $options['style'] . '"';
+
+        $style = '';
+        if (isset($options['style']))
+            $style = ' style="' . $options['style'] . '"';
 
         $html_data = <<<EOF
         <a id="{$field_id}" href="{$options['href']}" class="btn btn-app" {$on_click} {$style}>{$fieldNotification}<i class="fa fa-{$options['button-icon']}"></i>{$fieldName}</a>
@@ -614,7 +627,9 @@ EOF;
     }
 
     /**
-     * @param $fieldName
+     *
+     * @param
+     *            $fieldName
      * @param array $options
      * @return string
      */
@@ -663,7 +678,9 @@ EOF;
     }
 
     /**
-     * @param $fieldName
+     *
+     * @param
+     *            $fieldName
      * @param array $options
      */
     public function startTimeLine($fieldName, $options = array())
@@ -672,11 +689,17 @@ EOF;
     }
 
     /**
-     * @param $label
-     * @param $header
-     * @param $body
-     * @param $footer
-     * @param $time
+     *
+     * @param
+     *            $label
+     * @param
+     *            $header
+     * @param
+     *            $body
+     * @param
+     *            $footer
+     * @param
+     *            $time
      * @param array $options
      */
     public function addTimeLine($label, $header, $body, $footer, $time, $options = array())
@@ -715,7 +738,6 @@ EOF;
     }
 
     /**
-     *
      */
     public function endTimeLine()
     {
@@ -729,8 +751,10 @@ EOF;
      * - `type` - Style of adminlte progress bar.
      * - `label` - Label that is used how the title.
      *
-     * @param string $fieldName Title of the progress bar.
-     * @param array $options Array of options
+     * @param string $fieldName
+     *            Title of the progress bar.
+     * @param array $options
+     *            Array of options
      */
     public function pogressbar($fieldName, $options = array())
     {
@@ -759,6 +783,7 @@ EOF;
     }
 
     /**
+     *
      * @param array $options
      * @return null
      */
@@ -779,7 +804,9 @@ EOF;
     }
 
     /**
-     * @param $tab_title
+     *
+     * @param
+     *            $tab_title
      * @return null
      */
     public function contentTabStart($tab_title)
@@ -790,6 +817,7 @@ EOF;
     }
 
     /**
+     *
      * @return null
      */
     public function contentTabEnd()
@@ -800,7 +828,9 @@ EOF;
     }
 
     /**
-     * @param $buffer
+     *
+     * @param
+     *            $buffer
      * @param array $options
      * @param array $tabs
      */
@@ -873,54 +903,106 @@ EOF;
         $_html .= '</div>'; // end div nav-tabs-custom
         echo $_html;
     }
-    public function prettyDate($lastDate=null, $include_time=true , $abbreviated=false, $language = 'es'){
-      $new_date = explode(' ',$lastDate);
-      list($year,$month,$day) = explode('-',$new_date[0]);
 
-      if($language == 'es'){
-        $months = array(1=>'Ene',2=>'Feb',3=>'Mar',4=>'Abr',5=>'May',6=>'Jun',7=>'Jul',8=>'Ago',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dic');
-        $monthsComplete = array(1=>'Enero',2=>'Febrero',3=>'Marzo',4=>'Abril',5=>'Mayo',6=>'Junio',7=>'Julio',8=>'Agosto',9=>'Septiembre',10=>'Octubre',11=>'Noviembre',12=>'Diciembre');
-      }else{
-        $months = array(1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec');
-        $monthsComplete = array(1=>'January',2=>'February',3=>'March',4=>'April',5=>'May',6=>'June',7=>'July',8=>'August',9=>'September',10=>'October',11=>'November',12=>'December');
-      }
+    public function prettyDate($lastDate = null, $include_time = true, $abbreviated = false, $language = 'es')
+    {
+        $new_date = explode(' ', $lastDate);
+        list ($year, $month, $day) = explode('-', $new_date[0]);
 
-  		if($abbreviated){
-        $date = $day."/".$months[intval($month)]."/".$year;
-
-        if($language != 'es')
-          $date = $months[intval($month)]."/".$day."/".$year;
-
-  		}else{
-        $date = $day." de ".$monthsComplete[intval($month)]." del ".$year;
-
-        if($language != 'es')
-          $date = $monthsComplete[intval($month)] . " " . $day . ", " . $year;
-      }
-
-      if(!empty($new_date[1])){
-        list($hour,$min,$sec) = explode(':',$new_date[1]);
-        if($hour>=12){
-  				if($hour>12){
-  					$hour = $hour-12;
-  					if(strlen($hour)==1 ){
-  						$hour = "0".$hour;
-  					}
-  				}
-  				$meridian = "p.m.";
-  			}else{
-  				$meridian = "a.m.";
-  			}
-        if($include_time){
-
-          if($language == 'es')
-            $date .= " a las " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
-          else
-            $date .= "  " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+        if ($language == 'es') {
+            $months = array(
+                1 => 'Ene',
+                2 => 'Feb',
+                3 => 'Mar',
+                4 => 'Abr',
+                5 => 'May',
+                6 => 'Jun',
+                7 => 'Jul',
+                8 => 'Ago',
+                9 => 'Sep',
+                10 => 'Oct',
+                11 => 'Nov',
+                12 => 'Dic'
+            );
+            $monthsComplete = array(
+                1 => 'Enero',
+                2 => 'Febrero',
+                3 => 'Marzo',
+                4 => 'Abril',
+                5 => 'Mayo',
+                6 => 'Junio',
+                7 => 'Julio',
+                8 => 'Agosto',
+                9 => 'Septiembre',
+                10 => 'Octubre',
+                11 => 'Noviembre',
+                12 => 'Diciembre'
+            );
+        } else {
+            $months = array(
+                1 => 'Jan',
+                2 => 'Feb',
+                3 => 'Mar',
+                4 => 'Apr',
+                5 => 'May',
+                6 => 'Jun',
+                7 => 'Jul',
+                8 => 'Aug',
+                9 => 'Sep',
+                10 => 'Oct',
+                11 => 'Nov',
+                12 => 'Dec'
+            );
+            $monthsComplete = array(
+                1 => 'January',
+                2 => 'February',
+                3 => 'March',
+                4 => 'April',
+                5 => 'May',
+                6 => 'June',
+                7 => 'July',
+                8 => 'August',
+                9 => 'September',
+                10 => 'October',
+                11 => 'November',
+                12 => 'December'
+            );
         }
-      }
 
-      return $date;
+        if ($abbreviated) {
+            $date = $day . "/" . $months[intval($month)] . "/" . $year;
 
-  	}
+            if ($language != 'es')
+                $date = $months[intval($month)] . "/" . $day . "/" . $year;
+        } else {
+            $date = $day . " de " . $monthsComplete[intval($month)] . " del " . $year;
+
+            if ($language != 'es')
+                $date = $monthsComplete[intval($month)] . " " . $day . ", " . $year;
+        }
+
+        if (! empty($new_date[1])) {
+            list ($hour, $min, $sec) = explode(':', $new_date[1]);
+            if ($hour >= 12) {
+                if ($hour > 12) {
+                    $hour = $hour - 12;
+                    if (strlen($hour) == 1) {
+                        $hour = "0" . $hour;
+                    }
+                }
+                $meridian = "p.m.";
+            } else {
+                $meridian = "a.m.";
+            }
+            if ($include_time) {
+
+                if ($language == 'es')
+                    $date .= " a las " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+                else
+                    $date .= "  " . $hour . ":" . $min . ":" . $sec . " " . $meridian;
+            }
+        }
+
+        return $date;
+    }
 }
