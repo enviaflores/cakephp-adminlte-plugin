@@ -90,7 +90,7 @@ class ProcessFailedExceptionTest extends TestCase
     }
 
     /**
-     * Tests that ProcessFailedException does not extract information from
+     * Test that ProcessFailedException does not extract information from
      * process output if it was previously disabled.
      */
     public function testDisabledOutputInFailedExceptionDoesNotPopulateOutput()

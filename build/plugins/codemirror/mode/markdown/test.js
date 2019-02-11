@@ -163,7 +163,7 @@
   MT("doubleBackticks",
      "[comment ``foo ` bar``]");
 
-  // Tests based on Dingus
+  // Test based on Dingus
   // http://daringfireball.net/projects/markdown/dingus
   //
   // Multiple backticks within an inline code block
@@ -916,7 +916,7 @@
   FormatTokenTypeOverrideTest("overrideFormatting",
     "[override-formatting-escape \\*]");
 
-  // Tests to make sure GFM-specific things aren't getting through
+  // Test to make sure GFM-specific things aren't getting through
 
   MT("taskList",
      "[variable-2 * [ ]] bar]");
@@ -968,7 +968,7 @@
      "[comment ~~~]",
      "bar");
 
-  // Tests that require XML mode
+  // Test that require XML mode
 
   MT("xmlMode",
      "[tag&bracket <][tag div][tag&bracket >]",
