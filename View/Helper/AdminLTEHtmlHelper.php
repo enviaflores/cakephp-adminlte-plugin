@@ -541,7 +541,7 @@ EOF;
         $onclick_str = '';
         if (isset($options['onclick'])) {
             $onclick_str = ' onclick="' . $options['onclick'] . '"';
-            ;
+            
             unset($options['onclick']);
         }
 
