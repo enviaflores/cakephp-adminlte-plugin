@@ -193,7 +193,7 @@ class AdminLTEWidgetsHelper extends HtmlHelper
     public function defaultBoxEnd($return = false)
     {
         $buffer = ob_get_clean();
-        $_box_html_str = '<div class="box box-' . $this->_defaultBoxOptions['variant'] . '">';
+        $_box_html_str = '<div class="box box-' . $this->_defaultBoxOptions['variant'] . '" ' . $this->process_box_params('box-params') . '>';
         if ($this->_defaultBoxOptions['header'] !== false) {
             $_box_html_str .= '<div class="box-header' . ((! empty($this->_defaultBoxOptions['header']['border'])) ? ' with-border' : '') . '">';
             $_box_html_str .= '<h3 class="box-title">' . $this->_defaultBoxOptions['header']['title'] . '</h3>';
@@ -219,5 +219,32 @@ class AdminLTEWidgetsHelper extends HtmlHelper
             print $_box_html_str;
         else 
             return $_box_html_str;
+    }
+
+    /**
+     * Processes an array of parameters given at _defaultBoxOptions.
+     *
+     * @param string $params Index for search in _defaultBoxOptions
+     * @return string
+     */
+    private function process_box_params($params = '')
+    {
+        if (empty($params) || !is_string($params) || !isset($this->_defaultBoxOptions[$params]))
+            return '';
+
+        $elements = [];
+
+        foreach ($this->_defaultBoxOptions[$params] as $index => $param) {
+            if (!is_string($param))
+                continue;
+
+            if (is_numeric($index))
+                array_push($elements, $param);
+            else {
+                array_push($elements, $index.'="'.$param.'"');
+            }
+        }
+
+        return implode(' ', $elements);
     }
 }
