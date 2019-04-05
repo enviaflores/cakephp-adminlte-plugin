@@ -77,6 +77,8 @@ if (! empty($head_additional_scripts))
 	<?php echo $this->fetch('modal-dialogs'); ?>
 <!-- jQuery 2.2.0 -->
 <?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.4', array('inline' => true)); ?>
+<!-- jQueryUI 1.11.4 -->
+<?php echo $this->Html->script('https://code.jquery.com/ui/1.12.1/jquery-ui.js', array('inline' => true)); ?>
 <!-- Bootstrap 3.3.5 -->
 <?php echo $this->Html->script('AdminLTE.bootstrap/bootstrap-3.3.6', array('inline' => true)); ?>
 <!-- SlimScroll -->
