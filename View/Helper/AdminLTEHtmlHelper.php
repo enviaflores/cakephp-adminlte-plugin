@@ -916,4 +916,47 @@ EOF;
       return $date;
 
   	}
-}
+
+    /**
+     * @param string $fieldName
+     * @param array  $options
+     * @return string|void
+     */
+    public function Image($fieldName, $options = array())
+    {
+        $defaultOpts = array(
+            'label' => 'Vista Previa'
+        );
+        $options += $defaultOpts;
+
+        if (isset($options['id']))
+            $field_id = $options['id'];
+        else
+            $field_id = Inflector::variable($fieldName . 'Image');
+
+        $src = 'http://www.finescale.com/sitefiles/images/no-preview-available.png';
+        if(isset($options['src']) && !empty($options['src']))
+            $src = $options['src'];
+
+        $alt = $fieldName;
+        if(isset($options['alt']) && !empty($options['alt']))
+            $alt = $options['alt'];
+
+        $label = '';
+        if(isset($options['label']) && !empty($options['label']))
+            $label = '<label>'.$options["label"].'</label>';
+
+
+
+        $html_data = <<<EOF
+        <div class="row">
+        <div class="col-md-12">
+        {$label}
+                      <img id="{$field_id}" class="img-responsive thumbnail" src="{$src}" alt="{$alt}" style=" width: auto;height : auto; line-height: 150px;">
+        </div>
+</div>
+EOF;
+        echo $html_data;
+    }
+
+    }
