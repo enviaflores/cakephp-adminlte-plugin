@@ -24,36 +24,36 @@ class AdminLTEFormHelper extends AppHelper
      *
      * @var array
      */
-    public $helpers = array(
-        'Html'
-    );
+    public $helpers = [
+        'Html',
+    ];
 
     /**
      * Options used by DateTime fields
      *
      * @var array
      */
-    protected $_options = array(
-        'day'      => array(),
-        'minute'   => array(),
-        'hour'     => array(),
-        'month'    => array(),
-        'year'     => array(),
-        'meridian' => array()
-    );
+    protected $_options = [
+        'day'      => [],
+        'minute'   => [],
+        'hour'     => [],
+        'month'    => [],
+        'year'     => [],
+        'meridian' => [],
+    ];
 
-    protected $feedbackIcons = array(
+    protected $feedbackIcons = [
         'email' => 'envelope',
         'cell'  => 'phone',
-        'phone' => 'phone'
-    );
+        'phone' => 'phone',
+    ];
 
     /**
      * List of fields created, used with secure forms.
      *
      * @var array
      */
-    public $fields = array();
+    public $fields = [];
 
     /**
      * Constant used internally to skip the securing process,
@@ -84,7 +84,7 @@ class AdminLTEFormHelper extends AppHelper
      *
      * @var array
      */
-    protected $_inputDefaults = array();
+    protected $_inputDefaults = [];
 
     /**
      * An array of field names that have been excluded from
@@ -94,7 +94,7 @@ class AdminLTEFormHelper extends AppHelper
      * @see SecurityComponent::validatePost()
      * @var array
      */
-    protected $_unlockedFields = array();
+    protected $_unlockedFields = [];
 
     /**
      * Holds the model references already loaded by this helper
@@ -102,7 +102,7 @@ class AdminLTEFormHelper extends AppHelper
      *
      * @var array
      */
-    protected $_models = array();
+    protected $_models = [];
 
     /**
      * Holds all the validation errors for models loaded and inspected
@@ -111,14 +111,14 @@ class AdminLTEFormHelper extends AppHelper
      *
      * @var array
      */
-    public $validationErrors = array();
+    public $validationErrors = [];
 
     /**
      * Holds already used DOM ID suffixes to avoid collisions with multiple form field elements.
      *
      * @var array
      */
-    protected $_domIdSuffixes = array();
+    protected $_domIdSuffixes = [];
 
     /**
      * The action attribute value of the last created form.
@@ -128,7 +128,7 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected $_lastAction = '';
 
-    protected $_jsArrayHelper = array();
+    protected $_jsArrayHelper = [];
 
     /**
      * Copies the validationErrors variable from the View object into this instance
@@ -138,7 +138,7 @@ class AdminLTEFormHelper extends AppHelper
      * @param array $settings
      *            Configuration settings for the helper.
      */
-    public function __construct(View $View, $settings = array())
+    public function __construct(View $View, $settings = [])
     {
         parent::__construct($View, $settings);
         $this->validationErrors = &$View->validationErrors;
@@ -168,10 +168,10 @@ class AdminLTEFormHelper extends AppHelper
         } elseif (isset($this->request->params[ 'models' ][ $model ])) {
             $plugin = $this->request->params[ 'models' ][ $model ][ 'plugin' ];
             $plugin .= ($plugin) ? '.' : null;
-            $object = ClassRegistry::init(array(
+            $object = ClassRegistry::init([
                 'class' => $plugin . $this->request->params[ 'models' ][ $model ][ 'className' ],
-                'alias' => $model
-            ));
+                'alias' => $model,
+            ]);
         } elseif (ClassRegistry::isKeySet($this->defaultModel)) {
             $defaultObject = ClassRegistry::getObject($this->defaultModel);
             if ($defaultObject && in_array($model, array_keys($defaultObject->getAssociated()),
@@ -187,11 +187,11 @@ class AdminLTEFormHelper extends AppHelper
             return null;
         }
 
-        $this->fieldset[ $model ] = array(
+        $this->fieldset[ $model ] = [
             'fields'    => null,
             'key'       => $object->primaryKey,
-            'validates' => null
-        );
+            'validates' => null,
+        ];
         return $object;
     }
 
@@ -233,9 +233,9 @@ class AdminLTEFormHelper extends AppHelper
             if (!isset($this->fieldset[ $model ][ 'fields' ])) {
                 $this->fieldset[ $model ][ 'fields' ] = $object->schema();
                 foreach ($object->hasAndBelongsToMany as $alias => $assocData) {
-                    $this->fieldset[ $object->alias ][ 'fields' ][ $alias ] = array(
-                        'type' => 'multiple'
-                    );
+                    $this->fieldset[ $object->alias ][ 'fields' ][ $alias ] = [
+                        'type' => 'multiple',
+                    ];
                 }
             }
             if ($field === null || $field === false) {
@@ -243,9 +243,9 @@ class AdminLTEFormHelper extends AppHelper
             } elseif (isset($this->fieldset[ $model ][ 'fields' ][ $field ])) {
                 return $this->fieldset[ $model ][ 'fields' ][ $field ];
             }
-            return isset($object->hasAndBelongsToMany[ $field ]) ? array(
-                'type' => 'multiple'
-            ) : null;
+            return isset($object->hasAndBelongsToMany[ $field ]) ? [
+                'type' => 'multiple',
+            ] : null;
         }
 
         if ($key === 'errors' && !isset($this->validationErrors[ $model ])) {
@@ -256,7 +256,7 @@ class AdminLTEFormHelper extends AppHelper
         }
 
         if ($key === 'validates' && !isset($this->fieldset[ $model ][ 'validates' ])) {
-            $validates = array();
+            $validates = [];
             foreach (iterator_to_array($object->validator(), true) as $validateField => $validateProperties) {
                 if ($this->_isRequiredField($validateProperties)) {
                     $validates[ $validateField ] = true;
@@ -317,7 +317,7 @@ class AdminLTEFormHelper extends AppHelper
             $model = array_shift($entity);
         }
 
-        $errors = array();
+        $errors = [];
         if (!empty($entity) && isset($this->validationErrors[ $model ])) {
             $errors = $this->validationErrors[ $model ];
         }
@@ -359,7 +359,7 @@ class AdminLTEFormHelper extends AppHelper
      * @return string A formatted opening FORM tag.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#options-for-create
      */
-    public function create($model = null, $options = array())
+    public function create($model = null, $options = [])
     {
         $created = $id = false;
         $append = '';
@@ -392,14 +392,14 @@ class AdminLTEFormHelper extends AppHelper
             }
         }
 
-        $options += array(
+        $options += [
             'type'          => ($created && empty($options[ 'action' ])) ? 'put' : 'post',
             'action'        => null,
             'url'           => null,
             'default'       => true,
             'encoding'      => strtolower(Configure::read('App.encoding')),
-            'inputDefaults' => array()
-        );
+            'inputDefaults' => [],
+        ];
         $this->inputDefaults($options[ 'inputDefaults' ]);
         unset($options[ 'inputDefaults' ]);
 
@@ -433,11 +433,11 @@ class AdminLTEFormHelper extends AppHelper
             if ($this->plugin) {
                 $plugin = Inflector::underscore($this->plugin);
             }
-            $actionDefaults = array(
+            $actionDefaults = [
                 'plugin'     => $plugin,
                 'controller' => $this->_View->viewPath,
-                'action'     => $options[ 'action' ]
-            );
+                'action'     => $options[ 'action' ],
+            ];
             $options[ 'action' ] = array_merge($actionDefaults, (array)$options[ 'url' ]);
             if (!isset($options[ 'action' ][ 0 ]) && !empty($id)) {
                 $options[ 'action' ][ 0 ] = $id;
@@ -456,12 +456,12 @@ class AdminLTEFormHelper extends AppHelper
             case 'post':
             case 'put':
             case 'delete':
-                $append .= $this->hidden('_method', array(
+                $append .= $this->hidden('_method', [
                     'name'   => '_method',
                     'value'  => strtoupper($options[ 'type' ]),
                     'id'     => null,
-                    'secure' => static::SECURE_SKIP
-                ));
+                    'secure' => static::SECURE_SKIP,
+                ]);
             default:
                 $htmlAttributes[ 'method' ] = 'post';
         }
@@ -491,7 +491,7 @@ class AdminLTEFormHelper extends AppHelper
 
         $htmlAttributes = array_merge($options, $htmlAttributes);
 
-        $this->fields = array();
+        $this->fields = [];
         if ($this->requestType !== 'get') {
             $append .= $this->_csrfField();
         }
@@ -528,11 +528,11 @@ class AdminLTEFormHelper extends AppHelper
                 $this->_unlockedFields[] = $unlocked;
             }
         }
-        return $this->hidden('_Token.key', array(
+        return $this->hidden('_Token.key', [
             'value'  => $this->request->params[ '_Token' ][ 'key' ],
             'id'     => 'Token' . mt_rand(),
-            'secure' => static::SECURE_SKIP
-        ));
+            'secure' => static::SECURE_SKIP,
+        ]);
     }
 
     /**
@@ -562,13 +562,13 @@ class AdminLTEFormHelper extends AppHelper
      * @return string a closing FORM tag optional submit button.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#closing-the-form
      */
-    public function end($options = null, $secureAttributes = array())
+    public function end($options = null, $secureAttributes = [])
     {
         $out = null;
         $submit = null;
 
         if ($options !== null) {
-            $submitOptions = array();
+            $submitOptions = [];
             if (is_string($options)) {
                 $submit = $options;
             } else {
@@ -582,7 +582,7 @@ class AdminLTEFormHelper extends AppHelper
         }
         if ($this->requestType !== 'get' && isset($this->request[ '_Token' ]) && !empty($this->request[ '_Token' ])) {
             $out .= $this->secure($this->fields, $secureAttributes);
-            $this->fields = array();
+            $this->fields = [];
         }
         $this->setEntity(null);
         $out .= $this->Html->useTag('formend');
@@ -609,12 +609,12 @@ class AdminLTEFormHelper extends AppHelper
      * @return string|null A hidden input field with a security hash, otherwise null.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::secure
      */
-    public function secure($fields = array(), $secureAttributes = array())
+    public function secure($fields = [], $secureAttributes = [])
     {
         if (!isset($this->request[ '_Token' ]) || empty($this->request[ '_Token' ])) {
             return null;
         }
-        $locked = array();
+        $locked = [];
         $unlockedFields = $this->_unlockedFields;
 
         foreach ($fields as $key => $value) {
@@ -631,23 +631,23 @@ class AdminLTEFormHelper extends AppHelper
 
         $locked = implode(array_keys($locked), '|');
         $unlocked = implode($unlockedFields, '|');
-        $hashParts = array(
+        $hashParts = [
             $this->_lastAction,
             serialize($fields),
             $unlocked,
-            Configure::read('Security.salt')
-        );
+            Configure::read('Security.salt'),
+        ];
         $fields = Security::hash(implode('', $hashParts), 'sha1');
 
-        $tokenFields = array_merge($secureAttributes, array(
+        $tokenFields = array_merge($secureAttributes, [
             'value' => urlencode($fields . ':' . $locked),
-            'id'    => 'TokenFields' . mt_rand()
-        ));
+            'id'    => 'TokenFields' . mt_rand(),
+        ]);
         $out = $this->hidden('_Token.fields', $tokenFields);
-        $tokenUnlocked = array_merge($secureAttributes, array(
+        $tokenUnlocked = array_merge($secureAttributes, [
             'value' => urlencode($unlocked),
-            'id'    => 'TokenUnlocked' . mt_rand()
-        ));
+            'id'    => 'TokenUnlocked' . mt_rand(),
+        ]);
         $out .= $this->hidden('_Token.unlocked', $tokenUnlocked);
         return $this->Html->useTag('hiddenblock', $out);
     }
@@ -757,13 +757,13 @@ class AdminLTEFormHelper extends AppHelper
      * @return string|null If there are errors this method returns an error message, otherwise null.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::error
      */
-    public function error($field, $text = null, $options = array())
+    public function error($field, $text = null, $options = [])
     {
-        $defaults = array(
+        $defaults = [
             'wrap'   => true,
             'class'  => 'error-message',
-            'escape' => true
-        );
+            'escape' => true,
+        ];
         $options += $defaults;
         $this->setEntity($field);
 
@@ -776,7 +776,7 @@ class AdminLTEFormHelper extends AppHelper
                 $options = array_merge($options, $text[ 'attributes' ]);
                 unset($text[ 'attributes' ]);
             }
-            $tmp = array();
+            $tmp = [];
             foreach ($error as &$e) {
                 if (isset($text[ $e ])) {
                     $tmp[] = $text[ $e ];
@@ -803,7 +803,7 @@ class AdminLTEFormHelper extends AppHelper
         }
         if (is_array($error)) {
             if (count($error) > 1) {
-                $listParams = array();
+                $listParams = [];
                 if (isset($options[ 'listOptions' ])) {
                     if (is_string($options[ 'listOptions' ])) {
                         $listParams[] = $options[ 'listOptions' ];
@@ -812,7 +812,7 @@ class AdminLTEFormHelper extends AppHelper
                             $listParams[] = $options[ 'listOptions' ][ 'itemOptions' ];
                             unset($options[ 'listOptions' ][ 'itemOptions' ]);
                         } else {
-                            $listParams[] = array();
+                            $listParams[] = [];
                         }
                         if (isset($options[ 'listOptions' ][ 'tag' ])) {
                             $listParams[] = $options[ 'listOptions' ][ 'tag' ];
@@ -823,10 +823,10 @@ class AdminLTEFormHelper extends AppHelper
                     unset($options[ 'listOptions' ]);
                 }
                 array_unshift($listParams, $error);
-                $error = call_user_func_array(array(
+                $error = call_user_func_array([
                     $this->Html,
-                    'nestedList'
-                ), $listParams);
+                    'nestedList',
+                ], $listParams);
             } else {
                 $error = array_pop($error);
             }
@@ -897,7 +897,7 @@ class AdminLTEFormHelper extends AppHelper
      * @return string The formatted LABEL element
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::label
      */
-    public function label($fieldName = null, $text = null, $options = array())
+    public function label($fieldName = null, $text = null, $options = [])
     {
         if ($fieldName === null) {
             $fieldName = implode('.', $this->entity());
@@ -917,9 +917,9 @@ class AdminLTEFormHelper extends AppHelper
         }
 
         if (is_string($options)) {
-            $options = array(
-                'class' => $options
-            );
+            $options = [
+                'class' => $options,
+            ];
         }
 
         if (isset($options[ 'icon' ])) {
@@ -967,10 +967,10 @@ class AdminLTEFormHelper extends AppHelper
      * @return string Completed form inputs.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::inputs
      */
-    public function inputs($fields = null, $blacklist = null, $options = array())
+    public function inputs($fields = null, $blacklist = null, $options = [])
     {
         $fieldset = $legend = true;
-        $modelFields = array();
+        $modelFields = [];
         $model = $this->model();
         if ($model) {
             $modelFields = array_keys((array)$this->_introspectModel($model, 'fields'));
@@ -990,7 +990,7 @@ class AdminLTEFormHelper extends AppHelper
             if (!is_bool($fieldset)) {
                 $fieldset = true;
             }
-            $fields = array();
+            $fields = [];
         }
 
         if (isset($options[ 'legend' ])) {
@@ -1019,7 +1019,7 @@ class AdminLTEFormHelper extends AppHelper
         foreach ($fields as $name => $options) {
             if (is_numeric($name) && !is_array($options)) {
                 $name = $options;
-                $options = array();
+                $options = [];
             }
             $entity = explode('.', $name);
             $blacklisted = (is_array($blacklist) && (in_array($name, $blacklist) || in_array(end($entity),
@@ -1080,7 +1080,7 @@ class AdminLTEFormHelper extends AppHelper
      * @return string Completed form widget.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#creating-form-elements
      */
-    public function input($fieldName, $options = array())
+    public function input($fieldName, $options = [])
     {
         if (empty($options[ 'type' ])) {
             $options[ 'type' ] = 'text';
@@ -1128,12 +1128,12 @@ class AdminLTEFormHelper extends AppHelper
         }
 
         $type = $options[ 'type' ];
-        $out = array(
+        $out = [
             'before'  => $options[ 'before' ],
             'label'   => $label,
             'between' => $options[ 'between' ],
-            'after'   => $options[ 'after' ]
-        );
+            'after'   => $options[ 'after' ],
+        ];
         $format = $this->_getFormat($options);
 
         unset($options[ 'type' ], $options[ 'before' ], $options[ 'between' ], $options[ 'after' ], $options[ 'format' ]);
@@ -1177,10 +1177,10 @@ class AdminLTEFormHelper extends AppHelper
         if (!empty($options[ 'inline-help' ]) && !empty($out[ 'label' ]) && empty($options[ 'has-feedback' ])) {
             $out[ 'label' ] .= '&nbsp;<i class="fa fa-fw fa-question"  data-toggle="tooltip" data-original-title="' . $options[ 'inline-help' ] . '"></i>';
             unset($options[ 'inline-help' ]);
-            return $this->Html->useTag('block', array(
+            return $this->Html->useTag('block', [
                 'for'   => $this->domId($fieldName),
-                'class' => 'form-group'
-            ), $out[ 'label' ] . $out[ 'input' ]);
+                'class' => 'form-group',
+            ], $out[ 'label' ] . $out[ 'input' ]);
         }
 
         if (!empty($options[ 'has-feedback' ])) {
@@ -1188,29 +1188,29 @@ class AdminLTEFormHelper extends AppHelper
             if (!empty($this->feedbackIcons[ $options[ 'has-feedback' ] ])) {
                 $icon = $this->feedbackIcons[ $options[ 'has-feedback' ] ];
             }
-            return $this->Html->useTag('block', array(
-                'class' => 'form-group has-feedback'
-            ), $out[ 'label' ] . $out[ 'input' ] . $this->Html->useTag('span', array(
-                    'class' => 'glyphicon glyphicon-' . $icon . ' form-control-feedback'
-                ), null));
+            return $this->Html->useTag('block', [
+                'class' => 'form-group has-feedback',
+            ], $out[ 'label' ] . $out[ 'input' ] . $this->Html->useTag('span', [
+                    'class' => 'glyphicon glyphicon-' . $icon . ' form-control-feedback',
+                ], null));
         }
 
         /**
          * tagsinput support
          */
         if (!empty($options[ 'data-role' ]) && $options[ 'data-role' ] == "tagsinput") {
-            $this->Html->script('AdminLTE.bootstrap-tagsinput/0.8.0/bootstrap-tagsinput', array(
-                'inline' => false
-            ));
-            $this->Html->css('AdminLTE.bootstrap-tagsinput/0.8.0/bootstrap-tagsinput', array(
-                'inline' => false
-            ));
+            $this->Html->script('AdminLTE.bootstrap-tagsinput/0.8.0/bootstrap-tagsinput', [
+                'inline' => false,
+            ]);
+            $this->Html->css('AdminLTE.bootstrap-tagsinput/0.8.0/bootstrap-tagsinput', [
+                'inline' => false,
+            ]);
         }
 
-        return $this->Html->tag('div', $output, array(
+        return $this->Html->tag('div', $output, [
             'class' => 'form-group',
-            'for'   => $this->domId($fieldName)
-        ));
+            'for'   => $this->domId($fieldName),
+        ]);
     }
 
     /**
@@ -1233,37 +1233,37 @@ class AdminLTEFormHelper extends AppHelper
             case 'file':
                 return $this->file($fieldName, $options);
             case 'select':
-                $options += array(
-                    'options' => array(),
-                    'value'   => $selected
-                );
+                $options += [
+                    'options' => [],
+                    'value'   => $selected,
+                ];
                 $list = $options[ 'options' ];
                 unset($options[ 'options' ]);
                 return $this->select($fieldName, $list, $options);
             case 'time':
-                $options += array(
-                    'value' => $selected
-                );
+                $options += [
+                    'value' => $selected,
+                ];
                 return $this->dateTime($fieldName, null, $timeFormat, $options);
             case 'date':
-                $options += array(
-                    'value' => $selected
-                );
+                $options += [
+                    'value' => $selected,
+                ];
                 return $this->dateTime($fieldName, $dateFormat, null, $options);
             case 'datetime':
-                $options += array(
-                    'value' => $selected
-                );
+                $options += [
+                    'value' => $selected,
+                ];
                 return $this->dateTime($fieldName, $dateFormat, $timeFormat, $options);
             case 'textarea':
-                return $this->textarea($fieldName, $options + array(
+                return $this->textarea($fieldName, $options + [
                         'cols' => '30',
-                        'rows' => '6'
-                    ));
+                        'rows' => '6',
+                    ]);
             case 'url':
-                return $this->text($fieldName, array(
-                        'type' => 'url'
-                    ) + $options);
+                return $this->text($fieldName, [
+                        'type' => 'url',
+                    ] + $options);
             case 'email':
                 return $this->email($fieldName, $options);
             default:
@@ -1280,21 +1280,21 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _parseOptions($options)
     {
-        $options = array_merge(array(
+        $options = array_merge([
             'before'  => null,
             'between' => null,
             'after'   => null,
-            'format'  => null
-        ), $this->_inputDefaults, $options);
+            'format'  => null,
+        ], $this->_inputDefaults, $options);
 
         if (!isset($options[ 'type' ])) {
             $options = $this->_magicOptions($options);
         }
 
-        if (in_array($options[ 'type' ], array(
+        if (in_array($options[ 'type' ], [
             'radio',
-            'select'
-        ))) {
+            'select',
+        ])) {
             $options = $this->_optionsOptions($options);
         }
 
@@ -1305,9 +1305,9 @@ class AdminLTEFormHelper extends AppHelper
         }
 
         if ($options[ 'type' ] === 'datetime' || $options[ 'type' ] === 'date' || $options[ 'type' ] === 'time' || $options[ 'type' ] === 'select') {
-            $options += array(
-                'empty' => false
-            );
+            $options += [
+                'empty' => false,
+            ];
         }
         return $options;
     }
@@ -1350,17 +1350,17 @@ class AdminLTEFormHelper extends AppHelper
         $options[ 'type' ] = 'text';
         if (isset($options[ 'options' ])) {
             $options[ 'type' ] = 'select';
-        } elseif (in_array($fieldKey, array(
+        } elseif (in_array($fieldKey, [
             'psword',
             'passwd',
-            'password'
-        ))) {
+            'password',
+        ])) {
             $options[ 'type' ] = 'password';
-        } elseif (in_array($fieldKey, array(
+        } elseif (in_array($fieldKey, [
             'tel',
             'telephone',
-            'phone'
-        ))) {
+            'phone',
+        ])) {
             $options[ 'type' ] = 'tel';
         } elseif ($fieldKey === 'email') {
             $options[ 'type' ] = 'email';
@@ -1369,7 +1369,7 @@ class AdminLTEFormHelper extends AppHelper
         } elseif ($fieldDef = $this->_introspectModel($modelKey, 'fields', $fieldKey)) {
             $type = $fieldDef[ 'type' ];
             $primaryKey = $this->fieldset[ $modelKey ][ 'key' ];
-            $map = array(
+            $map = [
                 'string'    => 'text',
                 'datetime'  => 'datetime',
                 'boolean'   => 'checkbox',
@@ -1380,8 +1380,8 @@ class AdminLTEFormHelper extends AppHelper
                 'float'     => 'number',
                 'integer'   => 'number',
                 'decimal'   => 'number',
-                'binary'    => 'file'
-            );
+                'binary'    => 'file',
+            ];
 
             if (isset($this->map[ $type ])) {
                 $options[ 'type' ] = $this->map[ $type ];
@@ -1411,10 +1411,10 @@ class AdminLTEFormHelper extends AppHelper
                 $options[ 'multiple' ] = 'multiple';
             }
         }
-        if (in_array($options[ 'type' ], array(
+        if (in_array($options[ 'type' ], [
             'text',
-            'number'
-        ))) {
+            'number',
+        ])) {
             $options = $this->_optionsOptions($options);
         }
         if ($options[ 'type' ] === 'select' && array_key_exists('step', $options)) {
@@ -1434,31 +1434,31 @@ class AdminLTEFormHelper extends AppHelper
     protected function _getFormat($options)
     {
         if ($options[ 'type' ] === 'hidden') {
-            return array(
-                'input'
-            );
+            return [
+                'input',
+            ];
         }
         if (is_array($options[ 'format' ]) && in_array('input', $options[ 'format' ])) {
             return $options[ 'format' ];
         }
         if ($options[ 'type' ] === 'checkbox') {
-            return array(
+            return [
                 'before',
                 'input',
                 'between',
                 'label',
                 'after',
-                'error'
-            );
+                'error',
+            ];
         }
-        return array(
+        return [
             'before',
             'label',
             'between',
             'input',
             'after',
-            'error'
-        );
+            'error',
+        ];
     }
 
     /**
@@ -1499,14 +1499,14 @@ class AdminLTEFormHelper extends AppHelper
         $fieldDef = $this->_introspectModel($this->model(), 'fields', $this->field());
         $autoLength = (!array_key_exists('maxlength',
                 $options) && isset($fieldDef[ 'length' ]) && is_scalar($fieldDef[ 'length' ]) && $fieldDef[ 'length' ] < 1000000 && $fieldDef[ 'type' ] !== 'decimal' && $options[ 'type' ] !== 'select');
-        if ($autoLength && in_array($options[ 'type' ], array(
+        if ($autoLength && in_array($options[ 'type' ], [
                 'text',
                 'textarea',
                 'email',
                 'tel',
                 'url',
-                'search'
-            ))) {
+                'search',
+            ])) {
             $options[ 'maxlength' ] = (int)$fieldDef[ 'length' ];
         }
         return $options;
@@ -1522,21 +1522,21 @@ class AdminLTEFormHelper extends AppHelper
     protected function _divOptions($options)
     {
         if ($options[ 'type' ] === 'hidden') {
-            return array();
+            return [];
         }
 
         if ($options[ 'type' ] === 'select') {
-            return array();
+            return [];
         }
 
         $div = $this->_extractOption('div', $options, true);
         if (!$div) {
-            return array();
+            return [];
         }
 
-        $divOptions = array(
-            'class' => 'input'
-        );
+        $divOptions = [
+            'class' => 'input',
+        ];
         $divOptions = $this->addClass($divOptions, $options[ 'type' ]);
         if (is_string($div)) {
             $divOptions[ 'class' ] = $div;
@@ -1599,7 +1599,7 @@ class AdminLTEFormHelper extends AppHelper
      */
     protected function _inputLabel($fieldName, $label, $options)
     {
-        $labelAttributes = $this->domId(array(), 'for');
+        $labelAttributes = $this->domId([], 'for');
         $idKey = null;
         if ($options[ 'type' ] === 'date' || $options[ 'type' ] === 'datetime') {
             $firstInput = 'M';
@@ -1648,9 +1648,9 @@ class AdminLTEFormHelper extends AppHelper
         }
 
         if (isset($options[ 'id' ]) && is_string($options[ 'id' ])) {
-            $labelAttributes = array_merge($labelAttributes, array(
-                'for' => $options[ 'id' ]
-            ));
+            $labelAttributes = array_merge($labelAttributes, [
+                'for' => $options[ 'id' ],
+            ]);
         }
         return $this->label($fieldName, $labelText, $labelAttributes);
     }
@@ -1676,30 +1676,30 @@ class AdminLTEFormHelper extends AppHelper
      * @return string An HTML text input element.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#options-for-select-checkbox-and-radio-inputs
      */
-    public function checkbox($fieldName, $options = array())
+    public function checkbox($fieldName, $options = [])
     {
         if (!defined('adminlteformhelper.checkbox.included_helpers_icheck')) {
-            $this->Html->css('AdminLTE.iCheck/square/_all', array(
-                'inline' => false
-            ));
-            $this->Html->script('AdminLTE.iCheck/icheck', array(
-                'inline' => false
-            ));
+            $this->Html->css('AdminLTE.iCheck/square/_all', [
+                'inline' => false,
+            ]);
+            $this->Html->script('AdminLTE.iCheck/icheck', [
+                'inline' => false,
+            ]);
             define('adminlteformhelper.checkbox.included_helpers_icheck', true);
         }
-        $valueOptions = array();
+        $valueOptions = [];
         if (isset($options[ 'default' ])) {
             $valueOptions[ 'default' ] = $options[ 'default' ];
             unset($options[ 'default' ]);
         }
 
-        $options += array(
+        $options += [
             'value'    => 1,
-            'required' => false
-        );
-        $options = $this->_initInputField($fieldName, $options) + array(
-                'hiddenField' => true
-            );
+            'required' => false,
+        ];
+        $options = $this->_initInputField($fieldName, $options) + [
+                'hiddenField' => true,
+            ];
         $value = current($this->value($valueOptions));
         $output = '';
         $label = '';
@@ -1722,20 +1722,20 @@ class AdminLTEFormHelper extends AppHelper
                 case 'red':
                 case 'yellow':
                     $color_box = '-' . $options[ 'color' ];
-                    $this->Html->css('AdminLTE.iCheck/square/' . $color_box, array(
-                        'inline' => false
-                    ));
+                    $this->Html->css('AdminLTE.iCheck/square/' . $color_box, [
+                        'inline' => false,
+                    ]);
                     break;
                 case '':
                     break;
                 case 'black':
                     $color_box = '';
-                    $this->Html->css('AdminLTE.iCheck/square/', array(
-                        'inline' => false
-                    ));
+                    $this->Html->css('AdminLTE.iCheck/square/', [
+                        'inline' => false,
+                    ]);
                     break;
                 default :
-                    $this->Html->css('AdminLTE.iCheck/square/blue', array('inline' => false));
+                    $this->Html->css('AdminLTE.iCheck/square/blue', ['inline' => false]);
                     $color_box = '-blue';
                     break;
 
@@ -1748,9 +1748,9 @@ class AdminLTEFormHelper extends AppHelper
         $this->_View->append("scriptAddTemplate",
             "\$('input[id=\"" . $options[ 'id' ] . "\"]').iCheck({checkboxClass: 'icheckbox_square{$color_box}',radioClass: 'iradio_square{$color_box}',increaseArea: '20%'});\n");
 
-        return $output . $this->Html->useTag('checkbox', $options[ 'name' ], array_diff_key($options, array(
-                'name' => null
-            ))) . $label;
+        return $output . $this->Html->useTag('checkbox', $options[ 'name' ], array_diff_key($options, [
+                'name' => null,
+            ])) . $label;
     }
 
     /**
@@ -1790,7 +1790,7 @@ class AdminLTEFormHelper extends AppHelper
      * @return string Completed radio widget set.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#options-for-select-checkbox-and-radio-inputs
      */
-    public function radio($fieldName, $options = array(), $attributes = array())
+    public function radio($fieldName, $options = [], $attributes = [])
     {
         $attributes[ 'options' ] = $options;
         $attributes = $this->_initInputField($fieldName, $attributes);
@@ -1799,9 +1799,9 @@ class AdminLTEFormHelper extends AppHelper
         $showEmpty = $this->_extractOption('empty', $attributes);
         if ($showEmpty) {
             $showEmpty = ($showEmpty === true) ? __d('cake', 'empty') : $showEmpty;
-            $options = array(
-                    '' => $showEmpty
-                ) + $options;
+            $options = [
+                    '' => $showEmpty,
+                ] + $options;
         }
         unset($attributes[ 'empty' ]);
 
@@ -1838,12 +1838,12 @@ class AdminLTEFormHelper extends AppHelper
             $value = $this->value($fieldName);
         }
 
-        $disabled = array();
+        $disabled = [];
         if (isset($attributes[ 'disabled' ])) {
             $disabled = $attributes[ 'disabled' ];
         }
 
-        $out = array();
+        $out = [];
 
         $hiddenField = isset($attributes[ 'hiddenField' ]) ? $attributes[ 'hiddenField' ] : true;
         unset($attributes[ 'hiddenField' ]);
@@ -1852,12 +1852,12 @@ class AdminLTEFormHelper extends AppHelper
             $value = $value ? 1 : 0;
         }
 
-        $this->_domIdSuffixes = array();
+        $this->_domIdSuffixes = [];
         foreach ($options as $optValue => $optTitle) {
-            $optionsHere = array(
+            $optionsHere = [
                 'value'    => $optValue,
-                'disabled' => false
-            );
+                'disabled' => false,
+            ];
             if (is_array($optTitle)) {
                 if (isset($optTitle[ 'value' ])) {
                     $optionsHere[ 'value' ] = $optTitle[ 'value' ];
@@ -1878,10 +1878,10 @@ class AdminLTEFormHelper extends AppHelper
             $tagName = $attributes[ 'id' ] . $this->domIdSuffix($optValue);
 
             if ($label) {
-                $labelOpts = is_array($label) ? $label : array();
-                $labelOpts += array(
-                    'for' => $tagName
-                );
+                $labelOpts = is_array($label) ? $label : [];
+                $labelOpts += [
+                    'for' => $tagName,
+                ];
                 $optTitle = $this->label($tagName, $optTitle, $labelOpts);
             }
 
@@ -1889,22 +1889,22 @@ class AdminLTEFormHelper extends AppHelper
                 $optTitle .= array_shift($between);
             }
             $allOptions = $optionsHere + $attributes;
-            $out[] = $this->Html->useTag('radio', $attributes[ 'name' ], $tagName, array_diff_key($allOptions, array(
+            $out[] = $this->Html->useTag('radio', $attributes[ 'name' ], $tagName, array_diff_key($allOptions, [
                 'name' => null,
                 'type' => null,
-                'id'   => null
-            )), $optTitle);
+                'id'   => null,
+            ]), $optTitle);
         }
         $hidden = null;
 
         if ($hiddenField) {
             if (!isset($value) || $value === '') {
-                $hidden = $this->hidden($fieldName, array(
+                $hidden = $this->hidden($fieldName, [
                     'form'  => isset($attributes[ 'form' ]) ? $attributes[ 'form' ] : null,
                     'id'    => $attributes[ 'id' ] . '_',
                     'value' => '',
-                    'name'  => $attributes[ 'name' ]
-                ));
+                    'name'  => $attributes[ 'name' ],
+                ]);
             }
         }
         $out = $hidden . implode($separator, $out);
@@ -1944,7 +1944,7 @@ class AdminLTEFormHelper extends AppHelper
      */
     public function __call($method, $params)
     {
-        $options = array();
+        $options = [];
         if (empty($params)) {
             throw new CakeException(__d('cake_dev', 'Missing field name for FormHelper::%s', $method));
         }
@@ -1955,9 +1955,9 @@ class AdminLTEFormHelper extends AppHelper
             $options[ 'type' ] = $method;
         }
         $options = $this->_initInputField($params[ 0 ], $options);
-        return $this->Html->useTag('input', $options[ 'name' ], array_diff_key($options, array(
-            'name' => null
-        )));
+        return $this->Html->useTag('input', $options[ 'name' ], array_diff_key($options, [
+            'name' => null,
+        ]));
     }
 
     /**
@@ -1968,38 +1968,38 @@ class AdminLTEFormHelper extends AppHelper
      * @param array $options
      * @return mixed
      */
-    public function text($fieldName, $options = array())
+    public function text($fieldName, $options = [])
     {
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options[ 'type' ] = 'text';
         $pre = "";
         if (!empty($options[ 'pre-input-group-addon' ])) {
-            $pre = $this->Html->useTag('span', array(
-                'class' => 'input-group-addon'
-            ), $options[ 'pre-input-group-addon' ]);
+            $pre = $this->Html->useTag('span', [
+                'class' => 'input-group-addon',
+            ], $options[ 'pre-input-group-addon' ]);
             unset($options[ 'pre-input-group-addon' ]);
         }
         $post = "";
         if (!empty($options[ 'post-input-group-addon' ])) {
-            $post = $this->Html->useTag('span', array(
-                'class' => 'input-group-addon'
-            ), $options[ 'post-input-group-addon' ]);
+            $post = $this->Html->useTag('span', [
+                'class' => 'input-group-addon',
+            ], $options[ 'post-input-group-addon' ]);
             unset($options[ 'post-input-group-addon' ]);
         }
 
         if (isset($options[ 'typeahead' ])) {
-            $this->Html->css('AdminLTE.typeahead/typeahead', array(
-                'inline' => false
-            ));
-            $this->Html->script('AdminLTE.typeahead/typeahead', array(
-                'inline' => false
-            ));
-            $ta_query_url = isset($options[ 'typeahead' ][ 'query_url' ]) ? $options[ 'typeahead' ][ 'query_url' ] : Router::url(array(
+            $this->Html->css('AdminLTE.typeahead/typeahead', [
+                'inline' => false,
+            ]);
+            $this->Html->script('AdminLTE.typeahead/typeahead', [
+                'inline' => false,
+            ]);
+            $ta_query_url = isset($options[ 'typeahead' ][ 'query_url' ]) ? $options[ 'typeahead' ][ 'query_url' ] : Router::url([
                     'prefix'     => $this->params[ 'prefix' ],
                     'controller' => $this->params[ 'controller' ],
-                    'action'     => $this->params[ 'action' ]
-                )) . '?q=%QUERY';
+                    'action'     => $this->params[ 'action' ],
+                ]) . '?q=%QUERY';
             $ta_query_cache_response = isset($options[ 'typeahead' ][ 'query_cache_response' ]) ? 'true' : 'false';
             $ta_query_limit_response = isset($options[ 'typeahead' ][ 'query_limit_response' ]) && is_numeric($options[ 'typeahead' ][ 'query_limit_response' ]) ? round($options[ 'typeahead' ][ 'query_limit_response' ],
                 0) : 100;
@@ -2051,10 +2051,10 @@ EOF;
         }
 
         if (!empty($pre) || !empty($post)) {
-            return $this->Html->useTag('block', array(
+            return $this->Html->useTag('block', [
                 'class' => 'input-group',
-                'for'   => $options[ 'id' ]
-            ), $pre . $this->Html->useTag('input', $options[ 'name' ], $options) . $post);
+                'for'   => $options[ 'id' ],
+            ], $pre . $this->Html->useTag('input', $options[ 'name' ], $options) . $post);
         }
 
         return $this->Html->useTag('input', $options[ 'name' ], $options);
@@ -2069,14 +2069,14 @@ EOF;
      *            Array of options to append options into.
      * @return string
      */
-    public function password($fieldName, $options = array())
+    public function password($fieldName, $options = [])
     {
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options[ 'type' ] = 'password';
-        return $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('span', array(
-                'class' => 'glyphicon glyphicon-lock form-control-feedback'
-            ), null);
+        return $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('span', [
+                'class' => 'glyphicon glyphicon-lock form-control-feedback',
+            ], null);
     }
 
     /**
@@ -2086,24 +2086,24 @@ EOF;
      * @param array $options
      * @return mixed
      */
-    public function colorpicker($fieldName, $options = array())
+    public function colorpicker($fieldName, $options = [])
     {
-        $this->Html->css('AdminLTE.colorpicker/colorpicker', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.colorpicker/colorpicker-2.3.3', array(
-            'inline' => false
-        ));
+        $this->Html->css('AdminLTE.colorpicker/colorpicker', [
+            'inline' => false,
+        ]);
+        $this->Html->script('AdminLTE.colorpicker/colorpicker-2.3.3', [
+            'inline' => false,
+        ]);
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options[ 'type' ] = 'text';
         $this->_View->append("scriptAddTemplate", "\$('div[for=\"" . $options[ 'id' ] . "\"]').colorpicker();\n");
-        return $this->Html->useTag('block', array(
+        return $this->Html->useTag('block', [
             'class' => 'input-group colorpicker-element',
-            'for'   => $options[ 'id' ]
-        ), $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('block', array(
-                'class' => 'input-group-addon'
-            ), '<i></i>'));
+            'for'   => $options[ 'id' ],
+        ], $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('block', [
+                'class' => 'input-group-addon',
+            ], '<i></i>'));
     }
 
     /**
@@ -2113,7 +2113,7 @@ EOF;
      * @param array $options
      * @return mixed
      */
-    public function inputButtonBefore($fieldName, $options = array())
+    public function inputButtonBefore($fieldName, $options = [])
     {
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
@@ -2135,15 +2135,15 @@ EOF;
             $button_id = $options[ 'button' ][ 'id' ];
         }
 
-        return $label_str . $this->Html->useTag('block', array(
+        return $label_str . $this->Html->useTag('block', [
                 'class' => 'input-group',
-                'for'   => $options[ 'id' ]
-            ), $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('block', array(
-                    'class' => 'input-group-btn'
-                ), $this->button($button_label, array(
+                'for'   => $options[ 'id' ],
+            ], $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('block', [
+                    'class' => 'input-group-btn',
+                ], $this->button($button_label, [
                     'id'   => $button_id,
-                    'type' => 'button'
-                ))));
+                    'type' => 'button',
+                ])));
     }
 
     /**
@@ -2152,23 +2152,77 @@ EOF;
      * @return string
      *  Reference https://github.com/carloscabo/jquery-palette-color-picker
      */
-    public function palettecolorpicker($fieldName, $options = array())
+    public function palettecolorpicker($fieldName, $options = [])
     {
-        $this->Html->css('AdminLTE.palette-color-picker/palette-color-picker', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.palette-color-picker/palette-color-picker', array(
-            'inline' => false
-        ));
+        $this->Html->css('AdminLTE.palette-color-picker/palette-color-picker', [
+            'inline' => false,
+        ]);
+        $this->Html->script('AdminLTE.palette-color-picker/palette-color-picker', [
+            'inline' => false,
+        ]);
 
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options[ 'type' ] = 'hidden';
         $_callback = '';
+        $_callback_data = '';
+        $_multiple_select = '';
+        if (isset($options[ 'palettepicker_options' ][ 'multiple_select' ]) && !empty($options[ 'palettepicker_options' ][ 'multiple_select' ])) {
+            $_callback_data .= <<<EOF
+            if ($.inArray(clicked_color, pallete_option_list) != -1){
+                delete_pallet_option(clicked_color)
+            }else{
+                add_pallete_option(clicked_color)   
+            }
+EOF;
+
+            unset($options[ 'palettepicker_options' ][ 'multiple_select' ]);
+            $_multiple_select = '<div class="row multiple-select-box" id="multiple-select-box-' . $options[ 'id' ] . '"></div>';
+
+            $_multiple_select .= <<<EOF
+                <script type="text/javascript">
+                let pallete_option_list = [];
+
+                function delete_pallet_option(color) {
+                pallete_option_list.splice( $.inArray(color, pallete_option_list) ,1 );
+                  $("#multiple-select-box-{$options['id']}> .multiple-select-box-color-"+ color).remove()
+                }
+                function add_pallete_option(color) {
+                   pallete_option_list.push(color);
+                   $("#multiple-select-box-{$options['id']}").append('<div class="color-picker-multiple-select multiple-select-box-color-'+ color +' " ' +
+		            'style="background:'+ color + '" onclick="delete_pallet_option(\''+ color +'\')" ></div>')
+                }
+                
+                function get_pallete_option() {
+                  return pallete_option_list;
+                }
+                
+                function set_pallete_option_values(){
+                	let values = eval(document.getElementById("orderfiltersFraudFlag").value)
+                	values.forEach(function(item) {
+                	   add_pallete_option(item)
+                	});
+                	$("#orderfiltersFraudFlag").val(values[0])
+                }
+            </script>
+EOF;
+
+
+        }
+        if (isset($options[ 'palettepicker_options' ][ 'on_click_close' ]) && !empty($options[ 'palettepicker_options' ][ 'on_click_close' ])) {
+            $_callback_data .= '$(".palette-color-picker-bubble").css("display","none");';
+            unset($options[ 'palettepicker_options' ][ 'on_click_close' ]);
+        }
+
         if (isset($options[ 'palettepicker_options' ][ 'onchange_callback' ])) {
-            $_callback = ',onchange_callback: function( clicked_color ) {' . $options[ 'palettepicker_options' ][ 'onchange_callback' ] . '}';
+            $_callback_data .= $options[ 'palettepicker_options' ][ 'onchange_callback' ];
             unset($options[ 'palettepicker_options' ][ 'onchange_callback' ]);
         }
+
+        if (!empty($_callback_data)) {
+            $_callback = ',onchange_callback: function( clicked_color ) {' . $_callback_data . '}';
+        }
+
         $colors = '';
         $other_options = '';
         if (isset($options[ 'palettepicker_options' ][ 'colors' ])) {
@@ -2194,6 +2248,8 @@ EOF;
 <div class="form-group">
 <label for="{$options['id']}">{$options['label']}</label> <br>
     {$this->Html->useTag('input', $options['name'], $options)}
+    <br>
+    {$_multiple_select}
 </div>
 EOF;
 
@@ -2212,27 +2268,27 @@ EOF;
      *            Array of options to append options into.
      * @return string
      */
-    public function phone($fieldName, $options = array())
+    public function phone($fieldName, $options = [])
     {
-        $this->Html->css('AdminLTE.intl-tel-input/intl-tel-input', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.intl-tel-input/intl-tel-input-9.0.3', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.intl-tel-input/utils', array(
-            'inline' => false
-        ));
+        $this->Html->css('AdminLTE.intl-tel-input/intl-tel-input', [
+            'inline' => false,
+        ]);
+        $this->Html->script('AdminLTE.intl-tel-input/intl-tel-input-9.0.3', [
+            'inline' => false,
+        ]);
+        $this->Html->script('AdminLTE.intl-tel-input/utils', [
+            'inline' => false,
+        ]);
 
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options[ 'type' ] = 'tel';
 
-        $plugin_opts = array(
-            'utilsScript' => $this->Html->assetUrl("AdminLTE.intl-tel-input/utils.js", array(
-                'pathPrefix' => Configure::read('App.jsBaseUrl')
-            ))
-        );
+        $plugin_opts = [
+            'utilsScript' => $this->Html->assetUrl("AdminLTE.intl-tel-input/utils.js", [
+                'pathPrefix' => Configure::read('App.jsBaseUrl'),
+            ]),
+        ];
         if (!empty($options[ 'plugin-options' ])) {
             $plugin_opts += $options[ 'plugin-options' ];
             unset($options[ 'plugin-options' ]);
@@ -2252,14 +2308,14 @@ EOF;
      *            Array of options to append options into.
      * @return string
      */
-    public function email($fieldName, $options = array())
+    public function email($fieldName, $options = [])
     {
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
         $options[ 'type' ] = 'email';
-        return $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('span', array(
-                'class' => 'glyphicon glyphicon-envelope form-control-feedback'
-            ), null);
+        return $this->Html->useTag('input', $options[ 'name' ], $options) . $this->Html->useTag('span', [
+                'class' => 'glyphicon glyphicon-envelope form-control-feedback',
+            ], null);
     }
 
     /**
@@ -2276,7 +2332,7 @@ EOF;
      * @return string A generated HTML text input element
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::textarea
      */
-    public function textarea($fieldName, $options = array())
+    public function textarea($fieldName, $options = [])
     {
         $options = $this->_initInputField($fieldName, $options);
         $value = null;
@@ -2298,16 +2354,16 @@ EOF;
             $is_html_mode = true;
             $wysihtml5_opts = '';
             if (isset($options[ 'wysihtml5' ]) && $options[ 'wysihtml5' ] == true) {
-                $this->Html->script('AdminLTE.bootstrap3-wysihtml5/bootstrap3-wysihtml5.all', array(
-                    'inline' => false
-                ));
-                $this->Html->css('AdminLTE.bootstrap3-wysihtml5/bootstrap3-wysihtml5', array(
-                    'inline' => false
-                ));
+                $this->Html->script('AdminLTE.bootstrap3-wysihtml5/bootstrap3-wysihtml5.all', [
+                    'inline' => false,
+                ]);
+                $this->Html->css('AdminLTE.bootstrap3-wysihtml5/bootstrap3-wysihtml5', [
+                    'inline' => false,
+                ]);
                 if (!empty($options[ 'wysihtml5_options' ])) {
-                    $wysihtml5_opts = Zend\Json\Json::encode($options[ 'wysihtml5_options' ], false, array(
-                        'enableJsonExprFinder' => true
-                    ));
+                    $wysihtml5_opts = Zend\Json\Json::encode($options[ 'wysihtml5_options' ], false, [
+                        'enableJsonExprFinder' => true,
+                    ]);
                     unset($options[ 'wysihtml5_options' ]);
                 }
                 $this->_View->append("scriptAddTemplate",
@@ -2319,17 +2375,17 @@ EOF;
             if (isset($options[ 'ckeditor' ])) {
                 $options = $this->addClass($options, 'ckeditor');
 
-                $this->Html->script('AdminLTE.ckeditor/4.6.2/ckeditor', array(
-                    'inline' => false
-                ));
+                $this->Html->script('AdminLTE.ckeditor/4.6.2/ckeditor', [
+                    'inline' => false,
+                ]);
 
-                $this->Html->script('AdminLTE.ckeditor/4.6.2/adapters/jquery', array(
-                    'inline' => false
-                ));
+                $this->Html->script('AdminLTE.ckeditor/4.6.2/adapters/jquery', [
+                    'inline' => false,
+                ]);
 
-                $extraOptions = array();
+                $extraOptions = [];
 
-                $ckeditorOpts = array();
+                $ckeditorOpts = [];
 
                 $extraOptions[ 'label' ] = false;
 
@@ -2371,9 +2427,9 @@ EOF;
                     $ckeditorOpts[ 'extraAllowedContent' ] = '*{*}';
                 }
 
-                $ckeditor_opts = Zend\Json\Json::encode($ckeditorOpts, false, array(
-                    'enableJsonExprFinder' => true
-                ));
+                $ckeditor_opts = Zend\Json\Json::encode($ckeditorOpts, false, [
+                    'enableJsonExprFinder' => true,
+                ]);
                 unset($options[ 'ckeditor' ]);
 
                 $this->_View->append("scriptAddTemplate",
@@ -2383,12 +2439,12 @@ EOF;
                 } elseif (isset($options[ 'codemirror' ])) {
                     $codemirror_opts = '';
                     if (!defined('adminlteformhelper.textarea.included_helpers_codemirror')) {
-                        $this->Html->script('AdminLTE.codemirror/codemirror', array(
-                            'inline' => false
-                        ));
-                        $this->Html->css('AdminLTE.codemirror/codemirror', array(
-                            'inline' => false
-                        ));
+                        $this->Html->script('AdminLTE.codemirror/codemirror', [
+                            'inline' => false,
+                        ]);
+                        $this->Html->css('AdminLTE.codemirror/codemirror', [
+                            'inline' => false,
+                        ]);
                         define('adminlteformhelper.textarea.included_helpers_codemirror', true);
                     }
 
@@ -2396,24 +2452,24 @@ EOF;
                         if (!defined('adminlteformhelper.textarea.included_helpers_codemirror_' . $options[ 'codemirror' ][ 'mode' ])) {
                             switch ($options[ 'codemirror' ][ 'mode' ]) {
                                 case 'application/x-httpd-php':
-                                    $this->Html->script('AdminLTE.codemirror/addon/edit/matchbrackets', array(
-                                        'inline' => false
-                                    ));
-                                    $this->Html->script('AdminLTE.codemirror/mode/htmlmixed/htmlmixed', array(
-                                        'inline' => false
-                                    ));
-                                    $this->Html->script('AdminLTE.codemirror/mode/xml/xml', array(
-                                        'inline' => false
-                                    ));
-                                    $this->Html->script('AdminLTE.codemirror/mode/javascript/javascript', array(
-                                        'inline' => false
-                                    ));
-                                    $this->Html->script('AdminLTE.codemirror/mode/clike/clike', array(
-                                        'inline' => false
-                                    ));
-                                    $this->Html->script('AdminLTE.codemirror/mode/php/php', array(
-                                        'inline' => false
-                                    ));
+                                    $this->Html->script('AdminLTE.codemirror/addon/edit/matchbrackets', [
+                                        'inline' => false,
+                                    ]);
+                                    $this->Html->script('AdminLTE.codemirror/mode/htmlmixed/htmlmixed', [
+                                        'inline' => false,
+                                    ]);
+                                    $this->Html->script('AdminLTE.codemirror/mode/xml/xml', [
+                                        'inline' => false,
+                                    ]);
+                                    $this->Html->script('AdminLTE.codemirror/mode/javascript/javascript', [
+                                        'inline' => false,
+                                    ]);
+                                    $this->Html->script('AdminLTE.codemirror/mode/clike/clike', [
+                                        'inline' => false,
+                                    ]);
+                                    $this->Html->script('AdminLTE.codemirror/mode/php/php', [
+                                        'inline' => false,
+                                    ]);
                                     break;
                             }
                             define('adminlteformhelper.textarea.included_helpers_codemirror_' . $options[ 'codemirror' ][ 'mode' ],
@@ -2421,9 +2477,9 @@ EOF;
                         }
                     }
 
-                    $codemirror_opts = Zend\Json\Json::encode($options[ 'codemirror' ], false, array(
-                        'enableJsonExprFinder' => true
-                    ));
+                    $codemirror_opts = Zend\Json\Json::encode($options[ 'codemirror' ], false, [
+                        'enableJsonExprFinder' => true,
+                    ]);
                     unset($options[ 'codemirror' ]);
                     $this->_View->append("scriptAddTemplate",
                         "var codemirror_" . $options[ 'id' ] . " = CodeMirror.fromTextArea(document.getElementById('" . $options[ 'id' ] . "'), " . $codemirror_opts . ");\n");
@@ -2435,13 +2491,13 @@ EOF;
          * textcounter
          */
         if (isset($options[ 'textcounter' ]) && is_array($options[ 'textcounter' ]) && $is_html_modded == false) {
-            $this->Html->script('AdminLTE.textcounter/textcounter-0.3.6', array(
-                'inline' => false
-            ));
+            $this->Html->script('AdminLTE.textcounter/textcounter-0.3.6', [
+                'inline' => false,
+            ]);
             if (!empty($options[ 'textcounter' ])) {
-                $textcounter_opts = Zend\Json\Json::encode($options[ 'textcounter' ], false, array(
-                    'enableJsonExprFinder' => true
-                ));
+                $textcounter_opts = Zend\Json\Json::encode($options[ 'textcounter' ], false, [
+                    'enableJsonExprFinder' => true,
+                ]);
                 unset($options[ 'textcounter' ]);
             }
 
@@ -2449,10 +2505,10 @@ EOF;
                 "\$('textarea[id=\"" . $options[ 'id' ] . "\"]').textcounter(" . $textcounter_opts . ");\n");
         }
 
-        return $this->Html->useTag('textarea', $options[ 'name' ], array_diff_key($options, array(
+        return $this->Html->useTag('textarea', $options[ 'name' ], array_diff_key($options, [
             'type' => null,
-            'name' => null
-        )), $value);
+            'name' => null,
+        ]), $value);
     }
 
     /**
@@ -2465,27 +2521,27 @@ EOF;
      * @return string A generated hidden input
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::hidden
      */
-    public function hidden($fieldName, $options = array())
+    public function hidden($fieldName, $options = [])
     {
-        $options += array(
+        $options += [
             'required' => false,
-            'secure'   => true
-        );
+            'secure'   => true,
+        ];
 
         $secure = $options[ 'secure' ];
         unset($options[ 'secure' ]);
 
-        $options = $this->_initInputField($fieldName, array_merge($options, array(
-            'secure' => static::SECURE_SKIP
-        )));
+        $options = $this->_initInputField($fieldName, array_merge($options, [
+            'secure' => static::SECURE_SKIP,
+        ]));
 
         if ($secure === true) {
             $this->_secure(true, null, '' . $options[ 'value' ]);
         }
 
-        return $this->Html->useTag('hidden', $options[ 'name' ], array_diff_key($options, array(
-            'name' => null
-        )));
+        return $this->Html->useTag('hidden', $options[ 'name' ], array_diff_key($options, [
+            'name' => null,
+        ]));
     }
 
     /**
@@ -2498,33 +2554,33 @@ EOF;
      * @return string A generated file input.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::file
      */
-    public function file($fieldName, $options = array())
+    public function file($fieldName, $options = [])
     {
-        $options += array(
-            'secure' => true
-        );
+        $options += [
+            'secure' => true,
+        ];
         $secure = $options[ 'secure' ];
         $options[ 'secure' ] = static::SECURE_SKIP;
 
         $options = $this->_initInputField($fieldName, $options);
         $field = $this->entity();
 
-        foreach (array(
+        foreach ([
                      'name',
                      'type',
                      'tmp_name',
                      'error',
-                     'size'
-                 ) as $suffix) {
-            $this->_secure($secure, array_merge($field, array(
-                $suffix
-            )));
+                     'size',
+                 ] as $suffix) {
+            $this->_secure($secure, array_merge($field, [
+                $suffix,
+            ]));
         }
 
-        $exclude = array(
+        $exclude = [
             'name'  => null,
-            'value' => null
-        );
+            'value' => null,
+        ];
         return $this->Html->useTag('file', $options[ 'name' ], array_diff_key($options, $exclude));
     }
 
@@ -2543,13 +2599,13 @@ EOF;
      *            Html attributes
      * @return string
      */
-    public function button($title, $options = array())
+    public function button($title, $options = [])
     {
-        $options += array(
+        $options += [
             'type'   => 'submit',
             'escape' => false,
-            'secure' => false
-        );
+            'secure' => false,
+        ];
 
         $options = $this->addClass($options, 'btn');
 
@@ -2563,13 +2619,13 @@ EOF;
             $title = h($title);
         }
         if (isset($options[ 'name' ])) {
-            $name = str_replace(array(
+            $name = str_replace([
                 '[',
-                ']'
-            ), array(
+                ']',
+            ], [
                 '.',
-                ''
-            ), $options[ 'name' ]);
+                '',
+            ], $options[ 'name' ]);
             $this->_secure($options[ 'secure' ], $name);
         }
 
@@ -2614,13 +2670,13 @@ EOF;
      * @param array $attributes
      * @return string
      */
-    public function splitButton($fieldName, $attributes = array())
+    public function splitButton($fieldName, $attributes = [])
     {
-        $attributes += array(
-            'options' => array(),
+        $attributes += [
+            'options' => [],
             'escape'  => false,
-            'secure'  => false
-        );
+            'secure'  => false,
+        ];
 
         if (empty($attributes[ 'btn-type' ])) {
             $btn_type = 'btn-primary';
@@ -2628,19 +2684,19 @@ EOF;
             $btn_type = 'btn-' . $attributes[ 'btn-type' ];
         }
 
-        $attributes = $this->_initInputField($fieldName, array_merge((array)$attributes, array(
-            'secure' => static::SECURE_SKIP
-        )));
+        $attributes = $this->_initInputField($fieldName, array_merge((array)$attributes, [
+            'secure' => static::SECURE_SKIP,
+        ]));
 
         $onclick_main_action = 'javascript:;';
         if (!empty($attributes[ 'onclick' ])) {
             $onclick_main_action = $attributes[ 'onclick' ];
         }
 
-        $this->Html->link('Enter', '/pages/home', array(
+        $this->Html->link('Enter', '/pages/home', [
             'class'  => 'button',
-            'target' => '_blank'
-        ));
+            'target' => '_blank',
+        ]);
 
         if (isset($attributes[ 'id' ])) {
             $fieldId = $attributes[ 'id' ];
@@ -2696,18 +2752,18 @@ EOF;
      * @return string A HTML button tag.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::postButton
      */
-    public function postButton($title, $url, $options = array())
+    public function postButton($title, $url, $options = [])
     {
-        $out = $this->create(false, array(
+        $out = $this->create(false, [
             'id'  => false,
-            'url' => $url
-        ));
+            'url' => $url,
+        ]);
         if (isset($options[ 'data' ]) && is_array($options[ 'data' ])) {
             foreach (Hash::flatten($options[ 'data' ]) as $key => $value) {
-                $out .= $this->hidden($key, array(
+                $out .= $this->hidden($key, [
                     'value' => $value,
-                    'id'    => false
-                ));
+                    'id'    => false,
+                ]);
             }
             unset($options[ 'data' ]);
         }
@@ -2752,12 +2808,12 @@ EOF;
      * @return string An `<a />` element.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::postLink
      */
-    public function postLink($title, $url = null, $options = array(), $confirmMessage = false)
+    public function postLink($title, $url = null, $options = [], $confirmMessage = false)
     {
-        $options = (array)$options + array(
+        $options = (array)$options + [
                 'inline' => true,
-                'block'  => null
-            );
+                'block'  => null,
+            ];
         if (!$options[ 'inline' ] && empty($options[ 'block' ])) {
             $options[ 'block' ] = __FUNCTION__;
         }
@@ -2775,12 +2831,12 @@ EOF;
 
         $formName = str_replace('.', '', uniqid('post_', true));
         $formUrl = $this->url($url);
-        $formOptions = array(
+        $formOptions = [
             'name'   => $formName,
             'id'     => $formName,
             'style'  => 'display:none;',
-            'method' => 'post'
-        );
+            'method' => 'post',
+        ];
         if (isset($options[ 'target' ])) {
             $formOptions[ 'target' ] = $options[ 'target' ];
             unset($options[ 'target' ]);
@@ -2789,19 +2845,19 @@ EOF;
         $this->_lastAction($url);
 
         $out = $this->Html->useTag('form', $formUrl, $formOptions);
-        $out .= $this->Html->useTag('hidden', '_method', array(
-            'value' => $requestMethod
-        ));
+        $out .= $this->Html->useTag('hidden', '_method', [
+            'value' => $requestMethod,
+        ]);
         $out .= $this->_csrfField();
 
-        $fields = array();
+        $fields = [];
         if (isset($options[ 'data' ]) && is_array($options[ 'data' ])) {
             foreach (Hash::flatten($options[ 'data' ]) as $key => $value) {
                 $fields[ $key ] = $value;
-                $out .= $this->hidden($key, array(
+                $out .= $this->hidden($key, [
                     'value' => $value,
-                    'id'    => false
-                ));
+                    'id'    => false,
+                ]);
             }
             unset($options[ 'data' ]);
         }
@@ -2858,7 +2914,7 @@ EOF;
      * @return string A HTML submit button
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::submit
      */
-    public function submit($caption = null, $options = array())
+    public function submit($caption = null, $options = [])
     {
         if (!is_string($caption) && empty($caption)) {
             $caption = __d('cake', 'Submit');
@@ -2870,15 +2926,15 @@ EOF;
             $div = $options[ 'div' ];
             unset($options[ 'div' ]);
         }
-        $options += array(
+        $options += [
             'type'   => 'submit',
             'before' => null,
             'after'  => null,
-            'secure' => false
-        );
-        $divOptions = array(
-            'tag' => 'div'
-        );
+            'secure' => false,
+        ];
+        $divOptions = [
+            'tag' => 'div',
+        ];
 
         if ($div === true) {
             $divOptions[ 'class' ] = 'submit';
@@ -2887,20 +2943,20 @@ EOF;
         } elseif (is_string($div)) {
             $divOptions[ 'class' ] = $div;
         } elseif (is_array($div)) {
-            $divOptions = array_merge(array(
+            $divOptions = array_merge([
                 'class' => 'submit',
-                'tag'   => 'div'
-            ), $div);
+                'tag'   => 'div',
+            ], $div);
         }
 
         if (isset($options[ 'name' ])) {
-            $name = str_replace(array(
+            $name = str_replace([
                 '[',
-                ']'
-            ), array(
+                ']',
+            ], [
                 '.',
-                ''
-            ), $options[ 'name' ]);
+                '',
+            ], $options[ 'name' ]);
             $this->_secure($options[ 'secure' ], $name);
         }
         unset($options[ 'secure' ]);
@@ -2913,15 +2969,15 @@ EOF;
         $isImage = preg_match('/\.(jpg|jpe|jpeg|gif|png|ico)$/', $caption);
 
         if ($isUrl || $isImage) {
-            $unlockFields = array(
+            $unlockFields = [
                 'x',
-                'y'
-            );
+                'y',
+            ];
             if (isset($options[ 'name' ])) {
-                $unlockFields = array(
+                $unlockFields = [
                     $options[ 'name' ] . '_x',
-                    $options[ 'name' ] . '_y'
-                );
+                    $options[ 'name' ] . '_y',
+                ];
             }
             foreach ($unlockFields as $ignore) {
                 $this->unlockField($ignore);
@@ -3017,26 +3073,26 @@ EOF;
      * @return string Formatted SELECT element
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#options-for-select-checkbox-and-radio-inputs
      */
-    public function select($fieldName, $options = array(), $attributes = array())
+    public function select($fieldName, $options = [], $attributes = [])
     {
         if (!empty($attributes[ 'two-side' ])) {
             return $this->select_twoside($fieldName, $options, $attributes);
         }
 
         if (!defined('adminlteformhelper.select.included_helpers_select2')) {
-            $this->Html->css('AdminLTE.select2/select2', array(
-                'inline' => false
-            ));
+            $this->Html->css('AdminLTE.select2/select2', [
+                'inline' => false,
+            ]);
 
-            $this->Html->script('AdminLTE.select2/select2', array(
-                'inline' => false
-            ));
+            $this->Html->script('AdminLTE.select2/select2', [
+                'inline' => false,
+            ]);
             define('adminlteformhelper.select.included_helpers_select2', true);
         }
-        $select = array();
+        $select = [];
         $style = null;
         $tag = null;
-        $attributes += array(
+        $attributes += [
             'class'       => null,
             'escape'      => true,
             'secure'      => true,
@@ -3044,8 +3100,8 @@ EOF;
             'showParents' => false,
             'hiddenField' => true,
             'disabled'    => false,
-            'style'       => 'width: 100%;'
-        );
+            'style'       => 'width: 100%;',
+        ];
 
         $escapeOptions = $this->_extractOption('escape', $attributes);
         $secure = $this->_extractOption('secure', $attributes);
@@ -3054,16 +3110,16 @@ EOF;
         $hiddenField = $this->_extractOption('hiddenField', $attributes);
         unset($attributes[ 'escape' ], $attributes[ 'secure' ], $attributes[ 'empty' ], $attributes[ 'showParents' ], $attributes[ 'hiddenField' ]);
 
-        $attributes = $this->_initInputField($fieldName, array_merge((array)$attributes, array(
-            'secure' => static::SECURE_SKIP
-        )));
+        $attributes = $this->_initInputField($fieldName, array_merge((array)$attributes, [
+            'secure' => static::SECURE_SKIP,
+        ]));
 
         $id = $this->_extractOption('id', $attributes);
 
         if (is_string($options) && isset($this->_options[ $options ])) {
             $options = $this->_generateOptions($options);
         } elseif (!is_array($options)) {
-            $options = array();
+            $options = [];
         }
 
         if (isset($attributes[ 'type' ])) {
@@ -3075,14 +3131,14 @@ EOF;
             $template = ($style) ? 'checkboxmultiplestart' : 'selectmultiplestart';
             $tag = $template;
             if ($hiddenField) {
-                $hiddenAttributes = array(
+                $hiddenAttributes = [
                     'value'    => '',
                     'id'       => $attributes[ 'id' ] . ($style ? '' : '_'),
                     'secure'   => false,
                     'form'     => isset($attributes[ 'form' ]) ? $attributes[ 'form' ] : null,
                     'name'     => $attributes[ 'name' ],
-                    'disabled' => $attributes[ 'disabled' ] === true || $attributes[ 'disabled' ] === 'disabled'
-                );
+                    'disabled' => $attributes[ 'disabled' ] === true || $attributes[ 'disabled' ] === 'disabled',
+                ];
                 $select[] = $this->hidden(null, $hiddenAttributes);
             }
         } else {
@@ -3096,9 +3152,9 @@ EOF;
 
         $select2_opts = '';
         if (!empty($attributes[ 'select2_options' ])) {
-            $select2_opts = Zend\Json\Json::encode($attributes[ 'select2_options' ], false, array(
-                'enableJsonExprFinder' => true
-            ));
+            $select2_opts = Zend\Json\Json::encode($attributes[ 'select2_options' ], false, [
+                'enableJsonExprFinder' => true,
+            ]);
             unset($attributes[ 'select2_options' ]);
         }
 
@@ -3109,10 +3165,10 @@ EOF;
             if ((!isset($secure) || $secure) && empty($attributes[ 'disabled' ]) && (!empty($attributes[ 'multiple' ]) || $hasOptions)) {
                 $this->_secure(true, $this->_secureFieldName($attributes));
             }
-            $filter = array(
+            $filter = [
                 'name'  => null,
-                'value' => null
-            );
+                'value' => null,
+            ];
             if (is_array($attributes[ 'disabled' ])) {
                 $filter[ 'disabled' ] = null;
             }
@@ -3122,9 +3178,9 @@ EOF;
                         $attributes))));
         if ($emptyMulti) {
             $showEmpty = ($showEmpty === true) ? '' : $showEmpty;
-            $options = array(
-                    '' => $showEmpty
-                ) + $options;
+            $options = [
+                    '' => $showEmpty,
+                ] + $options;
         }
 
         if (!$id) {
@@ -3132,15 +3188,15 @@ EOF;
         }
 
         $select = array_merge($select,
-            $this->_selectOptions(array_reverse($options, true), array(), $showParents, array(
+            $this->_selectOptions(array_reverse($options, true), [], $showParents, [
                 'escape'   => $escapeOptions,
                 'style'    => $style,
                 'name'     => $attributes[ 'name' ],
                 'value'    => $attributes[ 'value' ],
                 'class'    => $attributes[ 'class' ],
                 'id'       => $attributes[ 'id' ],
-                'disabled' => $attributes[ 'disabled' ]
-            )));
+                'disabled' => $attributes[ 'disabled' ],
+            ]));
         $template = ($style === 'checkbox') ? 'checkboxmultipleend' : 'selectend';
 
         $additional_select_js = '';
@@ -3148,9 +3204,9 @@ EOF;
 
         if (isset($attributes[ 'value' ])) {
             $additional_select_js .= is_array($attributes[ 'value' ]) ? ".val(" . Zend\Json\Json::encode($attributes[ 'value' ],
-                    false, array(
-                        'enableJsonExprFinder' => true
-                    )) . ")" : ".val('" . $attributes[ 'value' ] . "')";
+                    false, [
+                        'enableJsonExprFinder' => true,
+                    ]) . ")" : ".val('" . $attributes[ 'value' ] . "')";
             $additional_select_js_has_changed = true;
         }
 
@@ -3177,26 +3233,26 @@ EOF;
      * @param array $attributes
      * @return string
      */
-    public function select_twoside($fieldName, $options = array(), $attributes = array())
+    public function select_twoside($fieldName, $options = [], $attributes = [])
     {
         if (!defined('adminlteformhelper.select_twoside.included_helpers_multiselect')) {
-            $this->Html->script('AdminLTE.multiselect/multiselect-2.3.5', array(
-                'inline' => false
-            ));
+            $this->Html->script('AdminLTE.multiselect/multiselect-2.3.5', [
+                'inline' => false,
+            ]);
             define('adminlteformhelper.select_twoside.included_helpers_multiselect', true);
         }
 
-        $attributes = $this->_initInputField($fieldName, array_merge((array)$attributes, array(
-            'secure' => static::SECURE_SKIP
-        )));
+        $attributes = $this->_initInputField($fieldName, array_merge((array)$attributes, [
+            'secure' => static::SECURE_SKIP,
+        ]));
 
-        $attributes_from = $this->_initInputField($fieldName . 'From', array_merge((array)$attributes, array(
-            'secure' => static::SECURE_SKIP
-        )));
+        $attributes_from = $this->_initInputField($fieldName . 'From', array_merge((array)$attributes, [
+            'secure' => static::SECURE_SKIP,
+        ]));
 
-        $attributes_to = $this->_initInputField($fieldName . 'To', array_merge((array)$attributes, array(
-            'secure' => static::SECURE_SKIP
-        )));
+        $attributes_to = $this->_initInputField($fieldName . 'To', array_merge((array)$attributes, [
+            'secure' => static::SECURE_SKIP,
+        ]));
         $id = $this->_extractOption('id', $attributes_from);
 
         if (!$id) {
@@ -3208,7 +3264,7 @@ EOF;
 
         $_html .= '<select name="' . $attributes_from[ 'name' ] . '" id="' . $id . '" class="form-control" size="8" multiple="multiple">';
 
-        $values_matrix = array();
+        $values_matrix = [];
         if (!empty($options)) {
             foreach ($options as $opt_idx => $opt_label) {
                 if (is_array($opt_label)) {
@@ -3249,9 +3305,9 @@ EOF;
         if (is_array($attributes[ 'two-side' ])) {
             $twp_side_opts = '';
 
-            $twp_side_opts = Zend\Json\Json::encode($attributes[ 'two-side' ], false, array(
-                'enableJsonExprFinder' => true
-            ));
+            $twp_side_opts = Zend\Json\Json::encode($attributes[ 'two-side' ], false, [
+                'enableJsonExprFinder' => true,
+            ]);
         }
 
         $this->_View->append("scriptAddTemplate",
@@ -3277,14 +3333,14 @@ EOF;
     public function domIdSuffix($value, $type = 'html4')
     {
         if ($type === 'html5') {
-            $value = str_replace(array(
+            $value = str_replace([
                 '@',
                 '<',
                 '>',
                 ' ',
                 '"',
-                '\''
-            ), '_', $value);
+                '\'',
+            ], '_', $value);
         } else {
             $value = Inflector::camelize(Inflector::slug($value));
         }
@@ -3314,12 +3370,12 @@ EOF;
      * @return string A generated day select box.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::day
      */
-    public function day($fieldName = null, $attributes = array())
+    public function day($fieldName = null, $attributes = [])
     {
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         $attributes = $this->_dateTimeSelected('day', $fieldName, $attributes);
 
         if (strlen($attributes[ 'value' ]) > 2) {
@@ -3344,43 +3400,43 @@ EOF;
     {
         switch ($field_data[ 'type' ]) {
             case 'text':
-                return $this->input('field.' . $field_data[ 'id' ], array(
+                return $this->input('field.' . $field_data[ 'id' ], [
                     'type'  => 'text',
-                    'label' => $field_data[ 'name' ]
-                ));
+                    'label' => $field_data[ 'name' ],
+                ]);
                 break;
             case 'image':
-                return $this->image('field.' . $field_data[ 'id' ], array(
+                return $this->image('field.' . $field_data[ 'id' ], [
                     'label'        => $field_data[ 'name' ],
                     // 'value' => '/image_place_holder/png/1280x180/AAAAAA/EFEFEF?' . urlencode('text=1280x180'),
                     'with-preview' => true,
                     'width'        => !empty($field_data[ 'type_params' ][ 'width' ]) ? $field_data[ 'type_params' ][ 'width' ] : 'auto',
-                    'height'       => !empty($field_data[ 'type_params' ][ 'width' ]) ? $field_data[ 'type_params' ][ 'height' ] : 'auto'
-                ));
+                    'height'       => !empty($field_data[ 'type_params' ][ 'width' ]) ? $field_data[ 'type_params' ][ 'height' ] : 'auto',
+                ]);
                 break;
             case 'select':
-                $empty_opts = array();
+                $empty_opts = [];
                 if (!empty($field_data[ 'type_params' ][ 'placeholder' ])) {
-                    $empty_opts = array(
-                        'empty' => $field_data[ 'type_params' ][ 'placeholder' ]
-                    );
+                    $empty_opts = [
+                        'empty' => $field_data[ 'type_params' ][ 'placeholder' ],
+                    ];
                 }
 
                 $options = preg_split('/\R/', $field_data[ 'type_params' ][ 'options' ]);
 
-                return $this->input('field.' . $field_data[ 'id' ], array(
+                return $this->input('field.' . $field_data[ 'id' ], [
                         'type'    => 'select',
                         'label'   => $field_data[ 'name' ],
-                        'options' => array_combine($options, $options)
-                    ) + $empty_opts);
+                        'options' => array_combine($options, $options),
+                    ] + $empty_opts);
                 break;
 
             case 'ckeditor':
-                return $this->input('field.' . $field_data[ 'id' ], array(
+                return $this->input('field.' . $field_data[ 'id' ], [
                     'type'     => 'textarea',
                     'label'    => $field_data[ 'name' ],
-                    'ckeditor' => true
-                ));
+                    'ckeditor' => true,
+                ]);
                 break;
         }
     }
@@ -3407,17 +3463,17 @@ EOF;
      * @return string Completed year select input
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::year
      */
-    public function year($fieldName, $minYear = null, $maxYear = null, $attributes = array())
+    public function year($fieldName, $minYear = null, $maxYear = null, $attributes = [])
     {
         if (is_array($minYear)) {
             $attributes = $minYear;
             $minYear = null;
         }
 
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         if ((empty($attributes[ 'value' ]) || $attributes[ 'value' ] === true) && $value = $this->value($fieldName)) {
             if (is_array($value)) {
                 $year = null;
@@ -3445,12 +3501,12 @@ EOF;
         } elseif ($attributes[ 'value' ] === false) {
             $attributes[ 'value' ] = null;
         }
-        $yearOptions = array(
+        $yearOptions = [
             'value' => $attributes[ 'value' ],
             'min'   => $minYear,
             'max'   => $maxYear,
-            'order' => 'desc'
-        );
+            'order' => 'desc',
+        ];
         if (isset($attributes[ 'orderYear' ])) {
             $yearOptions[ 'order' ] = $attributes[ 'orderYear' ];
             unset($attributes[ 'orderYear' ]);
@@ -3476,12 +3532,12 @@ EOF;
      * @return string A generated month select dropdown.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::month
      */
-    public function month($fieldName, $attributes = array())
+    public function month($fieldName, $attributes = [])
     {
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         $attributes = $this->_dateTimeSelected('month', $fieldName, $attributes);
 
         if (strlen($attributes[ 'value' ]) > 2) {
@@ -3493,16 +3549,16 @@ EOF;
         } elseif ($attributes[ 'value' ] === false) {
             $attributes[ 'value' ] = null;
         }
-        $defaults = array(
-            'monthNames' => true
-        );
+        $defaults = [
+            'monthNames' => true,
+        ];
         $attributes = array_merge($defaults, (array)$attributes);
         $monthNames = $attributes[ 'monthNames' ];
         unset($attributes[ 'monthNames' ]);
 
-        return $this->select($fieldName . ".month", $this->_generateOptions('month', array(
-            'monthNames' => $monthNames
-        )), $attributes);
+        return $this->select($fieldName . ".month", $this->_generateOptions('month', [
+            'monthNames' => $monthNames,
+        ]), $attributes);
     }
 
     /**
@@ -3523,17 +3579,17 @@ EOF;
      * @return string Completed hour select input
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::hour
      */
-    public function hour($fieldName, $format24Hours = false, $attributes = array())
+    public function hour($fieldName, $format24Hours = false, $attributes = [])
     {
         if (is_array($format24Hours)) {
             $attributes = $format24Hours;
             $format24Hours = false;
         }
 
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         $attributes = $this->_dateTimeSelected('hour', $fieldName, $attributes);
 
         if (strlen($attributes[ 'value' ]) > 2) {
@@ -3578,12 +3634,12 @@ EOF;
      * @return string Completed minute select input.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::minute
      */
-    public function minute($fieldName, $attributes = array())
+    public function minute($fieldName, $attributes = [])
     {
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         $attributes = $this->_dateTimeSelected('min', $fieldName, $attributes);
 
         if (strlen($attributes[ 'value' ]) > 2) {
@@ -3595,7 +3651,7 @@ EOF;
         } elseif ($attributes[ 'value' ] === false) {
             $attributes[ 'value' ] = null;
         }
-        $minuteOptions = array();
+        $minuteOptions = [];
 
         if (isset($attributes[ 'interval' ])) {
             $minuteOptions[ 'interval' ] = $attributes[ 'interval' ];
@@ -3649,12 +3705,12 @@ EOF;
      * @return string Completed meridian select input
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::meridian
      */
-    public function meridian($fieldName, $attributes = array())
+    public function meridian($fieldName, $attributes = [])
     {
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         if ((empty($attributes[ 'value' ]) || $attributes[ 'value' ] === true) && $value = $this->value($fieldName)) {
             if (is_array($value)) {
                 $meridian = null;
@@ -3709,12 +3765,12 @@ EOF;
      * @return string Generated set of select boxes for the date and time formats chosen.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/form.html#FormHelper::dateTime
      */
-    public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $attributes = array())
+    public function dateTime($fieldName, $dateFormat = 'DMY', $timeFormat = '12', $attributes = [])
     {
-        $attributes += array(
+        $attributes += [
             'empty' => true,
-            'value' => null
-        );
+            'value' => null,
+        ];
         $year = $month = $day = $hour = $min = $meridian = null;
 
         if (empty($attributes[ 'value' ])) {
@@ -3733,14 +3789,14 @@ EOF;
                 $timeFormat);
         }
 
-        $defaults = array(
+        $defaults = [
             'minYear'    => null,
             'maxYear'    => null,
             'separator'  => '-',
             'interval'   => 1,
             'monthNames' => true,
-            'round'      => null
-        );
+            'round'      => null,
+        ];
         $attributes = array_merge($defaults, (array)$attributes);
         if (isset($attributes[ 'minuteInterval' ])) {
             $attributes[ 'interval' ] = $attributes[ 'minuteInterval' ];
@@ -3780,27 +3836,27 @@ EOF;
             list ($year, $month, $day, $hour, $min, $meridian) = $newTime;
         }
 
-        $keys = array(
+        $keys = [
             'Day',
             'Month',
             'Year',
             'Hour',
             'Minute',
-            'Meridian'
-        );
+            'Meridian',
+        ];
         $attrs = array_fill_keys($keys, $attributes);
 
         $hasId = isset($attributes[ 'id' ]);
         if ($hasId && is_array($attributes[ 'id' ])) {
             // check for missing ones and build selectAttr for each element
-            $attributes[ 'id' ] += array(
+            $attributes[ 'id' ] += [
                 'month'    => '',
                 'year'     => '',
                 'day'      => '',
                 'hour'     => '',
                 'minute'   => '',
-                'meridian' => ''
-            );
+                'meridian' => '',
+            ];
             foreach ($keys as $key) {
                 $attrs[ $key ][ 'id' ] = $attributes[ 'id' ][ strtolower($key) ];
             }
@@ -3813,20 +3869,20 @@ EOF;
         }
 
         if (is_array($attributes[ 'empty' ])) {
-            $attributes[ 'empty' ] += array(
+            $attributes[ 'empty' ] += [
                 'month'    => true,
                 'year'     => true,
                 'day'      => true,
                 'hour'     => true,
                 'minute'   => true,
-                'meridian' => true
-            );
+                'meridian' => true,
+            ];
             foreach ($keys as $key) {
                 $attrs[ $key ][ 'empty' ] = $attributes[ 'empty' ][ strtolower($key) ];
             }
         }
 
-        $selects = array();
+        $selects = [];
         foreach (preg_split('//', $dateFormat, -1, PREG_SPLIT_NO_EMPTY) as $char) {
             switch ($char) {
                 case 'Y':
@@ -3879,15 +3935,15 @@ EOF;
      *            Array of options to append options into.
      * @return string
      */
-    public function datePicker($fieldName, $options = array())
+    public function datePicker($fieldName, $options = [])
     {
         if (!defined('adminlteformhelper.checkbox.included_helpers_datepicker')) {
-            $this->Html->css('AdminLTE.datepicker/1.7.0/css/bootstrap-datepicker3', array(
-                'inline' => false
-            ));
-            $this->Html->script('AdminLTE.datepicker/1.7.0/js/bootstrap-datepicker', array(
-                'inline' => false
-            ));
+            $this->Html->css('AdminLTE.datepicker/1.7.0/css/bootstrap-datepicker3', [
+                'inline' => false,
+            ]);
+            $this->Html->script('AdminLTE.datepicker/1.7.0/js/bootstrap-datepicker', [
+                'inline' => false,
+            ]);
             define('adminlteformhelper.checkbox.included_helpers_datepicker', true);
         }
 
@@ -3914,9 +3970,9 @@ EOF;
 EOF;
         $datepicker_opts = '';
         if (!empty($options[ 'datepicker_options' ])) {
-            $datepicker_opts = Zend\Json\Json::encode($options[ 'datepicker_options' ], false, array(
-                'enableJsonExprFinder' => true
-            ));
+            $datepicker_opts = Zend\Json\Json::encode($options[ 'datepicker_options' ], false, [
+                'enableJsonExprFinder' => true,
+            ]);
             unset($options[ 'datepicker_options' ]);
         }
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options,
@@ -3939,18 +3995,18 @@ EOF;
      *            Array of options to append options into.
      * @return string
      */
-    public function dateRangePicker($fieldName, $options = array())
+    public function dateRangePicker($fieldName, $options = [])
     {
         if (!defined('adminlteformhelper.checkbox.included_helpers_daterangepicker')) {
-            $this->Html->css('AdminLTE.daterangepicker/daterangepicker', array(
-                'inline' => false
-            ));
-            $this->Html->script('AdminLTE.moment/moment-2.10.2', array(
-                'inline' => false
-            ));
-            $this->Html->script('AdminLTE.daterangepicker/daterangepicker', array(
-                'inline' => false
-            ));
+            $this->Html->css('AdminLTE.daterangepicker/daterangepicker', [
+                'inline' => false,
+            ]);
+            $this->Html->script('AdminLTE.moment/moment-2.10.2', [
+                'inline' => false,
+            ]);
+            $this->Html->script('AdminLTE.daterangepicker/daterangepicker', [
+                'inline' => false,
+            ]);
             define('adminlteformhelper.checkbox.included_helpers_daterangepicker', true);
         }
 
@@ -3977,9 +4033,9 @@ EOF;
 
         $daterangepicker_opts = '';
         if (!empty($options[ 'daterangepicker_options' ])) {
-            $daterangepicker_opts = Zend\Json\Json::encode($options[ 'daterangepicker_options' ], false, array(
-                'enableJsonExprFinder' => true
-            ));
+            $daterangepicker_opts = Zend\Json\Json::encode($options[ 'daterangepicker_options' ], false, [
+                'enableJsonExprFinder' => true,
+            ]);
             unset($options[ 'datetimepicker_options' ]);
         }
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $this->_extractOption('id', $options,
@@ -4004,14 +4060,14 @@ EOF;
             if ($meridian === 'pm') {
                 $hour += 12;
             }
-            return array(
+            return [
                 $year,
                 $month,
                 $day,
                 $hour,
                 $min,
-                $meridian
-            );
+                $meridian,
+            ];
         }
 
         if (is_numeric($value)) {
@@ -4041,14 +4097,14 @@ EOF;
                 $min = $time[ 1 ];
             }
         }
-        return array(
+        return [
             $year,
             $month,
             $day,
             $hour,
             $min,
-            $meridian
-        );
+            $meridian,
+        ];
     }
 
     /**
@@ -4062,11 +4118,11 @@ EOF;
      *            Key name.
      * @return array
      */
-    protected function _name($options = array(), $field = null, $key = 'name')
+    protected function _name($options = [], $field = null, $key = 'name')
     {
         if ($this->requestType === 'get') {
             if ($options === null) {
-                $options = array();
+                $options = [];
             } elseif (is_string($options)) {
                 $field = $options;
                 $options = 0;
@@ -4111,18 +4167,18 @@ EOF;
      * @return array
      */
     protected function _selectOptions(
-        $elements = array(),
-        $parents = array(),
+        $elements = [],
+        $parents = [],
         $showParents = null,
-        $attributes = array()
+        $attributes = []
     ) {
-        $select = array();
-        $attributes = array_merge(array(
+        $select = [];
+        $attributes = array_merge([
             'escape' => true,
             'style'  => null,
             'value'  => null,
-            'class'  => null
-        ), $attributes);
+            'class'  => null,
+        ], $attributes);
         $selectedIsEmpty = ($attributes[ 'value' ] === '' || $attributes[ 'value' ] === null);
         $selectedIsArray = is_array($attributes[ 'value' ]);
 
@@ -4131,9 +4187,9 @@ EOF;
             $attributes[ 'value' ] = 0;
         }
 
-        $this->_domIdSuffixes = array();
+        $this->_domIdSuffixes = [];
         foreach ($elements as $name => $title) {
-            $htmlOptions = array();
+            $htmlOptions = [];
             if (is_array($title) && (!isset($title[ 'name' ]) || !isset($title[ 'value' ]))) {
                 if (!empty($name)) {
                     if ($attributes[ 'style' ] === 'checkbox') {
@@ -4195,9 +4251,9 @@ EOF;
 
                         $tagName = $attributes[ 'id' ] . $this->domIdSuffix($name);
                         $htmlOptions[ 'id' ] = $tagName;
-                        $label = array(
-                            'for' => $tagName
-                        );
+                        $label = [
+                            'for' => $tagName,
+                        ];
 
                         if (isset($htmlOptions[ 'checked' ]) && $htmlOptions[ 'checked' ] === true) {
                             $label[ 'class' ] = 'selected';
@@ -4235,12 +4291,12 @@ EOF;
      *            Options list.
      * @return array
      */
-    protected function _generateOptions($name, $options = array())
+    protected function _generateOptions($name, $options = [])
     {
         if (!empty($this->options[ $name ])) {
             return $this->options[ $name ];
         }
-        $data = array();
+        $data = [];
 
         switch ($name) {
             case 'minute':
@@ -4266,10 +4322,10 @@ EOF;
                 }
                 break;
             case 'meridian':
-                $data = array(
+                $data = [
                     'am' => 'am',
-                    'pm' => 'pm'
-                );
+                    'pm' => 'pm',
+                ];
                 break;
             case 'day':
                 for ($i = 1; $i <= 31; $i++) {
@@ -4305,10 +4361,10 @@ EOF;
                 $max = !isset($options[ 'max' ]) ? $current + 20 : (int)$options[ 'max' ];
 
                 if ($min > $max) {
-                    list ($min, $max) = array(
+                    list ($min, $max) = [
                         $max,
-                        $min
-                    );
+                        $min,
+                    ];
                 }
                 if (!empty($options[ 'value' ]) && (int)$options[ 'value' ] < $min && (int)$options[ 'value' ] > 0) {
                     $min = (int)$options[ 'value' ];
@@ -4347,7 +4403,7 @@ EOF;
      *            Array of options to append options into.
      * @return array Array of options for the input.
      */
-    protected function _initInputField($field, $options = array())
+    protected function _initInputField($field, $options = [])
     {
         if (isset($options[ 'secure' ])) {
             $secure = $options[ 'secure' ];
@@ -4370,7 +4426,7 @@ EOF;
         $isDisabled = false;
         if (isset($result[ 'disabled' ])) {
             $isDisabled = ($result[ 'disabled' ] === true || $result[ 'disabled' ] === 'disabled' || (is_array($result[ 'disabled' ]) && !empty($result[ 'options' ]) && array_diff($result[ 'options' ],
-                        $result[ 'disabled' ]) === array()));
+                        $result[ 'disabled' ]) === []));
         }
         if ($isDisabled) {
             return $result;
@@ -4451,10 +4507,10 @@ EOF;
      */
     public function inputRow()
     {
-        $size_rows = array();
+        $size_rows = [];
         $empty_rows = 0;
         $counting_spaces = 0;
-        $settings = array();
+        $settings = [];
         foreach (func_get_args() as $idx => $argument) {
             if (is_int($argument)) {
                 $size_rows[ $idx ] = $argument;
@@ -4475,7 +4531,7 @@ EOF;
                 }
             }
         }
-        $toProcess = array();
+        $toProcess = [];
         if ($empty_rows > 0) {
             $emptyToSpace = (12 - $counting_spaces) / $empty_rows;
         }
@@ -4492,22 +4548,22 @@ EOF;
                 }
             } else {
                 if (is_string($argument)) {
-                    $toProcess[] = array(
+                    $toProcess[] = [
                         'size'    => $emptyToSpace,
-                        'content' => $argument
-                    );
+                        'content' => $argument,
+                    ];
                 } else {
                     if (is_int($argument)) {
-                        $toProcess[] = array(
+                        $toProcess[] = [
                             'size'    => $argument,
-                            'content' => '&nbsp;'
-                        );
+                            'content' => '&nbsp;',
+                        ];
                     }
                 }
             }
         }
 
-        $toDisplay = array();
+        $toDisplay = [];
         $toProcessTotal = count($toProcess);
         $toProcessCount = 1;
         $toDiplayRows = 0;
@@ -4595,11 +4651,11 @@ EOF;
     function js_array($array)
     {
         $idx = count($this->_jsArrayHelper);
-        $this->_jsArrayHelper[ $idx ] = array();
-        $temp = array_walk($array, array(
+        $this->_jsArrayHelper[ $idx ] = [];
+        $temp = array_walk($array, [
             $this,
-            'array_key_js'
-        ), $idx);
+            'array_key_js',
+        ], $idx);
         $rd = implode(', ', $this->_jsArrayHelper[ $idx ]);
         if (substr($rd, 0, 1) == "{") {
             return $rd;
@@ -4644,19 +4700,19 @@ EOF;
      * @return string
      * @link http://docs.ckeditor.com/#!/api/CKEDITOR.config
      */
-    function ckeditor($fieldName, $options = array())
+    function ckeditor($fieldName, $options = [])
     {
-        $this->Html->script('AdminLTE.ckeditor/ckeditor', array(
-            'inline' => false
-        ));
+        $this->Html->script('AdminLTE.ckeditor/ckeditor', [
+            'inline' => false,
+        ]);
 
-        $this->Html->script('AdminLTE.ckeditor/adapters/jquery', array(
-            'inline' => false
-        ));
+        $this->Html->script('AdminLTE.ckeditor/adapters/jquery', [
+            'inline' => false,
+        ]);
 
-        $extraOptions = array();
+        $extraOptions = [];
 
-        $ckeditorOpts = array();
+        $ckeditorOpts = [];
 
         $extraOptions[ 'label' ] = false;
 
@@ -4702,19 +4758,19 @@ EOF;
             }
 
             $return = ((!empty($extraOptions[ 'label' ])) ? '<label for="' . $fieldName . '">' . $extraOptions[ 'label' ] . '</label>' : '') . $this->Html->useTag('block',
-                    array(
+                    [
                         'id'              => $fieldName,
                         'class'           => 'CkEditorInline ' . $extra_class,
-                        'contenteditable' => 'true'
-                    ), $extraOptions[ 'value' ]);
+                        'contenteditable' => 'true',
+                    ], $extraOptions[ 'value' ]);
 
             $this->_View->append("scriptAddTemplate",
                 "\$('div[id=" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "]').ckeditor(function(){},\$.parseJSON('" . json_encode($ckeditorOpts) . "'));\n");
         } else {
             $this->Html->_noEqualEights = true;
-            $return = $this->input($fieldName, array(
-                    'type' => 'textarea'
-                ) + $options + $extraOptions);
+            $return = $this->input($fieldName, [
+                    'type' => 'textarea',
+                ] + $options + $extraOptions);
             $this->_View->append("scriptAddTemplate",
                 "\$('textarea[id=" . Inflector::camelize($this->defaultModel . '_' . $fieldName) . "]').ckeditor(function(){},\$.parseJSON('" . json_encode($ckeditorOpts) . "'));\n");
         }
@@ -4729,26 +4785,26 @@ EOF;
      * @param array $options
      * @return string
      */
-    public function image($fieldName, $options = array())
+    public function image($fieldName, $options = [])
     {
         if (!defined('adminlteformhelper.image.included_helpers_jasny')) {
-            $this->Html->script('AdminLTE.jasny/jasny-3.2.0-beta1', array(
-                'inline' => false
-            ));
+            $this->Html->script('AdminLTE.jasny/jasny-3.2.0-beta1', [
+                'inline' => false,
+            ]);
 
-            $this->Html->css('AdminLTE.jasny/jasny-3.2.0-beta1', array(
-                'inline' => false
-            ));
+            $this->Html->css('AdminLTE.jasny/jasny-3.2.0-beta1', [
+                'inline' => false,
+            ]);
             define('adminlteformhelper.image.included_helpers_jasny', true);
         }
         if (!empty($options[ 'with-preview' ][ 'resize' ])) {
             if (!defined('adminlteformhelper.image.included_helpers_cropper')) {
-                $this->Html->css('AdminLTE.cropper/cropper', array(
-                    'inline' => false
-                ));
-                $this->Html->script('AdminLTE.cropper/cropper', array(
-                    'inline' => false
-                ));
+                $this->Html->css('AdminLTE.cropper/cropper', [
+                    'inline' => false,
+                ]);
+                $this->Html->script('AdminLTE.cropper/cropper', [
+                    'inline' => false,
+                ]);
                 define('adminlteformhelper.image.included_helpers_cropper', true);
             }
         }
@@ -4794,18 +4850,18 @@ EOF;
         $html .= '</div>'; // Close 1
 
         if (!empty($options[ 'with-preview' ][ 'resize' ])) {
-            $html .= $this->hidden($fieldName . 'X', array(
-                'val' => 0
-            ));
-            $html .= $this->hidden($fieldName . 'Y', array(
-                'val' => 0
-            ));
-            $html .= $this->hidden($fieldName . 'W', array(
-                'val' => $options[ 'with-preview' ][ 'resize' ][ 'width' ]
-            ));
-            $html .= $this->hidden($fieldName . 'H', array(
-                'val' => $options[ 'with-preview' ][ 'resize' ][ 'height' ]
-            ));
+            $html .= $this->hidden($fieldName . 'X', [
+                'val' => 0,
+            ]);
+            $html .= $this->hidden($fieldName . 'Y', [
+                'val' => 0,
+            ]);
+            $html .= $this->hidden($fieldName . 'W', [
+                'val' => $options[ 'with-preview' ][ 'resize' ][ 'width' ],
+            ]);
+            $html .= $this->hidden($fieldName . 'H', [
+                'val' => $options[ 'with-preview' ][ 'resize' ][ 'height' ],
+            ]);
 
             $resize_width = 'width: auto;';
             $resize_height = 'height : auto;';
@@ -4823,13 +4879,13 @@ EOF;
 </div>
 EOF;
             $dialogFooter = '<button class="btn btn-sm btn-default" data-dismiss="modal" type="button" id="' . $options[ 'id' ] . 'DoneCrop">' . __('Done') . '</button>';
-            $this->Html->dialog('imgPreviewDiv' . $options[ 'id' ], array(
+            $this->Html->dialog('imgPreviewDiv' . $options[ 'id' ], [
                 'dialog-header'  => __('Resize') . ' ' . $options[ 'label' ],
                 'dialog-content' => $dialogBody,
                 'dialog-footer'  => $dialogFooter,
                 'width'          => $resize_width_dialog,
-                'height'         => $resize_height_dialog
-            ));
+                'height'         => $resize_height_dialog,
+            ]);
             $this->_View->append("scriptAddTemplate", "
                 \$('#imgPreviewDiv" . $options[ 'id' ] . "Dialog').on('show.bs.modal', function() {
                      var sI = new Image();
