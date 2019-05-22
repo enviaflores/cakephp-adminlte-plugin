@@ -2167,7 +2167,9 @@ EOF;
         $_callback = '';
         $_callback_data = '';
         $_multiple_select = '';
+        // Enable multiple color select
         if (isset($options[ 'palettepicker_options' ][ 'multiple_select' ]) && !empty($options[ 'palettepicker_options' ][ 'multiple_select' ])) {
+            //On callback validate if the color is already on list
             $_callback_data .= <<<EOF
             if ($.inArray(clicked_color, pallete_option_list) != -1){
                 delete_pallet_option(clicked_color)
@@ -2177,10 +2179,13 @@ EOF;
 EOF;
 
             unset($options[ 'palettepicker_options' ][ 'multiple_select' ]);
+            // Append div for selected colors
             $_multiple_select = '<div class="row multiple-select-box" id="multiple-select-box-' . $options[ 'id' ] . '"></div>';
 
+            // Add JS functionalities for appending an removing colors
             $_multiple_select .= <<<EOF
                 <script type="text/javascript">
+                //List of colors
                 let pallete_option_list = [];
 
                 function delete_pallet_option(color) {
@@ -2192,11 +2197,11 @@ EOF;
                    $("#multiple-select-box-{$options['id']}").append('<div class="color-picker-multiple-select multiple-select-box-color-'+ color +' " ' +
 		            'style="background:'+ color + '" onclick="delete_pallet_option(\''+ color +'\')" ></div>')
                 }
-                
+                // Expose list of colors
                 function get_pallete_option() {
                   return pallete_option_list;
                 }
-                
+                // Function tu initialize colors
                 function set_pallete_option_values(){
                 	let values = eval(document.getElementById("orderfiltersFraudFlag").value)
                 	values.forEach(function(item) {
@@ -2209,11 +2214,12 @@ EOF;
 
 
         }
+        // Enable dismiss popup on color click
         if (isset($options[ 'palettepicker_options' ][ 'on_click_close' ]) && !empty($options[ 'palettepicker_options' ][ 'on_click_close' ])) {
             $_callback_data .= '$(".palette-color-picker-bubble").css("display","none");';
             unset($options[ 'palettepicker_options' ][ 'on_click_close' ]);
         }
-
+        // Append on change callback to plugin
         if (isset($options[ 'palettepicker_options' ][ 'onchange_callback' ])) {
             $_callback_data .= $options[ 'palettepicker_options' ][ 'onchange_callback' ];
             unset($options[ 'palettepicker_options' ][ 'onchange_callback' ]);
