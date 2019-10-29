@@ -2,14 +2,12 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta
-    http-equiv="X-UA-Compatible"
-    content="IE=edge">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?php echo AdminLTE_Header; ?></title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    name="viewport">
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
 <!-- Bootstrap 3.3.5 -->
   <?php echo $this->Html->css('AdminLTE.bootstrap'); ?>
   <!-- Font Awesome -->
@@ -59,20 +57,47 @@ if (! empty($head_additional_scripts))
 </script>
     <?php endif; ?>
 </head>
+<?php 
+if(AdminLTE_HasPurchasingFeature):
+?>
+    <style>
+    .purchasing_dialog_header {
+     
+        background-color: #337AB7;
+     
+        padding:16px 16px;
+     
+        color:#FFF;
+     
+        border-bottom:2px dashed #337AB7;
+     
+     }
+     
+     .purchasing_dialog_body {
+        width: 900px;
+    }
+    </style>
+<?php endif; ?>
+
 <!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
 <body class="<?php echo AdminLTE_BodyClass; ?>">
-    <div class="wrapper">
-        <header class="main-header"><?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?></header>
-        <!-- LeftMainSideBar Element -->
+	<div class="wrapper">
+		<header class="main-header"><?php echo  $this->Html->getMainHeaderLogo(); echo $this->Html->getMainHeaderNavBar(); ?></header>
+		<!-- LeftMainSideBar Element -->
         <?php echo $this->element('AdminLTE.left-main-sidebar'); ?>
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper"> <?php echo $this->fetch('content'); ?> </div>
+		<div class="content-wrapper"> <?php echo $this->fetch('content'); ?> </div>
+		<!-- Purchasing request dialogs -->
+        <?php
+            if(AdminLTE_HasPurchasingFeature)
+            echo $this->element('AdminLTE.purchasing-request-dialog');
+        ?>
         <!-- Footer -->
-        <footer class="main-footer"><?php echo $this->element('AdminLTE.footer'); ?></footer>
-        <!-- Control Sidebar -->
+		<footer class="main-footer"><?php echo $this->element('AdminLTE.footer'); ?></footer>
+		<!-- Control Sidebar -->
 	   <?php echo $this->element('AdminLTE.control-sidebar'); ?>
 	   <div class="control-sidebar-bg"></div>
-    </div>
+	</div>
 	<?php echo $this->fetch('modal-dialogs'); ?>
 <!-- jQuery 2.2.0 -->
 <?php echo $this->Html->script('AdminLTE.jQuery/jQuery-2.2.4', array('inline' => true)); ?>
@@ -90,6 +115,13 @@ if (! empty($head_additional_scripts))
 <?php echo $this->Html->script('AdminLTE.center/center-1.1.1', array('inline' => true)); ?>
 <!-- Msg 1.0.7 -->
 <?php echo $this->Html->script('AdminLTE.msg/msg-1.0.7', array('inline' => true)); ?>
+<!-- purchasing modal plugin -->
+<?php
+    if(AdminLTE_HasPurchasingFeature)
+    echo $this->Html->script('AdminLTE.purchasing/plugin', array(
+        'inline' => true
+    ));
+?>
 <?php
 
 /**
