@@ -165,7 +165,7 @@ function not_valid_purchase_inputs(){
 		
 	
 	
-	// specific validation for purchase
+	// specific validations for purchase
 	if($('#NewPurchasingRequestPurchaseType').val()=='purchase'){
 		switch(true){
 		case $('#NewPurchasingRequestQuantity').val()=='': $('div[for="NewPurchasingRequestQuantity"]').addClass('has-error');
