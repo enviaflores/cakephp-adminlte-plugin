@@ -1,3 +1,5 @@
+var main_form;
+
 $( document ).ready(function() {
 	
 	$('#NewPurchasingRequestQuantity,#NewPurchasingRequestAmount').on('keypress', function(key) {
@@ -52,12 +54,20 @@ $( document ).ready(function() {
 		
 		if(not_valid_purchase_inputs())
 			show_notification('warning','La solicitud no puede ser enviada<br>Captura toda la información requerida');
-		else
-			$('#NewPurchasingRequestIndexForm').submit();
+		
+		else{
+			main_form=$('#purchasingRequestDialogBody').find('form')[0].attr('id');
+			console.log(main_form);
+			return false;
+					
+			$(main_form).submit();
+		}
+			
 		
 	});
 	
-	$('#NewPurchasingRequestIndexForm').on('submit',function(e){
+	$(main_form).on('submit',function(e){
+		alert("submit");
 		e.preventDefault();
 		Swal.fire({
 			  title: 'Se enviará esta solicitud al responsable del departamento',
@@ -80,16 +90,18 @@ $( document ).ready(function() {
 			            contentType: false,
 			            processData: false,
 						beforeSend: function(){
+							$('#purchasingRequestDialog').modal('hide');
 							blockUI();
 						},
 						success: function(data) {
-							if(data.result!='ok')
+							if(data.result!='ok'){
+								$('#purchasingRequestDialog').modal('show');
 								show_notification('error',data.response,'center',1900);
+							}
+								
 							else{								
 								show_notification('success',data.response);
-								$('#purchasingRequestDialog').modal('hide');
 								restore_purchase_form();
-								
 							}
 	
 						},
@@ -98,6 +110,7 @@ $( document ).ready(function() {
 						},
 						complete: function(){
 							unblockUI();
+							
 						}
 					});
 			  }
@@ -135,7 +148,7 @@ function show_notification(type, content,  position='center', timer = 1500) {
 }
 
 function restore_purchase_form(){
-	$('#NewPurchasingRequestIndexForm').trigger('reset');
+	$(main_form).trigger('reset');
 	$('#form_container').hide();
 	$('#NewPurchasingRequestPurchaseType').val('').trigger('change');
 	$('#NewPurchasingRequestSupplierId').val('').trigger('change');
@@ -157,12 +170,13 @@ function not_valid_purchase_inputs(){
 		break;
 	}
 	
+	
 	// If another supplier was selected
 	if($('#NewPurchasingRequestSupplierId').val()==0 && $.trim($('#NewPurchasingRequestAnotherSupplier').val()).length == 0){
 		is_invalid=true;
 		$('div[for="NewPurchasingRequestSupplierId"]').addClass('has-error');
 	}
-		
+			
 	
 	
 	// specific validations for purchase
@@ -172,9 +186,10 @@ function not_valid_purchase_inputs(){
 		case $.trim($('#NewPurchasingRequestName').val()).length == 0: $('div[for="NewPurchasingRequestName"]').addClass('has-error');
 		is_invalid=true;
 		break;
-		}
+		}		
 	}
 	
+		
 	// validation for services
 	else if($('#NewPurchasingRequestPurchaseType').val()=='service'){
 		
@@ -194,12 +209,12 @@ function not_valid_purchase_inputs(){
 			$('div[for="NewPurchasingRequestServiceId"]').addClass('has-error');
 		}
 		
+		
 		if(!attachment_exists)
-			is_invalid=true;
+			is_invalid=true;		
 		
 			
-			
-		
 	}
+	
 	return is_invalid;
 }
