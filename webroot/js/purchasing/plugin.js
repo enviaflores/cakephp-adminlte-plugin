@@ -1,5 +1,3 @@
-var main_form;
-
 $( document ).ready(function() {
 	
 	$('#NewPurchasingRequestQuantity,#NewPurchasingRequestAmount').on('keypress', function(key) {
@@ -56,18 +54,13 @@ $( document ).ready(function() {
 			show_notification('warning','La solicitud no puede ser enviada<br>Captura toda la información requerida');
 		
 		else{
-			main_form=$('#purchasingRequestDialogBody').find('form')[0].attr('id');
-			console.log(main_form);
-			return false;
-					
-			$(main_form).submit();
+			$('#purchasingRequestDialogBody').find('form').submit();
 		}
 			
 		
 	});
 	
-	$(main_form).on('submit',function(e){
-		alert("submit");
+	$('#purchasingRequestDialogBody').find('form').on('submit',function(e){
 		e.preventDefault();
 		Swal.fire({
 			  title: 'Se enviará esta solicitud al responsable del departamento',
@@ -148,7 +141,7 @@ function show_notification(type, content,  position='center', timer = 1500) {
 }
 
 function restore_purchase_form(){
-	$(main_form).trigger('reset');
+	$('#purchasingRequestDialogBody').find('form').trigger('reset');
 	$('#form_container').hide();
 	$('#NewPurchasingRequestPurchaseType').val('').trigger('change');
 	$('#NewPurchasingRequestSupplierId').val('').trigger('change');

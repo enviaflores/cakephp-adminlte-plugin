@@ -54,6 +54,7 @@ class AdminLTEController extends Controller
     public $admin_lte_purchasing_feature = FALSE;
 
     public $admin_lte_Ops_WebService = null;
+    
 
     public function __construct($request = null, $response = null)
     {
