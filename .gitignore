@@ -1,0 +1,18 @@
+# Automatically generated files #
+/app/tmp
+/.settings/
+lib/Cake/Test/
+
+# IDE and editor specific files #
+/.project
+/.buildpath
+/.DS_Store
+/.idea*
+.vscode
+
+# User specific
+/sync-beta.sh
+/sync-prod.sh
+
+# Library files installed with composer
+/vendor/**
