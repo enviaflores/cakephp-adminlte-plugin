@@ -155,11 +155,11 @@ class AdminLTEController extends Controller
                     $services_list = $this->Ops->Request('cpo/services', 'GET', 'json', null, array(
                         'query_type' => 'list',
                         'fields' => array(
-                            'CPOService.id',
-                            'CPOService.name'
+                            'CpoService.id',
+                            'CpoService.name'
                         ),
                         'conditions' => array(
-                            'CPOService.active' => 'YES'
+                            'CpoService.active' => 'YES'
                         )
                     ));
 
