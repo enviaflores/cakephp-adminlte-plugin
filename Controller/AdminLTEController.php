@@ -229,6 +229,7 @@ class AdminLTEController extends Controller
             case 'red-light':
             case 'black':
             case 'black-light':
+            case 'pink':
                 $this->admin_lte_skin = $skin;
                 break;
         }
