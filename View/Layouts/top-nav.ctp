@@ -93,6 +93,8 @@
 <?php echo $this->Html->script('AdminLTE.center/center-1.1.1', array('inline' => true)); ?>
 <!-- Msg 1.0.7 -->
 <?php echo $this->Html->script('AdminLTE.msg/msg-1.0.7', array('inline' => true)); ?>
+<!-- EF websocket 1.0.0 -->
+<?= $this->Html->script('https://d3e3r3101xvs9k.cloudfront.net/js/ef_websocket.js', array('inline' => false)); ?>
 <?php
 /**
  * Additional BodyScripts

@@ -2000,22 +2000,83 @@ EOF;
         ))));
     }
 
-    public function palettecolorpicker($fieldName, $options = array())
+    /**
+     * @param       $fieldName
+     * @param array $options
+     * @return string
+     *  Reference https://github.com/carloscabo/jquery-palette-color-picker
+     */
+    public function palettecolorpicker($fieldName, $options = [])
     {
-        $this->Html->css('AdminLTE.palette-color-picker/palette-color-picker', array(
-            'inline' => false
-        ));
-        $this->Html->script('AdminLTE.palette-color-picker/palette-color-picker', array(
-            'inline' => false
-        ));
+        $this->Html->css('AdminLTE.palette-color-picker/palette-color-picker', [
+            'inline' => false,
+        ]);
+        $this->Html->script('AdminLTE.palette-color-picker/palette-color-picker', [
+            'inline' => false,
+        ]);
 
         $options = $this->_initInputField($fieldName, $options);
         $options = $this->addClass($options, 'form-control');
-        $options['type'] = 'hidden';
+        $options[ 'type' ] = 'hidden';
         $_callback = '';
-        if (isset($options['palettepicker_options']['onchange_callback'])) {
-            $_callback = ',onchange_callback: function( clicked_color ) {' . $options['palettepicker_options']['onchange_callback'] . '}';
-            unset($options['palettepicker_options']['onchange_callback']);
+        $_callback_data = '';
+        $_multiple_select = '';
+        // Enable multiple color select
+        if (isset($options[ 'palettepicker_options' ][ 'multiple_select' ]) && !empty($options[ 'palettepicker_options' ][ 'multiple_select' ])) {
+            //On callback validate if the color is already on list
+            $_callback_data .= <<<EOF
+            if ($.inArray(clicked_color, pallete_option_list) != -1){
+                delete_pallet_option(clicked_color)
+            }else{
+                add_pallete_option(clicked_color)   
+            }
+EOF;
+
+            unset($options[ 'palettepicker_options' ][ 'multiple_select' ]);
+            // Append div for selected colors
+            $_multiple_select = '<div class="row multiple-select-box" id="multiple-select-box-' . $options[ 'id' ] . '"></div>';
+
+            // Add JS functionalities for appending an removing colors
+            $_multiple_select .= <<<EOF
+                <script type="text/javascript">
+                //List of colors
+                let pallete_option_list = [];
+
+                function delete_pallet_option(color) {
+                pallete_option_list.splice( $.inArray(color, pallete_option_list) ,1 );
+                  $("#multiple-select-box-{$options['id']}> .multiple-select-box-color-"+ color).remove()
+                }
+                function add_pallete_option(color) {
+                   pallete_option_list.push(color);
+                   $("#multiple-select-box-{$options['id']}").append('<div class="color-picker-multiple-select multiple-select-box-color-'+ color +' " ' +
+		            'style="background:'+ color + '" onclick="delete_pallet_option(\''+ color +'\')" ></div>')
+                }
+                // Expose list of colors
+                function get_pallete_option() {
+                  return pallete_option_list;
+                }
+                // Function tu initialize colors
+                function set_pallete_option_values(){
+                	let values = eval(document.getElementById("orderfiltersFraudFlag").value)
+                	values.forEach(function(item) {
+                	   add_pallete_option(item)
+                	});
+                	$("#orderfiltersFraudFlag").val(values[0])
+                }
+            </script>
+EOF;
+
+
+        }
+        // Enable dismiss popup on color click
+        if (isset($options[ 'palettepicker_options' ][ 'on_click_close' ]) && !empty($options[ 'palettepicker_options' ][ 'on_click_close' ])) {
+            $_callback_data .= '$(".palette-color-picker-bubble").css("display","none");';
+            unset($options[ 'palettepicker_options' ][ 'on_click_close' ]);
+        }
+        // Append on change callback to plugin
+        if (isset($options[ 'palettepicker_options' ][ 'onchange_callback' ])) {
+            $_callback_data .= $options[ 'palettepicker_options' ][ 'onchange_callback' ];
+            unset($options[ 'palettepicker_options' ][ 'onchange_callback' ]);
         }
         $this->_View->append("scriptAddTemplate", "\$('input[id=\"" . $options['id'] . "\"]').paletteColorPicker({
         colors : " . json_encode($options['palettepicker_options']['colors']) . $_callback . "
