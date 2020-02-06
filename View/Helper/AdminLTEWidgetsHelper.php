@@ -5,7 +5,9 @@ class AdminLTEWidgetsHelper extends HtmlHelper
 {
 
     public $_defaultBoxOptions = array(
-        'variant' => 'default'
+        'variant' => 'default',
+        'type' => 'info',
+        'full-color' => 'aqua'
     );
 
     public $helpers = [
@@ -138,11 +140,25 @@ class AdminLTEWidgetsHelper extends HtmlHelper
      */
     public function infoBox($options = array())
     {
-        $html_data = '<div class="' . ((! empty($options['type']) && $options['type'] == 'more_info') ? 'small' : 'info') . '-box' . ((! empty($options['full-color'])) ? ' bg-' . $options['full-color'] : '') . '">';
+        $options = array_merge($this->_defaultBoxOptions, $options);
+
+        switch ($options['type']) {
+            case 'simple':
+                $this->simpleStatusBox($options);
+                break;
+            case 'percentage':
+                $this->percentageStatusBox($options);
+                break;
+            case 'more_info':
+
+                break;
+        }
+
+        $html_data = "<div class=\"{$options['type']}-box bg-{$options['full-color']}\">";
 
         if (! empty($options['type']) && $options['type'] == 'more_info') {
-            if (isset($options['number']) || ! empty($options['text']))
-                $html_data .= '<div class="inner"><h3>' . (isset($options['number']) ? intval($options['number']) : '0') . '</h3> <p>' . (! empty($options['text']) ? $options['text'] : '') . '</p></div>';
+            if (! empty($options['number']) || ! empty($options['text']))
+                $html_data .= '<div class="inner"><h3>' . (! empty($options['number']) ? $options['number'] : '') . '</h3> <p>' . (! empty($options['text']) ? $options['text'] : '') . '</p></div>';
 
             if (! empty($options['fa-icon']))
                 $html_data .= '<div class="icon"><i class="fa fa-' . $options['fa-icon'] . '"></i></div>';
@@ -162,7 +178,25 @@ class AdminLTEWidgetsHelper extends HtmlHelper
 
         $html_data .= '</div>';
 
+        if (!empty($options['wrap-class']))
+            $html_data = "<div class='{$options['wrap-class']}'>{$html_data}</div>";
+
         return $html_data;
+    }
+
+    public function simpleStatusBox($options = array())
+    {
+
+    }
+
+    public function percentageStatusBox($options = array())
+    {
+
+    }
+
+    public function moreInfoStatusBox($options = array())
+    {
+
     }
 
     /**
@@ -190,10 +224,10 @@ class AdminLTEWidgetsHelper extends HtmlHelper
         return null;
     }
 
-    public function defaultBoxEnd($return = false)
+    public function defaultBoxEnd()
     {
         $buffer = ob_get_clean();
-        $_box_html_str = '<div class="box box-' . $this->_defaultBoxOptions['variant'] . '" ' . $this->process_box_params('box-params') . '>';
+        $_box_html_str = '<div class="box box-' . $this->_defaultBoxOptions['variant'] . '">';
         if ($this->_defaultBoxOptions['header'] !== false) {
             $_box_html_str .= '<div class="box-header' . ((! empty($this->_defaultBoxOptions['header']['border'])) ? ' with-border' : '') . '">';
             $_box_html_str .= '<h3 class="box-title">' . $this->_defaultBoxOptions['header']['title'] . '</h3>';
@@ -215,36 +249,6 @@ class AdminLTEWidgetsHelper extends HtmlHelper
             $_box_html_str .= '<div class="box-footer">' . $this->_defaultBoxOptions['footer'] . '</div>';
         $_box_html_str .= '</div>';
 
-        if ($return == false)
-            print $_box_html_str;
-        else 
-            return $_box_html_str;
-    }
-
-    /**
-     * Processes an array of parameters given at _defaultBoxOptions.
-     *
-     * @param string $params Index for search in _defaultBoxOptions
-     * @return string
-     */
-    private function process_box_params($params = '')
-    {
-        if (empty($params) || !is_string($params) || !isset($this->_defaultBoxOptions[$params]))
-            return '';
-
-        $elements = [];
-
-        foreach ($this->_defaultBoxOptions[$params] as $index => $param) {
-            if (!is_string($param))
-                continue;
-
-            if (is_numeric($index))
-                array_push($elements, $param);
-            else {
-                array_push($elements, $index.'="'.$param.'"');
-            }
-        }
-
-        return implode(' ', $elements);
+        print $_box_html_str;
     }
 }
