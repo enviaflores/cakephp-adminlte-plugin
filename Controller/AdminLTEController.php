@@ -21,7 +21,7 @@ class AdminLTEController extends Controller
     const EMPTY_LAYOUT = 64;
 
     protected $_mergeParent = 'AdminLTEController';
-    
+
     public $components = array(
         'Flash'
     );
@@ -50,6 +50,11 @@ class AdminLTEController extends Controller
     public $admin_lte_skin = 'blue';
 
     public $admin_lte_header = 'AdminLTE Header';
+
+    public $admin_lte_purchasing_feature = FALSE;
+
+    public $admin_lte_Ops_WebService = null;
+    
 
     public function __construct($request = null, $response = null)
     {
@@ -89,7 +94,7 @@ class AdminLTEController extends Controller
             $AdminLTE_BodyClass[] = 'sidebar-collapse';
 
         if ($this->admin_lte_options & self::TOP_NAVIGATION) {
-            //defined('AdminLTE_TopNavigation', true);
+            // defined('AdminLTE_TopNavigation', true);
             $AdminLTE_BodyClass[] = 'layout-top-nav';
         }
 
@@ -108,6 +113,7 @@ class AdminLTEController extends Controller
         define('AdminLTE_BodyClass', join(' ', $AdminLTE_BodyClass));
         define('AdminLTE_Skin', 'skin-' . $this->admin_lte_skin);
         define('AdminLTE_Header', $this->admin_lte_header);
+        define('AdminLTE_HasPurchasingFeature', $this->admin_lte_purchasing_feature);
 
         if ($this->name == 'CakeError')
             return;
@@ -122,14 +128,55 @@ class AdminLTEController extends Controller
 
         if ($this->admin_lte_options & self::FIXED_LAYOUT || $this->admin_lte_options & self::BOXED_LAYOUT)
             $this->layout = 'AdminLTE.admin-lte';
-        else
-            if ($this->admin_lte_options & self::LOGIN_LAYOUT)
-                $this->layout = 'AdminLTE.login';
-        elseif($this->admin_lte_options & self::TOP_NAVIGATION)
+        else if ($this->admin_lte_options & self::LOGIN_LAYOUT)
+            $this->layout = 'AdminLTE.login';
+        elseif ($this->admin_lte_options & self::TOP_NAVIGATION)
             $this->layout = 'AdminLTE.top-nav';
 
         if ($this->admin_lte_options & self::EMPTY_LAYOUT)
             $this->layout = 'AdminLTE.empty';
+
+        if ($this->admin_lte_purchasing_feature) {
+            try {
+                if (is_object($this->APIV2))
+                    $suppliers_list = $this->APIV2->Request('suppliers', 'GET', 'json', null, array(
+                        'fields' => array(
+                            'Supplier.id',
+                            'Supplier.razon_social'
+                        ),
+                        'nolimit' => true,
+                        'query_type' => 'list',
+                        'conditions' => array(
+                            'Supplier.enabled' => 'YES'
+                        )
+                    ));
+
+                if (is_object($this->Ops))
+                    $services_list = $this->Ops->Request('cpo/services', 'GET', 'json', null, array(
+                        'query_type' => 'list',
+                        'fields' => array(
+                            'CpoService.id',
+                            'CpoService.name'
+                        ),
+                        'conditions' => array(
+                            'CpoService.active' => 'YES'
+                        )
+                    ));
+
+                if (isset($services_list['response_code']))
+                    unset($services_list['response_code']);
+
+                if (! empty($suppliers_list))
+                    $suppliers_list += array(
+                        0 => 'Otro'
+                    );
+            } catch (Exception $e) {
+                $suppliers_list = array();
+                $services_list = array();
+            }
+
+            $this->set(compact('suppliers_list', 'services_list'));
+        }
     }
 
     /**
@@ -137,7 +184,8 @@ class AdminLTEController extends Controller
      *
      * BOXED_LAYOUT, FIXED_LAYOUT, COLLAPSED_SIDEBAR, TOP_NAVIGATION, CONTROL_SIDEBAR, LOGIN_LAYOUT, EMPTY_LAYOUT
      *
-     * @param $options
+     * @param
+     *            $options
      */
     public function setLayoutOptions($options)
     {
@@ -147,7 +195,8 @@ class AdminLTEController extends Controller
     /**
      * Set the layout header
      *
-     * @param string $header Text to use how header of the layout.
+     * @param string $header
+     *            Text to use how header of the layout.
      */
     public function setLayoutHeader($header)
     {
@@ -157,7 +206,8 @@ class AdminLTEController extends Controller
     /**
      * Set the breadcrumb information
      *
-     * @param array $elements The elements of the breadcrumb.
+     * @param array $elements
+     *            The elements of the breadcrumb.
      */
     public function setBreadcrumb($elements = array())
     {
@@ -179,6 +229,7 @@ class AdminLTEController extends Controller
             case 'red-light':
             case 'black':
             case 'black-light':
+            case 'pink':
                 $this->admin_lte_skin = $skin;
                 break;
         }
