@@ -668,8 +668,14 @@ EOF;
                     $menu_opts[] = '<li class="divider"></li>';
                     break;
                 default:
-                    $onclick_string = (isset($opt_menu_data['onclick'])) ? ' onclick="' . $opt_menu_data['onclick'] . '"' : '';
-                    $menu_opts[] = '<li><a id="' . Inflector::variable($field_id . '_' . $opt_menu_data['name']) . ((isset($opt_menu_data['ref'])) ? '" ref="' . $opt_menu_data['ref'] : '') . '" href="' . $opt_menu_data['href'] . '" ' . $onclick_string . '>' . $opt_menu_data['name'] . '</a></li>';
+                    $onclick_string = (isset($opt_menu_data[ 'onclick' ])) ? ' onclick="' . $opt_menu_data[ 'onclick' ] . '"' : '';
+                    $menu_opts[] = '<li><a id="' . Inflector::variable($field_id . '_' . $opt_menu_data[ 'name' ]) .
+                        ((isset($opt_menu_data[ 'class' ])) ? '" class="' . $opt_menu_data[ 'class' ] : '') .
+                        ((isset($opt_menu_data[ 'style' ])) ? '" style="' . $opt_menu_data[ 'style' ] : '') .
+                        ((isset($opt_menu_data[ 'ref' ])) ? '" ref="' . $opt_menu_data[ 'ref' ] : '') .
+                        '" href="' . $opt_menu_data[ 'href' ] . '" ' . $onclick_string . '>' .
+                        $opt_menu_data[ 'name' ] .
+                        '</a></li>';
                     break;
             }
         }
