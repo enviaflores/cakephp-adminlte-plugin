@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png"/>
 <title><?php echo AdminLTE_Header; ?></title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta
